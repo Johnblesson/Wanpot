@@ -10,4 +10,8 @@ router.get("/calculator", (req, res) => {
   res.render("calculator");
 });
 
+router.get("/stopwatch", (req, res) => {
+    res.render("stopwatch");
+});
+
 export default router;

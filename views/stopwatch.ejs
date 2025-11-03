@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wanpot | Stopwatch with Lap Tracking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      overflow-x: hidden;
+      margin: 0;
+    }
+
+    /* Stopwatch Section */
+    .stopwatch-container {
+      margin-top: 8rem;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      color: #38bdf8;
+    }
+
+    .display {
+      font-size: 3rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 20px 40px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 10px rgba(56,189,248,0.3);
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    button {
+      padding: 0.8rem 1.6rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(6,182,212,0.3);
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(6,182,212,0.5);
+    }
+
+    /* Lap List */
+    .laps {
+      max-width: 400px;
+      margin: 0 auto;
+      background: rgba(15,23,42,0.6);
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 0 15px rgba(6,182,212,0.2);
+      overflow-y: auto;
+      max-height: 250px;
+    }
+
+    .lap {
+      display: flex;
+      justify-content: space-between;
+      background: rgba(30,41,59,0.7);
+      padding: 0.7rem 1rem;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #e2e8f0;
+      transition: 0.2s;
+    }
+
+    .lap:hover {
+      background: rgba(56,189,248,0.2);
+    }
+
+    .lap span:first-child {
+      color: #38bdf8;
+    }
+
+    /* Stopwatch Features Section */
+    .features {
+      text-align: center;
+      margin-top: 4rem;
+      padding: 3rem 1rem;
+      background: rgba(15,23,42,0.7);
+      border-top: 1px solid rgba(56,189,248,0.2);
+    }
+
+    .features h2 {
+      font-size: 2rem;
+      color: #38bdf8;
+      margin-bottom: 2rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: rgba(30,41,59,0.7);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: 0.3s;
+      box-shadow: 0 0 15px rgba(56,189,248,0.1);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 25px rgba(56,189,248,0.3);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      color: #06b6d4;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: #f8fafc;
+    }
+
+    .feature-card p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    footer {
+      background: #0f172a;
+      color: #64748b;
+      text-align: center;
+      padding: 2rem 1rem;
+      margin-top: 4rem;
+      font-size: 0.9rem;
+    }
+
+    footer strong {
+      color: #38bdf8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- include header -->
+  <%- include('include/_header') %>
+  <!-- /include header -->
+
+  <!-- Stopwatch Section -->
+  <section class="stopwatch-container">
+    <h1>Advanced Stopwatch</h1>
+    <div class="display" id="display">00:00:00</div>
+    <div class="buttons">
+      <button id="startStopBtn"><i class="fa-solid fa-play"></i> Start</button>
+      <button id="lapBtn" disabled><i class="fa-solid fa-flag"></i> Lap</button>
+      <button id="resetBtn"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+    </div>
+
+    <div class="laps" id="laps"></div>
+  </section>
+
+  <!-- Stopwatch Features Section -->
+  <section class="features">
+    <h2><i class="fa-solid fa-bolt"></i> Stopwatch Features</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-stopwatch"></i></div>
+        <h3>Accurate Time Tracking</h3>
+        <p>Experience second-perfect precision with modern JavaScript timing logic.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-flag-checkered"></i></div>
+        <h3>Lap Recording</h3>
+        <p>Record multiple laps easily and see them in an auto-numbered list.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-pause-circle"></i></div>
+        <h3>Pause & Resume</h3>
+        <p>Stop and resume your stopwatch anytime without losing your progress.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+        <h3>Responsive Design</h3>
+        <p>Fully responsive across all devices — desktop, tablet, and mobile.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-file-export"></i></div>
+        <h3>Export Option (Coming Soon)</h3>
+        <p>Save or export your lap records for workouts or research logs.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-gauge-high"></i></div>
+        <h3>Performance Optimized</h3>
+        <p>Lightweight script ensures smooth and fast performance with minimal lag.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- include about -->
+  <%- include('include/_about') %>
+  <!-- /include about --> 
+
+  <!-- include footer -->
+  <%- include('include/_footer') %>
+  <!-- /include footer --> 
+
+  <script>
+    let startTime, updatedTime, difference, tInterval;
+    let running = false;
+    let lapCounter = 1;
+
+    const display = document.getElementById('display');
+    const startStopBtn = document.getElementById('startStopBtn');
+    const lapBtn = document.getElementById('lapBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const lapsContainer = document.getElementById('laps');
+
+    function startStop() {
+      if (!running) {
+        startTime = new Date().getTime() - (difference || 0);
+        tInterval = setInterval(getShowTime, 1000);
+        startStopBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Stop';
+        running = true;
+        lapBtn.disabled = false;
+      } else {
+        clearInterval(tInterval);
+        running = false;
+        startStopBtn.innerHTML = '<i class="fa-solid fa-play"></i> Start';
+        lapBtn.disabled = true;
+      }
+    }
+
+    function reset() {
+      clearInterval(tInterval);
+      running = false;
+      difference = 0;
+      display.innerHTML = '00:00:00';
+      startStopBtn.innerHTML = '<i class="fa-solid fa-play"></i> Start';
+      lapsContainer.innerHTML = '';
+      lapCounter = 1;
+      lapBtn.disabled = true;
+    }
+
+    function getShowTime() {
+      updatedTime = new Date().getTime();
+      difference = updatedTime - startTime;
+
+      let hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      let minutes = Math.floor((difference / (1000 * 60)) % 60);
+      let seconds = Math.floor((difference / 1000) % 60);
+
+      hours = (hours < 10) ? "0" + hours : hours;
+      minutes = (minutes < 10) ? "0" + minutes : minutes;
+      seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+      display.innerHTML = `${hours}:${minutes}:${seconds}`;
+    }
+
+    function recordLap() {
+      if (running) {
+        const lapTime = display.innerText;
+        const lap = document.createElement('div');
+        lap.classList.add('lap');
+        lap.innerHTML = `<span>Lap ${lapCounter++}</span><span>${lapTime}</span>`;
+        lapsContainer.prepend(lap);
+      }
+    }
+
+    startStopBtn.addEventListener('click', startStop);
+    resetBtn.addEventListener('click', reset);
+    lapBtn.addEventListener('click', recordLap);
+  </script>
+
+</body>
+</html>

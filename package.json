@@ -1,0 +1,32 @@
+{
+  "name": "wanpot",
+  "version": "1.0.0",
+  "description": "- A landing\r - Unique Digital Calculator\r - Stopwatch\r - To Do List\r - Password generator\r - QR Code generatior\r - Quiz\r - Typing game",
+  "main": "script.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Johnblesson/Wanpot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Johnblesson/Wanpot/issues"
+  },
+  "homepage": "https://github.com/Johnblesson/Wanpot#readme",
+  "dependencies": {
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

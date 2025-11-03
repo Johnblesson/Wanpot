@@ -1,48 +1,404 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
-    integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
-    crossorigin="anonymous" />
-  <link rel="stylesheet" href="style.css" />
-  <title>Wanpot App</title>
+  <title>Wanpot - All-in-One Smart App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.7rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #f1f5f9;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #38bdf8;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      min-height: 100vh;
+      background: radial-gradient(circle at 30% 50%, rgba(59,130,246,0.3), transparent 70%),
+                  radial-gradient(circle at 70% 60%, rgba(6,182,212,0.3), transparent 70%);
+      padding: 2rem 1rem;
+    }
+
+    .hero h1 {
+      font-size: 2.6rem;
+      max-width: 700px;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+
+    .hero p {
+      color: #cbd5e1;
+      max-width: 650px;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+
+    .hero .cta-btn {
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      padding: 0.9rem 2rem;
+      border-radius: 50px;
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .hero .cta-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(6,182,212,0.4);
+    }
+
+    /* FEATURES */
+    .features {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 1rem;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      transition: 0.4s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255,255,255,0.1);
+    }
+
+    .feature-icon {
+      font-size: 2.3rem;
+      margin-bottom: 1rem;
+      color: #38bdf8;
+    }
+
+    .feature-card h3 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .feature-card p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    /* ABOUT SECTION */
+    .about {
+      text-align: center;
+      background: linear-gradient(90deg, #1e3a8a, #2563eb);
+      padding: 3rem 1rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      color: #f8fafc;
+    }
+
+    .about h2 {
+      margin-bottom: 1rem;
+    }
+
+    .about p {
+      max-width: 700px;
+      margin: 0 auto;
+      color: #e2e8f0;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: #0f172a;
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        right: 20px;
+        top: 70px;
+        width: 200px;
+        background: rgba(15,23,42,0.9);
+        border-radius: 10px;
+        padding: 1rem;
+      }
+
+      nav ul.active {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .hero h1 {
+        font-size: 2.1rem;
+      }
+    }
+  </style>
 </head>
-
 <body>
-  <button class="nav-btn open-btn">
-    <i class="fas fa-bars"></i>
-  </button>
-  <div class="nav nav-black">
-    <div class="nav nav-red">
-      <div class="nav nav-white">
-        <button class="nav-btn close-btn">
-          <i class="fas fa-times"></i>
-        </button>
-        <img
-        src="Original logo.png"
-        alt="Logo" class="logo">
-
-        <ul class="list">
-          <li><a href="./Analog Clock/index.html">Analog Clock</a></li>
-          <li><a href="./Calculator/index.html">Calculator</a></li>
-          <li><a href="./Stopwatch/index.html">Stopwatch</a></li>
-          <li>
-            <ul>
-              <li><a href="./quiz-app/index.html">Quiz</a></li>
-              <li><a href="./typing-game/index.html">Typing game</a></li>
-              <li><a href="./To Do List/index.html">To Do List</a></li>
-              <li><a href="./password-generator/index.html">Password generator</a></li>
-              <li><a href="./qr-code-generator/index.html">QR Code Generator</a></li>
-            </ul>
-          </li>
+  <header>
+    <div class="navbar">
+      <div class="logo">Wanpot</div>
+      <nav>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#download">Download</a></li>
         </ul>
-      </div>
+      </nav>
+      <div class="menu-toggle" onclick="toggleMenu()">☰</div>
     </div>
-  </div>
-  <script src="script.js"></script>
-</body>
+  </header>
 
+  <section class="hero" id="home">
+    <h1>One App, Many Tools — Welcome to <span style="color:#38bdf8;">Wanpot</span></h1>
+    <p>The all-in-one smart application designed to simplify student life, empower professionals, and make daily productivity effortless — everything in one pot!</p>
+    <a href="#features" class="cta-btn">Discover Features</a>
+  </section>
+
+  <section class="features" id="features">
+    <h2>What's Inside the Pot 🍲</h2>
+    <div class="features-grid">
+
+      <!-- Existing features -->
+      <div class="feature-card">
+        <div class="feature-icon">🧮</div>
+        <h3>Scientific Calculator</h3>
+        <p>Perform accurate calculations with a beautiful modern interface.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🕒</div>
+        <h3>Smart Stopwatch</h3>
+        <p>Track your activities with precision timing.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Tech Quiz & Study Tools</h3>
+        <p>Challenge your brain or prepare for tests the fun way.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⌨️</div>
+        <h3>Typing Game</h3>
+        <p>Improve your typing skills with interactive fun.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>To-Do List</h3>
+        <p>Organize tasks efficiently for productivity.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔐</div>
+        <h3>Password Generator</h3>
+        <p>Create strong, secure passwords instantly.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔳</div>
+        <h3>QR Code Generator</h3>
+        <p>Generate QR codes for links, contacts, or events.</p>
+      </div>
+
+      <!-- New Student Features -->
+      <div class="feature-card">
+        <div class="feature-icon">📓</div>
+        <h3>Note Keeper</h3>
+        <p>Save lecture notes and ideas in a clean interface.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎓</div>
+        <h3>GPA Calculator</h3>
+        <p>Compute grades and GPA easily for academic tracking.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📖</div>
+        <h3>Dictionary & Word Finder</h3>
+        <p>Offline English dictionary and synonyms at your fingertips.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⚖️</div>
+        <h3>Unit Converter</h3>
+        <p>Convert measurements, currency, volume, and more.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🃏</div>
+        <h3>Flashcards & Study Quiz</h3>
+        <p>Create flashcards and quizzes to improve memory retention.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⏱️</div>
+        <h3>Pomodoro Timer</h3>
+        <p>Boost focus and productivity with a smart timer.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📐</div>
+        <h3>Equation Solver (Math AI)</h3>
+        <p>Step-by-step solutions to complex math problems.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📄</div>
+        <h3>PDF Tools</h3>
+        <p>Merge, split, or compress PDFs for easy handling.</p>
+      </div>
+
+      <!-- Corporate Features -->
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3>Expense Tracker</h3>
+        <p>Track spending, budgets, and financial reports efficiently.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <h3>Meeting Scheduler / Reminder</h3>
+        <p>Organize meetings and receive smart reminders.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📄</div>
+        <h3>Resume / CV Builder</h3>
+        <p>Create professional CVs with clean templates quickly.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h3>File Converter</h3>
+        <p>Convert images, documents, and text between formats.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎤</div>
+        <h3>Voice-to-Text Note Recorder</h3>
+        <p>Quickly record and transcribe your ideas and meetings.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3>Task Priority Planner</h3>
+        <p>Plan tasks smartly with urgency and importance indicators.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">✉️</div>
+        <h3>Email Signature Generator</h3>
+        <p>Create professional email signatures in seconds.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>Quick Translator</h3>
+        <p>Translate text quickly in multiple languages.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <h2>The Wanpot Philosophy</h2>
+    <p>In Sierra Leone, “Wanpot” means putting everything in one pot — and that’s exactly what this app does. We blend tools for learning, productivity, creativity, and life management — all served hot in one digital experience!</p>
+  </section>
+
+  <footer>
+  <p>© 2025 Wanpot | Built with ❤️ in Sierra Leone by <strong>Kharis Pro Tech</strong> | Empowering Productivity Everywhere</p>
+</footer>
+
+  <script>
+    function toggleMenu() {
+      document.querySelector('nav ul').classList.toggle('active');
+    }
+  </script>
+</body>
 </html>

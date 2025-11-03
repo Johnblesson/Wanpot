@@ -1,0 +1,128 @@
+<style>
+  .calc-btn {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  padding: 0.9rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f8fafc;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  backdrop-filter: blur(8px);
+}
+
+.calc-btn:hover {
+  background: rgba(59,130,246,0.2);
+  transform: translateY(-2px);
+}
+
+.calc-btn.fn {
+  background: rgba(255,255,255,0.15);
+  font-size: 0.95rem;
+}
+
+.equal-btn:hover {
+  background: #2563eb !important;
+  transform: translateY(-2px);
+}
+
+</style>
+
+<section class="hero" style="min-height: auto; padding: 5rem 1rem 6rem;">
+  <h1>Scientific Calculator 🧮</h1>
+  <p>Perform calculations with precision. Advanced functions for students and professionals alike.</p>
+
+  <div class="calculator-container" style="margin-top: 3.5rem; max-width: 450px; margin-left: auto; margin-right: auto;">
+    <input 
+      type="text" 
+      id="display" 
+      disabled 
+      placeholder="0" 
+      style="width: 100%; padding: 1.2rem; border-radius: 12px; font-size: 1.6rem; text-align: right; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #f8fafc;"
+    />
+
+    <div class="calculator-buttons" 
+         style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.8rem; margin-top: 1.5rem;">
+      
+      <!-- Row 1 -->
+      <button class="calc-btn fn" data-func="sin">sin</button>
+      <button class="calc-btn fn" data-func="cos">cos</button>
+      <button class="calc-btn fn" data-func="tan">tan</button>
+      <button class="calc-btn fn" data-func="sqrt">√</button>
+      <button class="calc-btn fn" data-func="log">log</button>
+
+      <!-- Row 2 -->
+      <button class="calc-btn" data-value="7">7</button>
+      <button class="calc-btn" data-value="8">8</button>
+      <button class="calc-btn" data-value="9">9</button>
+      <button class="calc-btn" data-value="/">÷</button>
+      <button class="calc-btn" id="clear">C</button>
+
+      <!-- Row 3 -->
+      <button class="calc-btn" data-value="4">4</button>
+      <button class="calc-btn" data-value="5">5</button>
+      <button class="calc-btn" data-value="6">6</button>
+      <button class="calc-btn" data-value="*">×</button>
+      <button class="calc-btn fn" data-func="^">xⁿ</button>
+
+      <!-- Row 4 -->
+      <button class="calc-btn" data-value="1">1</button>
+      <button class="calc-btn" data-value="2">2</button>
+      <button class="calc-btn" data-value="3">3</button>
+      <button class="calc-btn" data-value="-">−</button>
+      <button class="calc-btn fn" data-func="pi">π</button>
+
+      <!-- Row 5 -->
+      <button class="calc-btn" data-value="0">0</button>
+      <button class="calc-btn" data-value=".">.</button>
+      <button class="calc-btn" data-value="(">(</button>
+      <button class="calc-btn" data-value=")">)</button>
+      <button class="calc-btn" data-value="+">+</button>
+
+      <!-- Row 6 -->
+      <button class="calc-btn equal-btn" id="equals" style="grid-column: span 5; background: #3b82f6; color: #fff; font-weight: 700; font-size: 1.1rem;">=</button>
+    </div>
+  </div>
+</section>
+
+
+<script>
+  const display = document.getElementById('display');
+const buttons = document.querySelectorAll('.calc-btn');
+
+buttons.forEach(button => {
+  button.addEventListener('click', () => {
+    const func = button.getAttribute('data-func');
+    const value = button.getAttribute('data-value');
+
+    if (button.id === 'clear') {
+      display.value = '';
+    } 
+    else if (button.id === 'equals') {
+      try {
+        // Replace power symbol with Math.pow syntax
+        let expression = display.value.replace(/\^/g, '**');
+        display.value = eval(expression);
+      } catch {
+        display.value = 'Error';
+      }
+    } 
+    else if (func) {
+      switch(func) {
+        case 'sin': display.value += 'Math.sin('; break;
+        case 'cos': display.value += 'Math.cos('; break;
+        case 'tan': display.value += 'Math.tan('; break;
+        case 'sqrt': display.value += 'Math.sqrt('; break;
+        case 'log': display.value += 'Math.log10('; break;
+        case 'pi': display.value += 'Math.PI'; break;
+        case '^': display.value += '^'; break;
+      }
+    } 
+    else {
+      display.value += value;
+    }
+  });
+});
+
+</script>

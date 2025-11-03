@@ -14,4 +14,9 @@ router.get("/stopwatch", (req, res) => {
     res.render("stopwatch");
 });
 
+// quiz route
+router.get("/quiz", (req, res) => {
+    res.render("quiz");
+})
+
 export default router;

@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wanpot | Stopwatch with Lap Tracking</title>
+  <title>Wanpot | Advanced Stopwatch with Laps</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     body {
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #0f172a, #1e293b);
       color: #f8fafc;
-      overflow-x: hidden;
       margin: 0;
+      overflow-x: hidden;
     }
 
     /* Stopwatch Section */
@@ -24,8 +25,8 @@
 
     h1 {
       font-size: 2.2rem;
-      margin-bottom: 1rem;
       color: #38bdf8;
+      margin-bottom: 1.5rem;
     }
 
     .display {
@@ -85,15 +86,27 @@
       margin-bottom: 0.5rem;
       font-weight: 500;
       color: #e2e8f0;
-      transition: 0.2s;
-    }
-
-    .lap:hover {
-      background: rgba(56,189,248,0.2);
     }
 
     .lap span:first-child {
       color: #38bdf8;
+    }
+
+    /* Share Buttons */
+    .share-buttons {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .share-buttons button {
+      background: linear-gradient(90deg, #22c55e, #16a34a);
+    }
+
+    .share-buttons button:nth-child(2) {
+      background: linear-gradient(90deg, #f59e0b, #f97316);
     }
 
     /* Stopwatch Features Section */
@@ -162,18 +175,18 @@
     footer strong {
       color: #38bdf8;
     }
+
   </style>
 </head>
+
 <body>
 
-  <!-- include header -->
   <%- include('include/_header') %>
-  <!-- /include header -->
 
-  <!-- Stopwatch Section -->
   <section class="stopwatch-container">
-    <h1>Advanced Stopwatch</h1>
+    <h1><i class="fa-solid fa-stopwatch"></i> Advanced Stopwatch</h1>
     <div class="display" id="display">00:00:00</div>
+
     <div class="buttons">
       <button id="startStopBtn"><i class="fa-solid fa-play"></i> Start</button>
       <button id="lapBtn" disabled><i class="fa-solid fa-flag"></i> Lap</button>
@@ -181,6 +194,11 @@
     </div>
 
     <div class="laps" id="laps"></div>
+
+    <div class="share-buttons">
+      <button id="downloadBtn"><i class="fa-solid fa-file-arrow-down"></i> Download Laps</button>
+      <button id="copyBtn"><i class="fa-solid fa-copy"></i> Copy to Clipboard</button>
+    </div>
   </section>
 
   <!-- Stopwatch Features Section -->
@@ -188,66 +206,59 @@
     <h2><i class="fa-solid fa-bolt"></i> Stopwatch Features</h2>
     <div class="features-grid">
       <div class="feature-card">
-        <div class="feature-icon"><i class="fa-solid fa-stopwatch"></i></div>
-        <h3>Accurate Time Tracking</h3>
-        <p>Experience second-perfect precision with modern JavaScript timing logic.</p>
+        <div class="feature-icon"><i class="fa-solid fa-clock"></i></div>
+        <h3>Accurate Timing</h3>
+        <p>Experience precision down to the millisecond with JavaScript-powered tracking.</p>
       </div>
-
       <div class="feature-card">
         <div class="feature-icon"><i class="fa-solid fa-flag-checkered"></i></div>
         <h3>Lap Recording</h3>
-        <p>Record multiple laps easily and see them in an auto-numbered list.</p>
+        <p>Save every lap seamlessly as you go — perfect for workouts or experiments.</p>
       </div>
-
       <div class="feature-card">
         <div class="feature-icon"><i class="fa-solid fa-pause-circle"></i></div>
         <h3>Pause & Resume</h3>
-        <p>Stop and resume your stopwatch anytime without losing your progress.</p>
+        <p>Stop and restart without losing your recorded time or laps.</p>
       </div>
-
       <div class="feature-card">
         <div class="feature-icon"><i class="fa-solid fa-mobile-screen"></i></div>
         <h3>Responsive Design</h3>
-        <p>Fully responsive across all devices — desktop, tablet, and mobile.</p>
+        <p>Optimized for all screens — from laptops to mobile devices.</p>
       </div>
-
       <div class="feature-card">
-        <div class="feature-icon"><i class="fa-solid fa-file-export"></i></div>
-        <h3>Export Option (Coming Soon)</h3>
-        <p>Save or export your lap records for workouts or research logs.</p>
+        <div class="feature-icon"><i class="fa-solid fa-share-nodes"></i></div>
+        <h3>Share & Export</h3>
+        <p>Instantly download or copy your lap list to share your progress.</p>
       </div>
-
       <div class="feature-card">
         <div class="feature-icon"><i class="fa-solid fa-gauge-high"></i></div>
         <h3>Performance Optimized</h3>
-        <p>Lightweight script ensures smooth and fast performance with minimal lag.</p>
+        <p>Lightweight and efficient, ensuring smooth functionality without lag.</p>
       </div>
     </div>
   </section>
 
-  <!-- include about -->
   <%- include('include/_about') %>
-  <!-- /include about --> 
-
-  <!-- include footer -->
   <%- include('include/_footer') %>
-  <!-- /include footer --> 
 
   <script>
     let startTime, updatedTime, difference, tInterval;
     let running = false;
     let lapCounter = 1;
+    let laps = [];
 
     const display = document.getElementById('display');
     const startStopBtn = document.getElementById('startStopBtn');
     const lapBtn = document.getElementById('lapBtn');
     const resetBtn = document.getElementById('resetBtn');
     const lapsContainer = document.getElementById('laps');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const copyBtn = document.getElementById('copyBtn');
 
     function startStop() {
       if (!running) {
         startTime = new Date().getTime() - (difference || 0);
-        tInterval = setInterval(getShowTime, 1000);
+        tInterval = setInterval(updateTime, 1000);
         startStopBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Stop';
         running = true;
         lapBtn.disabled = false;
@@ -267,21 +278,19 @@
       startStopBtn.innerHTML = '<i class="fa-solid fa-play"></i> Start';
       lapsContainer.innerHTML = '';
       lapCounter = 1;
+      laps = [];
       lapBtn.disabled = true;
     }
 
-    function getShowTime() {
+    function updateTime() {
       updatedTime = new Date().getTime();
       difference = updatedTime - startTime;
-
       let hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
       let minutes = Math.floor((difference / (1000 * 60)) % 60);
       let seconds = Math.floor((difference / 1000) % 60);
-
-      hours = (hours < 10) ? "0" + hours : hours;
-      minutes = (minutes < 10) ? "0" + minutes : minutes;
-      seconds = (seconds < 10) ? "0" + seconds : seconds;
-
+      hours = hours < 10 ? '0' + hours : hours;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      seconds = seconds < 10 ? '0' + seconds : seconds;
       display.innerHTML = `${hours}:${minutes}:${seconds}`;
     }
 
@@ -292,13 +301,33 @@
         lap.classList.add('lap');
         lap.innerHTML = `<span>Lap ${lapCounter++}</span><span>${lapTime}</span>`;
         lapsContainer.prepend(lap);
+        laps.unshift(lapTime);
       }
+    }
+
+    function downloadLaps() {
+      if (laps.length === 0) return alert("No laps to download yet!");
+      const content = laps.map((t, i) => `Lap ${laps.length - i}: ${t}`).join('\n');
+      const blob = new Blob([content], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'laps_record.txt';
+      link.click();
+    }
+
+    function copyLaps() {
+      if (laps.length === 0) return alert("No laps to copy!");
+      const text = laps.map((t, i) => `Lap ${laps.length - i}: ${t}`).join('\n');
+      navigator.clipboard.writeText(text)
+        .then(() => alert("Laps copied to clipboard ✅"))
+        .catch(() => alert("Failed to copy laps ❌"));
     }
 
     startStopBtn.addEventListener('click', startStop);
     resetBtn.addEventListener('click', reset);
     lapBtn.addEventListener('click', recordLap);
+    downloadBtn.addEventListener('click', downloadLaps);
+    copyBtn.addEventListener('click', copyLaps);
   </script>
-
 </body>
 </html>

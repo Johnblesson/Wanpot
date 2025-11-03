@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wanpot | Tech Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1rem;
+    }
+    .quiz-container {
+      width: 100%;
+      max-width: 600px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #38bdf8;
+    }
+    .question {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+    .options {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.8rem;
+    }
+    .option-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      color: #f8fafc;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .option-btn:hover {
+      background: rgba(56,189,248,0.2);
+      transform: translateY(-2px);
+    }
+    .option-btn.correct {
+      background: #22c55e;
+    }
+    .option-btn.wrong {
+      background: #ef4444;
+    }
+    .controls {
+      margin-top: 1.5rem;
+      text-align: right;
+    }
+    #next-btn, #restart-btn {
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      border: none;
+      padding: 0.8rem 1.6rem;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    #next-btn:hover, #restart-btn:hover {
+      transform: scale(1.05);
+    }
+    #score-section {
+      display: none;
+      text-align: center;
+      margin-top: 2rem;
+    }
+    #score {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1><i class="fa-solid fa-question"></i> Tech Quiz</h1>
+
+    <div id="quiz-area">
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
+      <div class="controls">
+        <button id="next-btn">Next</button>
+      </div>
+    </div>
+
+    <div id="score-section">
+      <p id="score"></p>
+      <button id="restart-btn">Try Again</button>
+    </div>
+  </div>
+
+  <script>
+    let questions = [];
+    let current = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const nextBtn = document.getElementById('next-btn');
+    const quizArea = document.getElementById('quiz-area');
+    const scoreSection = document.getElementById('score-section');
+    const scoreEl = document.getElementById('score');
+    const restartBtn = document.getElementById('restart-btn');
+
+    async function fetchQuiz() {
+      try {
+        const resp = await fetch('/data/questions.json');
+        questions = await resp.json();
+        shuffleArray(questions);
+        showQuestion();
+      } catch (err) {
+        console.error('Error loading questions:', err);
+        questionEl.textContent = 'Failed to load quiz.';
+      }
+    }
+
+    function showQuestion() {
+      const q = questions[current];
+      questionEl.textContent = q.question;
+      optionsEl.innerHTML = '';
+      const options = [...q.options];
+      shuffleArray(options);
+      options.forEach(option => {
+        const btn = document.createElement('button');
+        btn.classList.add('option-btn');
+        btn.textContent = option;
+        btn.onclick = () => selectAnswer(btn, option, q.answer);
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(button, option, correct) {
+      const btns = document.querySelectorAll('.option-btn');
+      btns.forEach(b => b.disabled = true);
+
+      if (option === correct) {
+        score++;
+        button.classList.add('correct');
+      } else {
+        button.classList.add('wrong');
+        btns.forEach(b => {
+          if (b.textContent === correct) b.classList.add('correct');
+        });
+      }
+    }
+
+    nextBtn.addEventListener('click', () => {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showScore();
+      }
+    });
+
+    function showScore() {
+      quizArea.style.display = 'none';
+      scoreSection.style.display = 'block';
+      scoreEl.textContent = `You scored ${score} / ${questions.length}`;
+    }
+
+    restartBtn.addEventListener('click', () => {
+      current = 0;
+      score = 0;
+      quizArea.style.display = 'block';
+      scoreSection.style.display = 'none';
+      fetchQuiz();
+    });
+
+    function shuffleArray(arr) {
+      for (let i = arr.length-1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i+1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    // Initialize
+    fetchQuiz();
+  </script>
+</body>
+</html>

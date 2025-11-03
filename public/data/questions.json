@@ -1,0 +1,102 @@
+[
+  {
+    "question": "What does CPU stand for?",
+    "options": ["Central Processing Unit", "Computer Personal Unit", "Central Program Unit", "Control Processing Unit"],
+    "answer": "Central Processing Unit"
+  },
+  {
+    "question": "Which programming language is primarily used for web development?",
+    "options": ["Python", "HTML", "C++", "Java"],
+    "answer": "HTML"
+  },
+  {
+    "question": "Which of the following is a NoSQL database?",
+    "options": ["MySQL", "MongoDB", "PostgreSQL", "SQLite"],
+    "answer": "MongoDB"
+  },
+  {
+    "question": "What does HTML stand for?",
+    "options": ["Hyper Text Markup Language", "High Tech Machine Language", "Hyperlink Text Markup Level", "Hyper Transfer Markup Language"],
+    "answer": "Hyper Text Markup Language"
+  },
+  {
+    "question": "Which company developed the Java programming language?",
+    "options": ["Microsoft", "Sun Microsystems", "Apple", "Google"],
+    "answer": "Sun Microsystems"
+  },
+  {
+    "question": "What is the main purpose of CSS?",
+    "options": ["Structure web pages", "Style web pages", "Add interactivity", "Store data"],
+    "answer": "Style web pages"
+  },
+  {
+    "question": "Which symbol is used for comments in JavaScript?",
+    "options": ["//", "/* */", "#", "<!-- -->"],
+    "answer": "//"
+  },
+  {
+    "question": "Which of these is a frontend JavaScript framework?",
+    "options": ["React", "Django", "Flask", "Laravel"],
+    "answer": "React"
+  },
+  {
+    "question": "Which of the following is not a programming language?",
+    "options": ["Python", "Java", "HTML", "C++"],
+    "answer": "HTML"
+  },
+  {
+    "question": "What is the extension for Python files?",
+    "options": [".py", ".pyt", ".pt", ".python"],
+    "answer": ".py"
+  },
+  {
+    "question": "Which protocol is used to securely browse the web?",
+    "options": ["HTTP", "FTP", "HTTPS", "SMTP"],
+    "answer": "HTTPS"
+  },
+  {
+    "question": "Which of these is a version control system?",
+    "options": ["Git", "Node.js", "NPM", "Docker"],
+    "answer": "Git"
+  },
+  {
+    "question": "Which HTML tag is used to create a link?",
+    "options": ["<a>", "<link>", "<href>", "<url>"],
+    "answer": "<a>"
+  },
+  {
+    "question": "What is the default port for HTTP?",
+    "options": ["80", "443", "21", "22"],
+    "answer": "80"
+  },
+  {
+    "question": "Which of these is used to style elements in HTML?",
+    "options": ["CSS", "JS", "SQL", "PHP"],
+    "answer": "CSS"
+  },
+  {
+    "question": "Which programming language is known for machine learning and data science?",
+    "options": ["Python", "Ruby", "C#", "PHP"],
+    "answer": "Python"
+  },
+  {
+    "question": "Which database is relational?",
+    "options": ["MongoDB", "MySQL", "Cassandra", "Firebase"],
+    "answer": "MySQL"
+  },
+  {
+    "question": "Which HTML element is used for headings?",
+    "options": ["<h1> to <h6>", "<p>", "<head>", "<title>"],
+    "answer": "<h1> to <h6>"
+  },
+  {
+    "question": "Which of the following is a JavaScript runtime environment?",
+    "options": ["Node.js", "React", "Angular", "Django"],
+    "answer": "Node.js"
+  },
+  {
+    "question": "Which symbol is used for multiplication in most programming languages?",
+    "options": ["*", "x", "×", "%"],
+    "answer": "*"
+  }
+]

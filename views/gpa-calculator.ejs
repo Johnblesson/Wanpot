@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wanpot | GPA Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+    .gpa-container {
+      width: 100%;
+      max-width: 600px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    h1 {
+      text-align: center;
+      color: #38bdf8;
+      margin-bottom: 1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+    th, td {
+      padding: 0.8rem;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    th {
+      background: rgba(56,189,248,0.3);
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255,255,255,0.1);
+      color: #f8fafc;
+      text-align: center;
+    }
+    input[type="number"]::placeholder {
+      color: #cbd5e1;
+    }
+    button {
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 0.3rem;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    #gpa-result {
+      text-align: center;
+      font-size: 1.4rem;
+      margin-top: 1rem;
+      color: #22c55e;
+    }
+    @media (max-width: 480px) {
+      .gpa-container {
+        padding: 1rem;
+      }
+      table, th, td {
+        font-size: 0.9rem;
+      }
+      button {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="gpa-container">
+    <h1>GPA Calculator 🎓</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Grade</th>
+          <th>Credit Unit</th>
+        </tr>
+      </thead>
+      <tbody id="courses-body">
+        <!-- Rows will be added dynamically -->
+      </tbody>
+    </table>
+
+    <button id="add-course">Add Course</button>
+    <button id="calculate-gpa">Calculate GPA</button>
+    <button id="reset-table">Reset</button>
+
+    <div id="gpa-result"></div>
+  </div>
+
+  <script>
+    const coursesBody = document.getElementById('courses-body');
+    const addCourseBtn = document.getElementById('add-course');
+    const calculateBtn = document.getElementById('calculate-gpa');
+    const resetBtn = document.getElementById('reset-table');
+    const gpaResult = document.getElementById('gpa-result');
+
+    const grades = [
+      { grade: 'A', point: 4.0 },
+      { grade: 'B', point: 3.0 },
+      { grade: 'C', point: 2.0 },
+      { grade: 'D', point: 1.0 },
+      { grade: 'F', point: 0.0 }
+    ];
+
+    function addCourseRow() {
+      const row = document.createElement('tr');
+
+      // Course name
+      const courseTd = document.createElement('td');
+      const courseInput = document.createElement('input');
+      courseInput.type = 'text';
+      courseInput.placeholder = 'Course name';
+      courseTd.appendChild(courseInput);
+      row.appendChild(courseTd);
+
+      // Grade
+      const gradeTd = document.createElement('td');
+      const gradeSelect = document.createElement('select');
+      grades.forEach(g => {
+        const opt = document.createElement('option');
+        opt.value = g.point;
+        opt.textContent = g.grade;
+        gradeSelect.appendChild(opt);
+      });
+      gradeTd.appendChild(gradeSelect);
+      row.appendChild(gradeTd);
+
+      // Credit
+      const creditTd = document.createElement('td');
+      const creditInput = document.createElement('input');
+      creditInput.type = 'number';
+      creditInput.min = 0;
+      creditInput.placeholder = 'Unit';
+      creditTd.appendChild(creditInput);
+      row.appendChild(creditTd);
+
+      coursesBody.appendChild(row);
+    }
+
+    addCourseBtn.addEventListener('click', addCourseRow);
+
+    calculateBtn.addEventListener('click', () => {
+      const rows = coursesBody.querySelectorAll('tr');
+      let totalPoints = 0;
+      let totalUnits = 0;
+
+      rows.forEach(row => {
+        const grade = parseFloat(row.cells[1].querySelector('select').value);
+        const credit = parseFloat(row.cells[2].querySelector('input').value);
+        if (!isNaN(grade) && !isNaN(credit)) {
+          totalPoints += grade * credit;
+          totalUnits += credit;
+        }
+      });
+
+      if (totalUnits === 0) {
+        gpaResult.textContent = "Enter valid grades and credits!";
+      } else {
+        const gpa = (totalPoints / totalUnits).toFixed(2);
+        gpaResult.textContent = `Your GPA is: ${gpa}`;
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      coursesBody.innerHTML = '';
+      gpaResult.textContent = '';
+    });
+
+    // Add initial row
+    addCourseRow();
+  </script>
+
+</body>
+</html>

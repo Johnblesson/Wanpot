@@ -29,4 +29,20 @@ router.get("/password-generator", (req, res) => {
     res.render("password-generator");
 });
 
+// Qrcode generator route
+router.get("/qrcode-generator", (req, res) => {
+    res.render("qr-code");
+}); 
+
+// Note keepeer route
+router.get("/note-keeper", (req, res) => {
+    res.render("note-keeper");
+});
+
+// Gpa Calculator route
+router.get("/gpa-calculator", (req, res) => {
+    res.render("gpa-calculator");
+});
+
+// Export the router
 export default router;

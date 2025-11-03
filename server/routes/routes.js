@@ -19,4 +19,11 @@ router.get("/quiz", (req, res) => {
     res.render("quiz");
 })
 
+// typing-game route
+router.get("/typing-game", (req, res) => {
+    res.render("typing-game");
+});
+
+// 
+
 export default router;

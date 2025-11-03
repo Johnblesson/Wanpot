@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Typing Game | Wanpot</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #2196f3;
+      color: white;
+      text-align: center;
+      padding: 1rem 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .typing-container {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 700px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    h2 {
+      color: #2196f3;
+      margin-bottom: 1rem;
+    }
+
+    select, button {
+      padding: 0.8rem 1rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      margin: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    select {
+      background: #e3f2fd;
+    }
+
+    button {
+      background: #2196f3;
+      color: white;
+    }
+
+    button:hover {
+      background: #1976d2;
+    }
+
+    #text-display {
+      margin: 2rem 0;
+      font-size: 1.2rem;
+      background: #f9f9f9;
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: left;
+      line-height: 1.8;
+      border: 1px solid #ddd;
+      min-height: 100px;
+    }
+
+    #text-input {
+      width: 90%;
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      outline: none;
+      resize: none;
+      height: 120px;
+    }
+
+    #stats {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+
+    #stats p {
+      margin: 0.3rem 0;
+      background: #e3f2fd;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      flex: 1;
+      text-align: center;
+      margin: 0.3rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #2196f3;
+      color: white;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      #stats {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>⌨️ Typing Game | Wanpot</header>
+  <main>
+    <div class="typing-container">
+      <h2>Sharpen Your Typing Skills</h2>
+      <p>Select a difficulty and test your speed & accuracy!</p>
+
+      <div>
+        <select id="mode">
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+        <button id="start-btn">Start Game</button>
+      </div>
+
+      <div id="text-display"></div>
+
+      <textarea id="text-input" placeholder="Start typing here..." disabled></textarea>
+
+      <div id="stats">
+        <p>⏱ Time: <span id="time">0</span>s</p>
+        <p>⚡ WPM: <span id="wpm">0</span></p>
+        <p>🎯 Accuracy: <span id="accuracy">0</span>%</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 Wanpot | Built by <b>Kharis Pro Tech</b> with ❤️ in Sierra Leone | Empowering Productivity Everywhere</p>
+  </footer>
+
+  <script>
+    const textDisplay = document.getElementById("text-display");
+    const textInput = document.getElementById("text-input");
+    const startBtn = document.getElementById("start-btn");
+    const modeSelect = document.getElementById("mode");
+    const timeEl = document.getElementById("time");
+    const wpmEl = document.getElementById("wpm");
+    const accEl = document.getElementById("accuracy");
+
+    let startTime, timer, correctChars = 0, totalChars = 0;
+
+    async function loadText(mode) {
+      const res = await fetch("/typing-texts.json");
+      const data = await res.json();
+      const texts = data[mode];
+      return texts[Math.floor(Math.random() * texts.length)];
+    }
+
+    function calculateWPM(time, correctWords) {
+      return Math.round((correctWords / time) * 60);
+    }
+
+    function startTimer() {
+      startTime = new Date();
+      timer = setInterval(() => {
+        const elapsed = Math.floor((new Date() - startTime) / 1000);
+        timeEl.textContent = elapsed;
+      }, 1000);
+    }
+
+    async function startGame() {
+      const mode = modeSelect.value;
+      const text = await loadText(mode);
+      textDisplay.textContent = text;
+      textInput.value = "";
+      textInput.disabled = false;
+      textInput.focus();
+      correctChars = 0;
+      totalChars = text.length;
+      clearInterval(timer);
+      timeEl.textContent = 0;
+      wpmEl.textContent = 0;
+      accEl.textContent = 0;
+      startTimer();
+    }
+
+    textInput.addEventListener("input", () => {
+      const text = textDisplay.textContent;
+      const input = textInput.value;
+      let correct = 0;
+
+      for (let i = 0; i < input.length; i++) {
+        if (input[i] === text[i]) correct++;
+      }
+
+      correctChars = correct;
+      const elapsedTime = Math.max((new Date() - startTime) / 1000 / 60, 1 / 60);
+      const wpm = calculateWPM(elapsedTime, correct / 5);
+      const accuracy = Math.round((correct / input.length) * 100) || 0;
+
+      wpmEl.textContent = wpm;
+      accEl.textContent = accuracy;
+
+      if (input === text) {
+        clearInterval(timer);
+        alert(`🎉 Great job!\nTime: ${timeEl.textContent}s\nWPM: ${wpm}\nAccuracy: ${accuracy}%`);
+        textInput.disabled = true;
+      }
+    });
+
+    startBtn.addEventListener("click", startGame);
+  </script>
+</body>
+</html>

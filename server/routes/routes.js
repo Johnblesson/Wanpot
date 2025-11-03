@@ -24,6 +24,9 @@ router.get("/typing-game", (req, res) => {
     res.render("typing-game");
 });
 
-// 
+// password-generator route
+router.get("/password-generator", (req, res) => {
+    res.render("password-generator");
+});
 
 export default router;

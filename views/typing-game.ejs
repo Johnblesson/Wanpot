@@ -38,7 +38,7 @@
       border-radius: 20px;
       padding: 2rem;
       width: 90%;
-      max-width: 700px;
+      max-width: 750px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       text-align: center;
       margin-top: 3rem;
@@ -49,7 +49,7 @@
       margin-bottom: 1rem;
     }
 
-    select, button {
+    select, button, input {
       padding: 0.8rem 1rem;
       border: none;
       border-radius: 10px;
@@ -70,6 +70,12 @@
 
     button:hover {
       background: #1976d2;
+    }
+
+    input {
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+      width: 60%;
     }
 
     #text-display {
@@ -113,6 +119,37 @@
       margin: 0.3rem;
     }
 
+    .leaderboard {
+      margin-top: 2rem;
+      text-align: left;
+    }
+
+    .leaderboard h3 {
+      color: #2196f3;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .leaderboard table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #f9f9f9;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .leaderboard th, .leaderboard td {
+      padding: 0.7rem;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    .leaderboard th {
+      background: #e3f2fd;
+      color: #333;
+    }
+
     footer {
       text-align: center;
       padding: 1rem;
@@ -126,6 +163,43 @@
         flex-direction: column;
       }
     }
+
+    /* 🔹 Responsive Design */
+    @media (max-width: 768px) {
+      .game-container {
+        width: 90%;
+        padding: 20px;
+      }
+
+      .word-display {
+        font-size: 1.6rem;
+      }
+
+      input {
+        width: 90%;
+        font-size: 1rem;
+      }
+
+      select, button {
+        width: 100%;
+        margin: 5px 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        font-size: 1.2rem;
+        padding: 10px 0;
+      }
+
+      .word-display {
+        font-size: 1.4rem;
+      }
+
+      .stats {
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -133,7 +207,7 @@
   <main>
     <div class="typing-container">
       <h2>Sharpen Your Typing Skills</h2>
-      <p>Select a difficulty and test your speed & accuracy!</p>
+      <p>Select a difficulty and test your typing speed!</p>
 
       <div>
         <select id="mode">
@@ -153,6 +227,24 @@
         <p>⚡ WPM: <span id="wpm">0</span></p>
         <p>🎯 Accuracy: <span id="accuracy">0</span>%</p>
       </div>
+
+      <div class="leaderboard">
+        <h3>🏆 Top Typists</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Mode</th>
+              <th>WPM</th>
+              <th>Accuracy</th>
+              <th>Time (s)</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <tr><td colspan="5">No records yet</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </main>
 
@@ -168,8 +260,9 @@
     const timeEl = document.getElementById("time");
     const wpmEl = document.getElementById("wpm");
     const accEl = document.getElementById("accuracy");
+    const leaderboardBody = document.getElementById("leaderboard-body");
 
-    let startTime, timer, correctChars = 0, totalChars = 0;
+    let startTime, timer, correctChars = 0, totalChars = 0, currentText = "";
 
     async function loadText(mode) {
       const res = await fetch("/typing-texts.json");
@@ -192,13 +285,13 @@
 
     async function startGame() {
       const mode = modeSelect.value;
-      const text = await loadText(mode);
-      textDisplay.textContent = text;
+      currentText = await loadText(mode);
+      textDisplay.textContent = currentText;
       textInput.value = "";
       textInput.disabled = false;
       textInput.focus();
       correctChars = 0;
-      totalChars = text.length;
+      totalChars = currentText.length;
       clearInterval(timer);
       timeEl.textContent = 0;
       wpmEl.textContent = 0;
@@ -206,13 +299,30 @@
       startTimer();
     }
 
+    function saveToLeaderboard(name, mode, wpm, accuracy, time) {
+      const record = { name, mode, wpm, accuracy, time };
+      const records = JSON.parse(localStorage.getItem("typingLeaderboard") || "[]");
+      records.push(record);
+      records.sort((a, b) => b.wpm - a.wpm);
+      localStorage.setItem("typingLeaderboard", JSON.stringify(records.slice(0, 5)));
+      loadLeaderboard();
+    }
+
+    function loadLeaderboard() {
+      const records = JSON.parse(localStorage.getItem("typingLeaderboard") || "[]");
+      leaderboardBody.innerHTML = records.length
+        ? records.map(r =>
+          `<tr><td>${r.name}</td><td>${r.mode}</td><td>${r.wpm}</td><td>${r.accuracy}%</td><td>${r.time}</td></tr>`
+        ).join("")
+        : `<tr><td colspan="5">No records yet</td></tr>`;
+    }
+
     textInput.addEventListener("input", () => {
-      const text = textDisplay.textContent;
       const input = textInput.value;
       let correct = 0;
 
       for (let i = 0; i < input.length; i++) {
-        if (input[i] === text[i]) correct++;
+        if (input[i] === currentText[i]) correct++;
       }
 
       correctChars = correct;
@@ -223,14 +333,19 @@
       wpmEl.textContent = wpm;
       accEl.textContent = accuracy;
 
-      if (input === text) {
+      if (input === currentText) {
         clearInterval(timer);
-        alert(`🎉 Great job!\nTime: ${timeEl.textContent}s\nWPM: ${wpm}\nAccuracy: ${accuracy}%`);
+        const totalTime = timeEl.textContent;
+        const name = prompt("🎉 Great job! Enter your name for the leaderboard:");
+        if (name) saveToLeaderboard(name, modeSelect.value, wpm, accuracy, totalTime);
         textInput.disabled = true;
       }
     });
 
     startBtn.addEventListener("click", startGame);
+
+    // Initialize leaderboard
+    loadLeaderboard();
   </script>
 </body>
 </html>

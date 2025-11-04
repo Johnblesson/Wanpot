@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wanpot | Dictionary & Word Finder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+
+    .dictionary-container {
+      width: 100%;
+      max-width: 700px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      text-align: center;
+      color: #38bdf8;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    input {
+      flex: 1;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #f8fafc;
+      font-size: 1rem;
+    }
+
+    input::placeholder {
+      color: #cbd5e1;
+    }
+
+    button {
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      border: none;
+      padding: 0.8rem 1.4rem;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .result {
+      background: rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 1rem;
+      line-height: 1.6;
+      margin-top: 1rem;
+    }
+
+    .word-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .word {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+
+    .phonetic {
+      font-style: italic;
+      color: #94a3b8;
+      margin-top: 0.3rem;
+    }
+
+    .definition {
+      margin-top: 1rem;
+    }
+
+    .part-of-speech {
+      font-weight: 600;
+      color: #22c55e;
+      margin-bottom: 0.5rem;
+    }
+
+    .example {
+      font-style: italic;
+      color: #94a3b8;
+      margin-top: 0.4rem;
+    }
+
+    .synonyms, .antonyms {
+      margin-top: 0.8rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.2);
+      color: #38bdf8;
+      border-radius: 8px;
+      padding: 0.2rem 0.6rem;
+      margin: 0.2rem;
+      font-size: 0.9rem;
+    }
+
+    .voice-btn {
+      background: none;
+      border: none;
+      color: #38bdf8;
+      cursor: pointer;
+      font-size: 1.4rem;
+      margin-left: 0.5rem;
+    }
+
+    @media (max-width: 480px) {
+      .dictionary-container {
+        padding: 1rem;
+      }
+      input, button {
+        font-size: 0.9rem;
+        padding: 0.7rem;
+      }
+      .word {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dictionary-container">
+    <h1><i class="fas fa-book-open"></i> Dictionary & Word Finder</h1>
+
+    <div class="search-box">
+      <input type="text" id="wordInput" placeholder="Enter a word e.g., innovation" />
+      <button id="searchBtn">Search</button>
+    </div>
+
+    <div class="result" id="result">
+      <p>Type a word and click <b>Search</b> to get its definition, pronunciation, synonyms, and antonyms.</p>
+    </div>
+  </div>
+
+  <script>
+    const searchBtn = document.getElementById('searchBtn');
+    const wordInput = document.getElementById('wordInput');
+    const resultDiv = document.getElementById('result');
+
+    searchBtn.addEventListener('click', searchWord);
+    wordInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') searchWord();
+    });
+
+    async function searchWord() {
+      const word = wordInput.value.trim();
+      if (!word) {
+        resultDiv.innerHTML = "<p>Please enter a word to search.</p>";
+        return;
+      }
+
+      resultDiv.innerHTML = "<p>Loading...</p>";
+
+      try {
+        const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+        if (!res.ok) throw new Error("Word not found");
+        const data = await res.json();
+        displayResult(data[0]);
+      } catch (err) {
+        resultDiv.innerHTML = `<p style="color:#ef4444;">Word not found or no internet connection.</p>`;
+      }
+    }
+
+    function displayResult(data) {
+      const meanings = data.meanings.map(m => `
+        <div class="definition">
+          <div class="part-of-speech">${m.partOfSpeech}</div>
+          ${m.definitions.map(d => `
+            <p>• ${d.definition}</p>
+            ${d.example ? `<p class="example">"${d.example}"</p>` : ''}
+          `).join('')}
+          ${m.synonyms && m.synonyms.length > 0 ? 
+            `<div class="synonyms"><strong>Synonyms:</strong> ${m.synonyms.map(s => `<span class="badge">${s}</span>`).join('')}</div>` : ''}
+          ${m.antonyms && m.antonyms.length > 0 ? 
+            `<div class="antonyms"><strong>Antonyms:</strong> ${m.antonyms.map(a => `<span class="badge">${a}</span>`).join('')}</div>` : ''}
+        </div>
+      `).join('');
+
+      const phoneticText = data.phonetics?.[0]?.text || '';
+      const audio = data.phonetics?.find(p => p.audio)?.audio || '';
+
+      resultDiv.innerHTML = `
+        <div class="word-header">
+          <div class="word">${data.word}</div>
+          ${audio ? `<button class="voice-btn" onclick="playAudio('${audio}')"><i class='fa-solid fa-volume-high'></i></button>` : ''}
+        </div>
+        ${phoneticText ? `<div class="phonetic">${phoneticText}</div>` : ''}
+        ${meanings}
+      `;
+    }
+
+    function playAudio(audioUrl) {
+      const audio = new Audio(audioUrl);
+      audio.play();
+    }
+  </script>
+</body>
+</html>

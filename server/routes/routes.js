@@ -44,5 +44,10 @@ router.get("/gpa-calculator", (req, res) => {
     res.render("gpa-calculator");
 });
 
+// Dictionary route
+router.get("/dictionary", (req, res) => {
+    res.render("dictionary");
+});
+
 // Export the router
 export default router;

@@ -49,5 +49,20 @@ router.get("/dictionary", (req, res) => {
     res.render("dictionary");
 });
 
+// Unit Converter route
+router.get("/unit-converter", (req, res) => {
+    res.render("unit-converter");
+});
+
+// flashcards route
+router.get("/flashcards", (req, res) => {
+    res.render("flashcards");
+});
+
+// equation-solver route
+router.get("/equation-solver", (req, res) => {
+    res.render("equation-solver");
+});
+
 // Export the router
 export default router;

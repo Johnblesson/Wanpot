@@ -7,222 +7,237 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #0f172a, #1e293b);
       color: #f8fafc;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      margin: 0;
-      padding: 2rem 1rem;
+      overflow-x: hidden;
     }
 
-    .dictionary-container {
+    header {
+      position: fixed;
+      top: 0;
       width: 100%;
-      max-width: 700px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
-      padding: 2rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
-    h1 {
-      text-align: center;
-      color: #38bdf8;
-      margin-bottom: 1.5rem;
-    }
-
-    .search-box {
-      display: flex;
-      gap: 0.8rem;
-      margin-bottom: 1.5rem;
-    }
-
-    input {
-      flex: 1;
-      padding: 0.8rem;
-      border: none;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      color: #f8fafc;
-      font-size: 1rem;
-    }
-
-    input::placeholder {
-      color: #cbd5e1;
-    }
-
-    button {
-      background: linear-gradient(90deg, #3b82f6, #06b6d4);
-      border: none;
-      padding: 0.8rem 1.4rem;
-      border-radius: 8px;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    button:hover {
-      transform: scale(1.05);
-    }
-
-    .result {
-      background: rgba(255,255,255,0.07);
-      border-radius: 10px;
-      padding: 1rem;
-      line-height: 1.6;
-      margin-top: 1rem;
-    }
-
-    .word-header {
+    .navbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
     }
 
-    .word {
-      font-size: 1.5rem;
+    .logo {
+      font-size: 1.7rem;
       font-weight: 700;
-      color: #38bdf8;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    .phonetic {
-      font-style: italic;
-      color: #94a3b8;
-      margin-top: 0.3rem;
-    }
-
-    .definition {
-      margin-top: 1rem;
-    }
-
-    .part-of-speech {
-      font-weight: 600;
-      color: #22c55e;
-      margin-bottom: 0.5rem;
-    }
-
-    .example {
-      font-style: italic;
-      color: #94a3b8;
-      margin-top: 0.4rem;
-    }
-
-    .synonyms, .antonyms {
-      margin-top: 0.8rem;
-    }
-
-    .badge {
-      display: inline-block;
-      background: rgba(56, 189, 248, 0.2);
-      color: #38bdf8;
-      border-radius: 8px;
-      padding: 0.2rem 0.6rem;
-      margin: 0.2rem;
-      font-size: 0.9rem;
-    }
-
-    .voice-btn {
-      background: none;
-      border: none;
-      color: #38bdf8;
-      cursor: pointer;
-      font-size: 1.4rem;
-      margin-left: 0.5rem;
-    }
-
-    .history {
-      margin-top: 1rem;
-      background: rgba(255,255,255,0.07);
-      border-radius: 10px;
-      padding: 1rem;
-    }
-
-    .history h3 {
-      margin: 0 0 0.5rem 0;
-      color: #06b6d4;
-    }
-
-    .history-list {
+    nav ul {
+      list-style: none;
       display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 1.5rem;
     }
 
-    .history-item {
-      background: rgba(56,189,248,0.2);
-      color: #38bdf8;
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
+    nav ul li a {
+      text-decoration: none;
+      color: #f1f5f9;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover { color: #38bdf8; }
+
+    .menu-toggle { display: none; font-size: 1.8rem; cursor: pointer; color: #fff; }
+
+    /* HERO SECTION */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      min-height: 70vh;
+      background: radial-gradient(circle at 30% 50%, rgba(59,130,246,0.3), transparent 70%),
+                  radial-gradient(circle at 70% 60%, rgba(6,182,212,0.3), transparent 70%);
+      padding: 2rem 1rem;
+      margin-top: 70px;
+    }
+
+    .hero h1 { font-size: 2.6rem; max-width: 700px; margin-bottom: 1rem; line-height: 1.3; }
+    .hero p { color: #cbd5e1; max-width: 650px; margin-bottom: 2rem; font-size: 1.1rem; }
+    .hero .cta-btn {
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      padding: 0.9rem 2rem;
+      border-radius: 50px;
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .hero .cta-btn:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(6,182,212,0.4); }
+
+    /* FEATURES */
+    .features {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 1rem;
+    }
+    .features h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      transition: 0.4s;
+    }
+    .feature-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
+    .feature-icon { font-size: 2.3rem; margin-bottom: 1rem; color: #38bdf8; }
+    .feature-card h3 { margin-bottom: 0.5rem; font-weight: 600; }
+    .feature-card p { color: #94a3b8; font-size: 0.95rem; }
+
+    /* DICTIONARY SECTION */
+    .dictionary-container {
+      max-width: 800px;
+      margin: 4rem auto;
+      padding: 2rem 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+    }
+
+    .dictionary-container h1 { text-align:center; margin-bottom: 1.5rem; color:#38bdf8; }
+    .search-box { display:flex; gap:0.8rem; margin-bottom:1.5rem; }
+    .search-box input {
+      flex:1; padding:0.8rem; border:none; border-radius:8px; background: rgba(255,255,255,0.1); color:#f8fafc;
+    }
+    .search-box input::placeholder { color:#cbd5e1; }
+    .search-box button {
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      border:none; padding:0.8rem 1.4rem; border-radius:8px; color:#fff; font-weight:600; cursor:pointer;
       transition: transform 0.2s;
     }
+    .search-box button:hover { transform: scale(1.05); }
 
-    .history-item:hover {
-      transform: scale(1.05);
+    .result {
+      background: rgba(255,255,255,0.07); border-radius:10px; padding:1rem; line-height:1.6; margin-top:1rem;
+    }
+    .word-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+    .word { font-size:1.5rem; font-weight:700; color:#38bdf8; }
+    .phonetic { font-style:italic; color:#94a3b8; margin-top:0.3rem; }
+    .definition { margin-top:1rem; }
+    .part-of-speech { font-weight:600; color:#22c55e; margin-bottom:0.5rem; }
+    .example { font-style:italic; color:#94a3b8; margin-top:0.4rem; }
+    .synonyms, .antonyms { margin-top:0.8rem; }
+    .badge { display:inline-block; background: rgba(56,189,248,0.2); color:#38bdf8; border-radius:8px; padding:0.2rem 0.6rem; margin:0.2rem; font-size:0.9rem; }
+    .voice-btn { background:none; border:none; color:#38bdf8; cursor:pointer; font-size:1.4rem; margin-left:0.5rem; }
+
+    .history { margin-top:1rem; background: rgba(255,255,255,0.07); border-radius:10px; padding:1rem; }
+    .history h3 { margin:0 0 0.5rem 0; color:#06b6d4; }
+    .history-list { display:flex; flex-wrap:wrap; gap:0.5rem; }
+    .history-item { background: rgba(56,189,248,0.2); color:#38bdf8; padding:0.3rem 0.6rem; border-radius:6px; cursor:pointer; font-size:0.9rem; transition: transform 0.2s; }
+    .history-item:hover { transform:scale(1.05); }
+    .clear-history { margin-top:0.8rem; background:#ef4444; color:white; border:none; border-radius:6px; padding:0.5rem 1rem; cursor:pointer; transition:transform 0.2s; }
+    .clear-history:hover { transform:scale(1.05); }
+
+    /* ABOUT */
+    .about { text-align:center; background: linear-gradient(90deg, #1e3a8a, #2563eb); padding:3rem 1rem; border-top:1px solid rgba(255,255,255,0.1); color:#f8fafc; }
+    .about h2 { margin-bottom:1rem; }
+    .about p { max-width:700px; margin:0 auto; color:#e2e8f0; }
+
+    /* FOOTER */
+    footer { text-align:center; padding:2rem 1rem; background:#0f172a; color:#64748b; font-size:0.9rem; }
+
+    @media (max-width: 768px) {
+      nav ul { display:none; flex-direction:column; position:absolute; right:20px; top:70px; width:200px; background:rgba(15,23,42,0.9); border-radius:10px; padding:1rem; }
+      nav ul.active { display:flex; }
+      .menu-toggle { display:block; }
+      .hero h1 { font-size:2.1rem; }
     }
 
-    .clear-history {
-      margin-top: 0.8rem;
-      background: #ef4444;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .clear-history:hover {
-      transform: scale(1.05);
-    }
-
-    @media (max-width: 480px) {
-      .dictionary-container {
-        padding: 1rem;
-      }
-      input, button {
-        font-size: 0.9rem;
-        padding: 0.7rem;
-      }
-      .word {
-        font-size: 1.3rem;
-      }
-    }
   </style>
 </head>
 <body>
-  <div class="dictionary-container">
-    <h1><i class="fas fa-book-open"></i> Dictionary & Word Finder</h1>
+  <header>
+    <div class="navbar">
+      <div class="logo">Wanpot</div>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#dictionary">Dictionary</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+      </nav>
+      <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    </div>
+  </header>
 
+  <!-- <section class="hero" id="home">
+    <h1>One App, Many Tools — Welcome to <span style="color:#38bdf8;">Wanpot</span></h1>
+    <p>The all-in-one smart application designed to simplify student life, empower professionals, and make daily productivity effortless — everything in one pot!</p>
+    <a href="#features" class="cta-btn">Discover Features</a>
+  </section> -->
+
+  <section class="features" id="features">
+    <!-- <h2>What's Inside the Pot 🍲</h2> -->
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📖</div>
+        <h3>Dictionary & Word Finder</h3>
+        <p>English dictionary and synonyms at your fingertips.</p>
+      </div>
+      <!-- Include other features here -->
+    </div>
+  </section>
+
+  <section class="dictionary-container" id="dictionary">
+    <h1><i class="fas fa-book-open"></i> Dictionary & Word Finder</h1>
     <div class="search-box">
       <input type="text" id="wordInput" placeholder="Enter a word e.g., innovation" />
       <button id="searchBtn">Search</button>
     </div>
-
     <div class="result" id="result">
       <p>Type a word and click <b>Search</b> to get its definition, pronunciation, synonyms, and antonyms.</p>
     </div>
-
     <div class="history" id="history">
       <h3>Search History</h3>
       <div class="history-list" id="historyList"></div>
       <button class="clear-history" id="clearHistoryBtn">Clear History</button>
     </div>
-  </div>
+  </section>
+
+  <section class="about" id="about">
+    <h2>The Wanpot Philosophy</h2>
+    <p>In Sierra Leone, “Wanpot” means putting everything in one pot — and that’s exactly what this app does. We blend tools for learning, productivity, creativity, and life management — all served hot in one digital experience!</p>
+  </section>
+
+  <footer>
+    <p>© 2025 Wanpot | Built with ❤️ in Sierra Leone by <strong>Kharis Pro Tech</strong> | Empowering Productivity Everywhere</p>
+  </footer>
 
   <script>
+    function toggleMenu() { document.querySelector('nav ul').classList.toggle('active'); }
+
     const searchBtn = document.getElementById('searchBtn');
     const wordInput = document.getElementById('wordInput');
     const resultDiv = document.getElementById('result');
     const historyList = document.getElementById('historyList');
     const clearHistoryBtn = document.getElementById('clearHistoryBtn');
-
     let searchHistory = JSON.parse(localStorage.getItem('dictionaryHistory')) || [];
 
     searchBtn.addEventListener('click', searchWord);

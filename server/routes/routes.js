@@ -69,5 +69,10 @@ router.get("/pomodoro", (req, res) => {
     res.render("pomodoro");
 });
 
+// Email Signature Generator
+router.get("/signature-generator", (req, res) => {
+    res.render("signature-generator");
+});
+
 // Export the router
 export default router;

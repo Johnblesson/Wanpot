@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pomodoro Timer - Wanpot</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wanpot - Pomodoro Timer</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -19,7 +19,6 @@
       overflow-x: hidden;
     }
 
-    /* HEADER */
     header {
       position: fixed;
       top: 0;
@@ -71,52 +70,49 @@
       color: #fff;
     }
 
-    /* MAIN CONTENT */
-    main {
+    .container {
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      padding-top: 100px;
+      align-items: center;
       text-align: center;
+      padding: 2rem 1rem;
+      background: radial-gradient(circle at 30% 50%, rgba(59,130,246,0.3), transparent 70%),
+                  radial-gradient(circle at 70% 60%, rgba(6,182,212,0.3), transparent 70%);
     }
 
     h1 {
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-      background: linear-gradient(90deg, #3b82f6, #06b6d4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: 2.3rem;
+      margin-bottom: 1rem;
+      color: #38bdf8;
     }
 
-    .timer {
-      width: 200px;
-      height: 200px;
-      border: 8px solid rgba(59,130,246,0.5);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
+    #timer {
+      font-size: 5rem;
+      margin: 1rem 0;
       font-weight: 600;
-      color: #38bdf8;
-      margin-bottom: 2rem;
+    }
+
+    #modeText {
+      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+      color: #cbd5e1;
     }
 
     .controls {
       display: flex;
       gap: 1rem;
-      justify-content: center;
+      margin-top: 1rem;
     }
 
     button {
-      padding: 0.8rem 1.5rem;
-      border: none;
-      border-radius: 25px;
       background: linear-gradient(90deg, #3b82f6, #06b6d4);
-      color: #fff;
+      border: none;
+      color: white;
       font-weight: 600;
+      padding: 0.8rem 1.6rem;
+      border-radius: 50px;
       cursor: pointer;
       transition: 0.3s;
     }
@@ -128,6 +124,7 @@
 
     .settings {
       margin-top: 2rem;
+      color: #cbd5e1;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -135,47 +132,78 @@
     }
 
     .settings input {
-      width: 60px;
+      width: 80px;
       padding: 0.3rem;
-      border: none;
+      border: 1px solid rgba(255,255,255,0.2);
       border-radius: 5px;
+      background: rgba(255,255,255,0.05);
+      color: #f8fafc;
       text-align: center;
     }
 
-    .mode {
-      margin-top: 1rem;
-      font-size: 1.1rem;
-      color: #94a3b8;
+    /* MODAL */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.6);
+      z-index: 999;
     }
 
-    /* ABOUT SECTION */
+    .modal-content {
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      max-width: 350px;
+      box-shadow: 0 0 20px rgba(6,182,212,0.4);
+      animation: popUp 0.4s ease;
+    }
+
+    @keyframes popUp {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-content h3 {
+      color: #38bdf8;
+      margin-bottom: 1rem;
+    }
+
+    .modal-content p {
+      color: #e2e8f0;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-content button {
+      background: linear-gradient(90deg, #06b6d4, #3b82f6);
+    }
+
+    /* ABOUT */
     .about {
       text-align: center;
       background: linear-gradient(90deg, #1e3a8a, #2563eb);
       padding: 3rem 1rem;
       border-top: 1px solid rgba(255,255,255,0.1);
       color: #f8fafc;
-      margin-top: 4rem;
     }
 
     .about h2 {
       margin-bottom: 1rem;
     }
 
-    .about p {
-      max-width: 700px;
-      margin: 0 auto;
-      color: #e2e8f0;
-    }
-
-    /* FOOTER */
     footer {
       text-align: center;
       padding: 2rem 1rem;
       background: #0f172a;
       color: #64748b;
       font-size: 0.9rem;
-      border-top: 1px solid rgba(255,255,255,0.05);
     }
 
     @media (max-width: 768px) {
@@ -202,26 +230,24 @@
   </style>
 </head>
 <body>
-  <!-- HEADER -->
   <header>
     <div class="navbar">
       <div class="logo">Wanpot</div>
       <nav>
         <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#pomodoro">Pomodoro</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#download">Download</a></li>
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#about">About</a></li>
         </ul>
       </nav>
       <div class="menu-toggle" onclick="toggleMenu()">☰</div>
     </div>
   </header>
 
-  <!-- MAIN -->
-  <main id="pomodoro">
+  <section class="container">
     <h1>Pomodoro Timer ⏱️</h1>
-    <div class="timer" id="timer">25:00</div>
+    <div id="timer">25:00</div>
+    <p id="modeText">Focus Mode 🔥</p>
 
     <div class="controls">
       <button id="start">Start</button>
@@ -230,96 +256,111 @@
     </div>
 
     <div class="settings">
-      <label>Work (min): <input type="number" id="workTime" value="25" min="1"></label>
-      <label>Break (min): <input type="number" id="breakTime" value="5" min="1"></label>
+      <label>Work (mins): <input type="number" id="workTime" value="25" min="1"></label>
+      <label>Break (mins): <input type="number" id="breakTime" value="5" min="1"></label>
     </div>
-
-    <div class="mode" id="modeText">Focus Mode 🔥</div>
-  </main>
-
-  <!-- ABOUT SECTION -->
-  <section class="about" id="about">
-    <h2>The Wanpot Philosophy</h2>
-    <p>In Sierra Leone, “Wanpot” means putting everything in one pot — and that’s exactly what this app does. We blend tools for learning, productivity, creativity, and life management — all served hot in one digital experience!</p>
   </section>
 
-  <!-- FOOTER -->
+  <section class="about">
+    <h2>Why Pomodoro?</h2>
+    <p>The Pomodoro technique boosts focus by splitting work into timed sessions with short breaks in between. Wanpot helps you stay sharp, productive, and stress-free while you study or work!</p>
+  </section>
+
   <footer>
-    <p>© 2025 Wanpot | Built with ❤️ in Sierra Leone by <strong>Kharis Pro Tech</strong> | Empowering Productivity Everywhere</p>
+    <p>© 2025 Wanpot | Built with ❤️ in Sierra Leone by <strong>Kharis Pro Tech</strong></p>
   </footer>
 
+  <!-- Modal Popup -->
+  <div class="modal" id="alertModal">
+    <div class="modal-content">
+      <h3 id="modalTitle">Time’s Up!</h3>
+      <p id="modalMessage">Take a short break ☕</p>
+      <button onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
   <script>
-  function toggleMenu() {
-    document.querySelector('nav ul').classList.toggle('active');
-  }
+    function toggleMenu() {
+      document.querySelector('nav ul').classList.toggle('active');
+    }
 
-  let timerDisplay = document.getElementById('timer');
-  let startBtn = document.getElementById('start');
-  let pauseBtn = document.getElementById('pause');
-  let resetBtn = document.getElementById('reset');
-  let modeText = document.getElementById('modeText');
-  let workInput = document.getElementById('workTime');
-  let breakInput = document.getElementById('breakTime');
+    const timerDisplay = document.getElementById('timer');
+    const startBtn = document.getElementById('start');
+    const pauseBtn = document.getElementById('pause');
+    const resetBtn = document.getElementById('reset');
+    const modeText = document.getElementById('modeText');
+    const workInput = document.getElementById('workTime');
+    const breakInput = document.getElementById('breakTime');
+    const modal = document.getElementById('alertModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMessage = document.getElementById('modalMessage');
 
-  let isRunning = false;
-  let isWorkMode = true;
-  let timer;
-  let timeLeft = workInput.value * 60;
+    let isRunning = false;
+    let isWorkMode = true;
+    let timer;
+    let timeLeft = workInput.value * 60;
 
-  function updateTimerDisplay() {
-    let minutes = Math.floor(timeLeft / 60);
-    let seconds = timeLeft % 60;
-    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  }
+    function updateTimerDisplay() {
+      let minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
+      timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
 
-  function startTimer() {
-    if (isRunning) return;
-    isRunning = true;
-    timer = setInterval(() => {
-      timeLeft--;
-      updateTimerDisplay();
-      if (timeLeft <= 0) {
-        clearInterval(timer);
-        isWorkMode = !isWorkMode;
-        modeText.textContent = isWorkMode ? "Focus Mode 🔥" : "Break Time ☕";
+    function showModal(title, message) {
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+      modal.style.display = 'flex';
+    }
 
-        // 🔔 ALERT when timer ends
-        if (isWorkMode) {
-          alert("Break time is over! Let's get back to work! 💪");
-        } else {
-          alert("Great job! Time to take a short break ☕");
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    function startTimer() {
+      if (isRunning) return;
+      isRunning = true;
+      timer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          isWorkMode = !isWorkMode;
+          modeText.textContent = isWorkMode ? "Focus Mode 🔥" : "Break Time ☕";
+
+          // Themed modal alert
+          if (isWorkMode) {
+            showModal("Break Over 💪", "Let's get back to work!");
+          } else {
+            showModal("Focus Complete 🎉", "Time to take a short break ☕");
+          }
+
+          timeLeft = (isWorkMode ? workInput.value : breakInput.value) * 60;
+          isRunning = false;
         }
+      }, 1000);
+    }
 
-        // Auto-switch mode and reset time
-        timeLeft = (isWorkMode ? workInput.value : breakInput.value) * 60;
-        isRunning = false;
-        startTimer();
-      }
-    }, 1000);
-  }
+    function pauseTimer() {
+      clearInterval(timer);
+      isRunning = false;
+    }
 
-  function pauseTimer() {
-    clearInterval(timer);
-    isRunning = false;
-  }
+    function resetTimer() {
+      clearInterval(timer);
+      isRunning = false;
+      isWorkMode = true;
+      modeText.textContent = "Focus Mode 🔥";
+      timeLeft = workInput.value * 60;
+      updateTimerDisplay();
+    }
 
-  function resetTimer() {
-    clearInterval(timer);
-    isRunning = false;
-    isWorkMode = true;
-    modeText.textContent = "Focus Mode 🔥";
-    timeLeft = workInput.value * 60;
+    startBtn.addEventListener('click', startTimer);
+    pauseBtn.addEventListener('click', pauseTimer);
+    resetBtn.addEventListener('click', resetTimer);
+    workInput.addEventListener('change', resetTimer);
+    breakInput.addEventListener('change', resetTimer);
+
     updateTimerDisplay();
-  }
-
-  startBtn.addEventListener('click', startTimer);
-  pauseBtn.addEventListener('click', pauseTimer);
-  resetBtn.addEventListener('click', resetTimer);
-  workInput.addEventListener('change', resetTimer);
-  breakInput.addEventListener('change', resetTimer);
-
-  updateTimerDisplay();
-</script>
-
+  </script>
 </body>
 </html>

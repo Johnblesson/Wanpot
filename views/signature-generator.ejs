@@ -16,10 +16,8 @@
     }
 
     header {
-      position: fixed;
-      top: 0; width: 100%;
-      z-index: 100;
-      background: rgba(15, 23, 42, 0.85);
+      position: fixed; top: 0; width: 100%;
+      z-index: 100; background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
@@ -30,27 +28,19 @@
       display: flex; justify-content: space-between; align-items: center;
     }
 
-    .logo {
-      font-size: 1.7rem; font-weight: 700;
-      background: linear-gradient(90deg, #3b82f6, #06b6d4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    .logo { font-size: 1.7rem; font-weight: 700; background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
     nav ul {
-      list-style: none;
-      display: flex; gap: 1.5rem;
+      list-style: none; display: flex; gap: 1.5rem;
     }
 
     nav ul li a {
-      text-decoration: none;
-      color: #f1f5f9;
-      font-weight: 500;
+      text-decoration: none; color: #f1f5f9; font-weight: 500;
       transition: color 0.3s;
     }
 
     nav ul li a:hover { color: #38bdf8; }
-
     .menu-toggle { display: none; font-size: 1.8rem; cursor: pointer; color: #fff; }
 
     /* MAIN */
@@ -121,16 +111,10 @@
     }
 
     .signature {
-      border-top: 2px solid #38bdf8;
       margin-top: 1rem;
       padding-top: 1rem;
       color: #e2e8f0;
       font-size: 0.95rem;
-    }
-
-    .signature strong {
-      color: #38bdf8;
-      font-size: 1.1rem;
     }
 
     .copy-btn {
@@ -158,12 +142,10 @@
       display: none;
     }
 
-    /* ABOUT */
     .about {
       text-align: center;
       background: linear-gradient(90deg, #1e3a8a, #2563eb);
       padding: 3rem 1rem;
-      border-top: 1px solid rgba(255,255,255,0.1);
       color: #f8fafc;
     }
 
@@ -201,9 +183,9 @@
       <div class="logo">Wanpot</div>
       <nav>
         <ul>
-          <li><a href="index.html#home">Home</a></li>
-          <li><a href="index.html#features">Features</a></li>
-          <li><a href="index.html#about">About</a></li>
+          <li><a href="/">Home</a></li>
+          <li><a href="/">Features</a></li>
+          <li><a href="/">About</a></li>
         </ul>
       </nav>
       <div class="menu-toggle" onclick="toggleMenu()">☰</div>
@@ -213,53 +195,49 @@
   <!-- Main Section -->
   <section class="container">
     <h1>Email Signature Generator ✉️</h1>
-    <p>Create a professional, clean, and modern email signature for your messages — personalized and ready to copy!</p>
+    <p>Create a beautiful branded email signature with your logo and color strip — ready to insert into any email client.</p>
 
     <div class="generator">
       <form id="signatureForm">
         <label>Full Name</label>
-        <input type="text" id="name" placeholder="John Doe" />
+        <input type="text" id="name" placeholder="John Doe">
 
         <label>Job Title</label>
-        <input type="text" id="title" placeholder="Software Engineer" />
+        <input type="text" id="title" placeholder="Software Engineer">
 
         <label>Company</label>
-        <input type="text" id="company" placeholder="Kharis Pro Tech" />
+        <input type="text" id="company" placeholder="Kharis Pro Tech">
 
         <label>Phone</label>
-        <input type="text" id="phone" placeholder="+232 77 000 000" />
+        <input type="text" id="phone" placeholder="+232 77 000 000">
 
         <label>Website</label>
-        <input type="text" id="website" placeholder="www.kharisprotech.com" />
+        <input type="text" id="website" placeholder="www.kharisprotech.com">
 
         <label>Email</label>
-        <input type="text" id="email" placeholder="info@kharisprotech.com" />
+        <input type="text" id="email" placeholder="info@kharisprotech.com">
 
         <label>LinkedIn</label>
-        <input type="text" id="linkedin" placeholder="linkedin.com/in/yourname" />
+        <input type="text" id="linkedin" placeholder="linkedin.com/in/yourname">
 
-        <button type="button" class="copy-btn" onclick="copySignature()">Copy Signature</button>
-        <div class="copy-message" id="copyMessage">✅ Signature copied to clipboard!</div>
+        <label>Logo URL</label>
+        <input type="text" id="logo" placeholder="https://example.com/logo.png">
+
+        <button type="button" class="copy-btn" onclick="copySignature()">Copy Signature HTML</button>
+        <div class="copy-message" id="copyMessage">✅ Signature HTML copied!</div>
       </form>
 
       <div class="preview">
         <h3>Preview:</h3>
-        <div class="signature" id="signaturePreview">
-          <strong>John Doe</strong><br>
-          Software Engineer | Kharis Pro Tech<br>
-          📞 +232 77 000 000<br>
-          🌐 www.kharisprotech.com<br>
-          ✉️ info@kharisprotech.com<br>
-          🔗 linkedin.com/in/yourname
-        </div>
+        <div class="signature" id="signaturePreview"></div>
       </div>
     </div>
   </section>
 
   <!-- About -->
   <section class="about">
-    <h2>Professionalism Made Simple</h2>
-    <p>Your digital identity starts with your emails. Wanpot helps you craft elegant, consistent signatures that make every message stand out.</p>
+    <h2>Elevate Your Brand</h2>
+    <p>Every email is a chance to make an impression. Create elegant, consistent email signatures with Wanpot.</p>
   </section>
 
   <!-- Footer -->
@@ -272,10 +250,8 @@
       document.querySelector('nav ul').classList.toggle('active');
     }
 
-    const fields = ['name', 'title', 'company', 'phone', 'website', 'email', 'linkedin'];
-    fields.forEach(id => {
-      document.getElementById(id).addEventListener('input', updateSignature);
-    });
+    const fields = ['name','title','company','phone','website','email','linkedin','logo'];
+    fields.forEach(id => document.getElementById(id).addEventListener('input', updateSignature));
 
     function updateSignature() {
       const name = document.getElementById('name').value || 'John Doe';
@@ -285,31 +261,52 @@
       const website = document.getElementById('website').value || 'www.kharisprotech.com';
       const email = document.getElementById('email').value || 'info@kharisprotech.com';
       const linkedin = document.getElementById('linkedin').value || 'linkedin.com/in/yourname';
+      const logo = document.getElementById('logo').value || 'https://wanpot.onrender.com/logo.png';
 
-      const html = `
-        <strong>${name}</strong><br>
-        ${title} | ${company}<br>
-        📞 ${phone}<br>
-        🌐 ${website}<br>
-        ✉️ ${email}<br>
-        🔗 ${linkedin}
-      `;
-      document.getElementById('signaturePreview').innerHTML = html;
+      const signatureHTML = `
+      <table cellpadding="0" cellspacing="0" style="font-family:Poppins,Arial,sans-serif; color:#0f172a;">
+        <tr>
+          <td style="padding:8px; background:linear-gradient(180deg,#3b82f6,#06b6d4); width:6px;"></td>
+          <td style="padding:10px 15px;">
+            <table cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding-right:10px; vertical-align:top;">
+                  <img src="${logo}" alt="Logo" style="width:70px; border-radius:10px;">
+                </td>
+                <td style="vertical-align:top;">
+                  <div style="font-size:16px; font-weight:600; color:#0f172a;">${name}</div>
+                  <div style="color:#334155; font-size:14px;">${title} | ${company}</div>
+                  <div style="color:#1e293b; font-size:13px; margin-top:4px;">
+                    📞 ${phone}<br>
+                    ✉️ <a href="mailto:${email}" style="color:#3b82f6; text-decoration:none;">${email}</a><br>
+                    🌐 <a href="https://${website}" style="color:#3b82f6; text-decoration:none;">${website}</a><br>
+                    🔗 <a href="https://${linkedin}" style="color:#3b82f6; text-decoration:none;">LinkedIn</a>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>`;
+
+      document.getElementById('signaturePreview').innerHTML = signatureHTML;
     }
 
     function copySignature() {
       const signatureHTML = document.getElementById('signaturePreview').innerHTML;
-      const tempElement = document.createElement('textarea');
-      tempElement.value = signatureHTML;
-      document.body.appendChild(tempElement);
-      tempElement.select();
+      const temp = document.createElement('textarea');
+      temp.value = signatureHTML;
+      document.body.appendChild(temp);
+      temp.select();
       document.execCommand('copy');
-      document.body.removeChild(tempElement);
+      document.body.removeChild(temp);
 
       const msg = document.getElementById('copyMessage');
       msg.style.display = 'block';
       setTimeout(() => msg.style.display = 'none', 2000);
     }
+
+    updateSignature();
   </script>
 </body>
 </html>

@@ -49,8 +49,8 @@ app.get('/favicon.svg', (req, res) => {
 // Routes
 app.use("/", viewRoutes); // Use viewRoutes
 
-// Set up the server to listen on port 8080
-const PORT = 8080;
+// Set up the server to listen on port 5000
+const PORT = 5000;
 // server.listen(PORT, '0.0.0.0', () => {
 //   console.log(`Server is running on port ${PORT}`);
 // });

@@ -64,5 +64,10 @@ router.get("/equation-solver", (req, res) => {
     res.render("equation-solver");
 });
 
+// Pomodoro Timer
+router.get("/pomodoro", (req, res) => {
+    res.render("pomodoro");
+});
+
 // Export the router
 export default router;

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pomodoro Timer - Wanpot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.7rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #f1f5f9;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #38bdf8;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    /* MAIN CONTENT */
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding-top: 100px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .timer {
+      width: 200px;
+      height: 200px;
+      border: 8px solid rgba(59,130,246,0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #38bdf8;
+      margin-bottom: 2rem;
+    }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    button {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(6,182,212,0.4);
+    }
+
+    .settings {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .settings input {
+      width: 60px;
+      padding: 0.3rem;
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .mode {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      color: #94a3b8;
+    }
+
+    /* ABOUT SECTION */
+    .about {
+      text-align: center;
+      background: linear-gradient(90deg, #1e3a8a, #2563eb);
+      padding: 3rem 1rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      color: #f8fafc;
+      margin-top: 4rem;
+    }
+
+    .about h2 {
+      margin-bottom: 1rem;
+    }
+
+    .about p {
+      max-width: 700px;
+      margin: 0 auto;
+      color: #e2e8f0;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: #0f172a;
+      color: #64748b;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        right: 20px;
+        top: 70px;
+        width: 200px;
+        background: rgba(15,23,42,0.9);
+        border-radius: 10px;
+        padding: 1rem;
+      }
+
+      nav ul.active {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="navbar">
+      <div class="logo">Wanpot</div>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#pomodoro">Pomodoro</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#download">Download</a></li>
+        </ul>
+      </nav>
+      <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main id="pomodoro">
+    <h1>Pomodoro Timer ⏱️</h1>
+    <div class="timer" id="timer">25:00</div>
+
+    <div class="controls">
+      <button id="start">Start</button>
+      <button id="pause">Pause</button>
+      <button id="reset">Reset</button>
+    </div>
+
+    <div class="settings">
+      <label>Work (min): <input type="number" id="workTime" value="25" min="1"></label>
+      <label>Break (min): <input type="number" id="breakTime" value="5" min="1"></label>
+    </div>
+
+    <div class="mode" id="modeText">Focus Mode 🔥</div>
+  </main>
+
+  <!-- ABOUT SECTION -->
+  <section class="about" id="about">
+    <h2>The Wanpot Philosophy</h2>
+    <p>In Sierra Leone, “Wanpot” means putting everything in one pot — and that’s exactly what this app does. We blend tools for learning, productivity, creativity, and life management — all served hot in one digital experience!</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Wanpot | Built with ❤️ in Sierra Leone by <strong>Kharis Pro Tech</strong> | Empowering Productivity Everywhere</p>
+  </footer>
+
+  <script>
+  function toggleMenu() {
+    document.querySelector('nav ul').classList.toggle('active');
+  }
+
+  let timerDisplay = document.getElementById('timer');
+  let startBtn = document.getElementById('start');
+  let pauseBtn = document.getElementById('pause');
+  let resetBtn = document.getElementById('reset');
+  let modeText = document.getElementById('modeText');
+  let workInput = document.getElementById('workTime');
+  let breakInput = document.getElementById('breakTime');
+
+  let isRunning = false;
+  let isWorkMode = true;
+  let timer;
+  let timeLeft = workInput.value * 60;
+
+  function updateTimerDisplay() {
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  function startTimer() {
+    if (isRunning) return;
+    isRunning = true;
+    timer = setInterval(() => {
+      timeLeft--;
+      updateTimerDisplay();
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        isWorkMode = !isWorkMode;
+        modeText.textContent = isWorkMode ? "Focus Mode 🔥" : "Break Time ☕";
+
+        // 🔔 ALERT when timer ends
+        if (isWorkMode) {
+          alert("Break time is over! Let's get back to work! 💪");
+        } else {
+          alert("Great job! Time to take a short break ☕");
+        }
+
+        // Auto-switch mode and reset time
+        timeLeft = (isWorkMode ? workInput.value : breakInput.value) * 60;
+        isRunning = false;
+        startTimer();
+      }
+    }, 1000);
+  }
+
+  function pauseTimer() {
+    clearInterval(timer);
+    isRunning = false;
+  }
+
+  function resetTimer() {
+    clearInterval(timer);
+    isRunning = false;
+    isWorkMode = true;
+    modeText.textContent = "Focus Mode 🔥";
+    timeLeft = workInput.value * 60;
+    updateTimerDisplay();
+  }
+
+  startBtn.addEventListener('click', startTimer);
+  pauseBtn.addEventListener('click', pauseTimer);
+  resetBtn.addEventListener('click', resetTimer);
+  workInput.addEventListener('change', resetTimer);
+  breakInput.addEventListener('change', resetTimer);
+
+  updateTimerDisplay();
+</script>
+
+</body>
+</html>

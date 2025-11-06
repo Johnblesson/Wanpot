@@ -1,7 +1,13 @@
 import { Router } from "express";
 const router = Router();
 import multer from "multer"; 
-import { getSolverPage,solveEquation, scanEquation } from "../controllers/controllers.js"
+import { 
+        getSolverPage,
+        solveEquation, 
+        scanEquation,
+        getTranslatorPage, 
+        translateText
+    } from "../controllers/controllers.js"
 
 const upload = multer({ dest: "uploads/" });
 
@@ -67,6 +73,10 @@ router.get("/flashcards", (req, res) => {
 router.post("/equation", solveEquation)
 router.get("/equation-solver", getSolverPage);
 router.post("/scan", upload.single("equationImage"), scanEquation);
+
+// Translation
+router.get("/translator", getTranslatorPage);
+router.post("/translate", translateText);
 
 // Pomodoro Timer
 router.get("/pomodoro", (req, res) => {

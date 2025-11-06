@@ -6,6 +6,8 @@
 <title>Wanpot | Advanced Equation Solver</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -124,7 +126,6 @@ footer {
   main { padding: 6rem 1rem 2rem; }
   .solver-container button { width: 100%; }
 }
-
 </style>
 </head>
 <body>
@@ -146,10 +147,9 @@ footer {
   <h1>Advanced Equation Solver (Math AI)</h1>
   <div class="solver-container">
 
-    <form action="/solve" method="POST" enctype="multipart/form-data">
+    <form id="solveForm" action="/equation" method="POST">
       <label for="equation">Enter your equation:</label>
       <input type="text" id="equation" name="equation" value="<%= equation %>" placeholder="e.g., 2x^2 + 3x - 5 = 0" required />
-
       <button type="submit"><i class="fa-solid fa-calculator"></i> Solve Equation</button>
     </form>
 
@@ -161,6 +161,13 @@ footer {
       <div class="result">
         <h3>Solution:</h3>
         <pre><%= result %></pre>
+
+        <% if (steps && steps.length > 0) { %>
+          <h3 style="margin-top:1rem;">Step-by-Step Derivation:</h3>
+          <% steps.forEach((step, index) => { %>
+            <p><strong>Step <%= index + 1 %>:</strong> <%= step %></p>
+          <% }) %>
+        <% } %>
       </div>
     <% } %>
 
@@ -207,6 +214,5 @@ document.getElementById("stopScan").addEventListener("click", (e) => {
   }
 });
 </script>
-
 </body>
 </html>

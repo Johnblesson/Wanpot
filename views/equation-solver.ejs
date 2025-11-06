@@ -69,7 +69,7 @@ h1 { text-align: center; margin-bottom: 2rem; color: #38bdf8; font-size: 2rem; }
 
 .solver-container label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
 
-.solver-container input, .solver-container textarea, .solver-container select {
+.solver-container input, .solver-container textarea {
   width: 100%;
   padding: 0.8rem 1rem;
   border-radius: 8px;
@@ -106,8 +106,6 @@ h1 { text-align: center; margin-bottom: 2rem; color: #38bdf8; font-size: 2rem; }
   overflow-y: auto;
 }
 
-#graph { margin-top: 2rem; text-align: center; }
-
 video#scanner { width: 100%; border-radius: 15px; margin-top: 1rem; }
 
 footer {
@@ -119,25 +117,14 @@ footer {
   margin-top: 3rem;
 }
 
-/* RESPONSIVE */
-@media (max-width: 1024px) {
-  h1 { font-size: 1.8rem; }
-  .solver-container { padding: 1.5rem; }
-}
-
 @media (max-width: 768px) {
   nav ul { display: none; flex-direction: column; position: absolute; right: 20px; top: 70px; background: rgba(15,23,42,0.9); border-radius: 10px; padding: 1rem; }
   nav ul.active { display: flex; }
   .menu-toggle { display: block; }
   main { padding: 6rem 1rem 2rem; }
   .solver-container button { width: 100%; }
-  #graph canvas { width: 100% !important; height: auto !important; }
 }
 
-@media (max-width: 480px) {
-  h1 { font-size: 1.5rem; }
-  .solver-container { padding: 1rem; }
-}
 </style>
 </head>
 <body>
@@ -158,149 +145,68 @@ footer {
 <main>
   <h1>Advanced Equation Solver (Math AI)</h1>
   <div class="solver-container">
-    <label for="equation">Enter your equation:</label>
-    <input type="text" id="equation" placeholder="e.g., 2x^2 + 3x - 5 = 0" />
 
-    <button onclick="solveEquation()">Solve</button>
-    <button onclick="copyResult()">Copy Result</button>
-    <button onclick="exportResult()">Export JSON</button>
+    <form action="/solve" method="POST" enctype="multipart/form-data">
+      <label for="equation">Enter your equation:</label>
+      <input type="text" id="equation" name="equation" value="<%= equation %>" placeholder="e.g., 2x^2 + 3x - 5 = 0" required />
 
-    <div class="result" id="solution"></div>
-    <div id="graph"></div>
+      <button type="submit"><i class="fa-solid fa-calculator"></i> Solve Equation</button>
+    </form>
+
+    <% if (error) { %>
+      <div class="result" style="color:#f87171;"><strong>Error:</strong> <%= error %></div>
+    <% } %>
+
+    <% if (result) { %>
+      <div class="result">
+        <h3>Solution:</h3>
+        <pre><%= result %></pre>
+      </div>
+    <% } %>
 
     <hr style="margin: 1.5rem 0; border-color: rgba(255,255,255,0.2);" />
 
     <label>Scan Equation via Camera:</label>
-    <video id="scanner"></video>
-    <button onclick="startScanner()">Start Scanner</button>
-    <button onclick="stopScanner()">Stop Scanner</button>
+    <video id="scanner" autoplay></video><br>
+    <button id="startScan"><i class="fa-solid fa-camera"></i> Start Scanner</button>
+    <button id="stopScan"><i class="fa-solid fa-stop"></i> Stop Scanner</button>
+
+    <form id="uploadForm" action="/scan" method="POST" enctype="multipart/form-data" style="margin-top:1rem;">
+      <input type="file" name="equationImage" accept="image/*" />
+      <button type="submit"><i class="fa-solid fa-upload"></i> Upload & Extract Equation</button>
+    </form>
+
   </div>
 </main>
 
 <footer>
-<p>© 2025 Wanpot | Built with ❤️ in Sierra Leone by <strong>Kharis Pro Tech</strong></p>
+  <p>© 2025 Wanpot | Built with ❤️ in Sierra Leone by <strong>Kharis Pro Tech</strong></p>
 </footer>
-
-<!-- Libraries -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/algebrite/1.5.0/algebrite.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://unpkg.com/@zxing/library@latest"></script>
 
 <script>
 function toggleMenu() { document.querySelector('nav ul').classList.toggle('active'); }
 
-// ======= Equation Cleaning =======
-function cleanEquation(eq) {
-  // Replace implicit multiplication: 2x -> 2*x, 3x^2 -> 3*x^2
-  eq = eq.replace(/(\d)([a-zA-Z])/g, '$1*$2');
-  eq = eq.replace(/([a-zA-Z])(\d)/g, '$1*$2');
-  // Remove unsupported characters
-  eq = eq.replace(/[^\d\+\-\*\/\^\=\.\(\)xX]/g, '');
-  eq = eq.replace(/\s+/g, '');
-  return eq;
-}
+let stream;
 
-// ======= Solve Equation =======
-function solveEquation() {
-  let eq = document.getElementById('equation').value;
-  eq = cleanEquation(eq);
-  const output = document.getElementById('solution');
-  const graphDiv = document.getElementById('graph');
-  graphDiv.innerHTML = '';
-
-  if (!eq) { output.textContent = "Please enter an equation."; return; }
-
+document.getElementById("startScan").addEventListener("click", async (e) => {
+  e.preventDefault();
   try {
-    const roots = Algebrite.run(`roots(${eq})`);
-    const steps = Algebrite.run(`simplify(${eq})`);
-    output.textContent = `Equation Simplified:\n${steps}\n\nRoots / Solutions:\n${roots}`;
-    plotEquation(eq);
+    stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const video = document.getElementById("scanner");
+    video.srcObject = stream;
   } catch (err) {
-    output.textContent = "Error: Unable to solve equation. Check syntax.";
-    console.error(err);
+    alert("Camera not accessible.");
   }
-}
+});
 
-// ======= Graph =======
-function plotEquation(eq) {
-  const graphDiv = document.getElementById('graph');
-  graphDiv.innerHTML = '<canvas id="eqGraph" width="400" height="300"></canvas>';
-  const canvas = document.getElementById('eqGraph');
-  const ctx = canvas.getContext('2d');
-  const xValues = [];
-  const yValues = [];
-  for(let x=-10; x<=10; x+=0.1){
-    try {
-      const y = parseFloat(Algebrite.run(`${eq.split('=')[0].trim()}|x=${x}`));
-      if(!isNaN(y)) { xValues.push(x); yValues.push(y); }
-    } catch(e){}
+document.getElementById("stopScan").addEventListener("click", (e) => {
+  e.preventDefault();
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+    alert("Camera stopped.");
   }
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: xValues,
-      datasets: [{
-        label: 'y = f(x)',
-        data: yValues,
-        borderColor: '#3b82f6',
-        backgroundColor: 'rgba(59,130,246,0.2)',
-        fill: true,
-        pointRadius: 0
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        x: { title: { display: true, text: 'x' } },
-        y: { title: { display: true, text: 'y' } }
-      }
-    }
-  });
-}
-
-// ======= Copy / Export =======
-function copyResult() {
-  const output = document.getElementById('solution');
-  navigator.clipboard.writeText(output.textContent)
-    .then(() => alert("Result copied to clipboard!"))
-    .catch(err => alert("Failed to copy result."));
-}
-
-function exportResult() {
-  const output = document.getElementById('solution').textContent;
-  const data = { equation: document.getElementById('equation').value, result: output };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'equation_result.json';
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-// ======= Camera Scanner =======
-let selectedDeviceId;
-let codeReader;
-
-function startScanner() {
-  codeReader = new ZXing.BrowserMultiFormatReader();
-  codeReader.listVideoInputDevices()
-    .then(videoInputDevices => {
-      selectedDeviceId = videoInputDevices[0].deviceId;
-      codeReader.decodeFromVideoDevice(selectedDeviceId, 'scanner', (result, err) => {
-        if (result) {
-          document.getElementById('equation').value = result.getText();
-          solveEquation();
-        }
-      });
-    })
-    .catch(err => alert("Camera not available."));
-}
-
-function stopScanner() {
-  if(codeReader) { codeReader.reset(); }
-}
+});
 </script>
+
 </body>
 </html>

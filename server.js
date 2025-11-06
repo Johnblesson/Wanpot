@@ -16,6 +16,13 @@ const server = http.createServer(app); // Create HTTP server
 const io = new Server(server); // Create Socket.io server
 
 // app.use(express.json()); // Parse JSON bodies
+// Body parsers
+app.use(express.json()); // for JSON requests
+app.use(express.urlencoded({ extended: true })); // for form submissions
+
+// OR (alternative if using body-parser package)
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
 // app.use(cookieParser()); // Use cookie-parser
 // app.use(flash()); // Use connect-flash
 app.use(cors()); // Use cors

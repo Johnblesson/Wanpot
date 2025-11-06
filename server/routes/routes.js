@@ -1,5 +1,9 @@
 import { Router } from "express";
 const router = Router();
+import multer from "multer"; 
+import { getSolverPage,solveEquation, scanEquation } from "../controllers/controllers.js"
+
+const upload = multer({ dest: "uploads/" });
 
 // Define your routes here
 router.get("/", (req, res) => {
@@ -60,9 +64,9 @@ router.get("/flashcards", (req, res) => {
 });
 
 // equation-solver route
-router.get("/equation-solver", (req, res) => {
-    res.render("equation-solver");
-});
+router.post("/equation", solveEquation)
+router.get("/equation-solver", getSolverPage);
+router.post("/scan", upload.single("equationImage"), scanEquation);
 
 // Pomodoro Timer
 router.get("/pomodoro", (req, res) => {

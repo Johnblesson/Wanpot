@@ -18,7 +18,6 @@
       overflow-x: hidden;
     }
 
-    /* HEADER */
     header {
       position: fixed;
       top: 0;
@@ -62,7 +61,6 @@
       color: #fff;
     }
 
-    /* MAIN */
     main {
       flex: 1;
       padding: 6rem 1rem 2rem;
@@ -76,7 +74,6 @@
       font-size: 1.9rem;
     }
 
-    /* TRANSLATOR BOX */
     .translator-container {
       background: rgba(255, 255, 255, 0.06);
       padding: 1.8rem;
@@ -121,7 +118,6 @@
     }
     .translator-container button:hover { transform: scale(1.04); }
 
-    /* RESULT BOX */
     .result-box {
       position: relative;
       background: rgba(255, 255, 255, 0.08);
@@ -155,7 +151,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    /* RESPONSIVE */
+    /* Responsive */
     @media (max-width: 768px) {
       .menu-toggle { display: block; }
       nav ul {
@@ -169,7 +165,6 @@
         padding: 1rem;
       }
       nav ul.active { display: flex; }
-
       .translator-container {
         width: 100vw;
         margin: 0 -1rem;
@@ -213,7 +208,7 @@
           </select>
         </div>
 
-        <button id="swapBtn" title="Swap Languages" style="background: none; border: none; color: #38bdf8; font-size: 1.5rem; cursor: pointer;">
+        <button id="swapBtn" title="Swap Languages" style="background:none;border:none;color:#38bdf8;font-size:1.5rem;cursor:pointer;">
           <i class="fas fa-exchange-alt"></i>
         </button>
 
@@ -223,7 +218,10 @@
         </div>
       </div>
 
-      <button onclick="translateText()"><i class="fas fa-language"></i> Translate</button>
+      <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+        <button onclick="translateText()"><i class="fas fa-language"></i> Translate</button>
+        <button onclick="listenText()"><i class="fas fa-volume-up"></i> Listen</button>
+      </div>
 
       <div class="result-box" id="result">
         <button class="copy-btn" title="Copy" onclick="copyResult()"><i class="fa-solid fa-copy"></i></button>
@@ -253,7 +251,7 @@
     }
     targetSelect.value = "fr";
 
-    // Swap function
+    // Swap languages
     document.getElementById("swapBtn").addEventListener("click", () => {
       const temp = sourceSelect.value;
       sourceSelect.value = targetSelect.value;
@@ -292,9 +290,24 @@
       }
     }
 
+    function listenText() {
+      const text = resultDiv.textContent.trim();
+      if (!text || text === "Your translation will appear here...") return;
+
+      const utter = new SpeechSynthesisUtterance(text);
+      const langCode = targetSelect.value;
+      // Map some language codes to SpeechSynthesis
+      if(langCode === "zh") utter.lang = "zh-CN";
+      else if(langCode === "ar") utter.lang = "ar-SA";
+      else utter.lang = langCode;
+
+      speechSynthesis.speak(utter);
+    }
+
     function toggleMenu() {
       document.querySelector("nav ul").classList.toggle("active");
     }
   </script>
 </body>
 </html>
+  

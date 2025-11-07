@@ -36,6 +36,9 @@ const templatePath = path.join(__dirname, './views');
 app.set('view engine', 'ejs');
 app.set('views', templatePath);
 
+app.use('/uploads', express.static('uploads'));
+
+
 // Serve static files from the 'public' directory
 app.use(express.static('public'));
 app.use("/assets", express.static(path.join(__dirname, "public/assets"), {

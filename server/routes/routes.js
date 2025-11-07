@@ -6,10 +6,21 @@ import {
         solveEquation, 
         scanEquation,
         getTranslatorPage, 
-        translateText
+        translateText,
+        renderPDFTools, processPDF
     } from "../controllers/controllers.js"
 
 const upload = multer({ dest: "uploads/" });
+
+// Multer setup
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, path.join(process.cwd(), 'uploads')),
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
+});
+const uploadPDF = multer({ storage });
+
+router.get('/pdf-tools', renderPDFTools);
+router.post('/pdf-tools/process', uploadPDF.array('pdfs'), processPDF);
 
 // Define your routes here
 router.get("/", (req, res) => {
@@ -77,6 +88,7 @@ router.post("/scan", upload.single("equationImage"), scanEquation);
 // Translation
 router.get("/translator", getTranslatorPage);
 router.post("/translate", translateText);
+
 
 // Pomodoro Timer
 router.get("/pomodoro", (req, res) => {

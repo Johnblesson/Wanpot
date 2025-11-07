@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= pageTitle %></title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      z-index: 10;
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #f1f5f9;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #38bdf8;
+    }
+
+    main {
+      flex: 1;
+      padding: 7rem 1rem 3rem;
+      max-width: 800px;
+      margin: auto;
+      text-align: center;
+    }
+
+    h1 {
+      color: #38bdf8;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .recorder-container {
+      background: rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 2rem;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    #recordBtn {
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #recordBtn.recording {
+      background: linear-gradient(90deg, #ef4444, #f97316);
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
+      70% { box-shadow: 0 0 0 20px rgba(239,68,68,0); }
+      100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+    }
+
+    #transcript {
+      background: rgba(255,255,255,0.08);
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 12px;
+      text-align: left;
+      min-height: 150px;
+      color: #e2e8f0;
+      font-size: 1rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .controls {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    button.action {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #f8fafc;
+      padding: 0.7rem 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button.action:hover {
+      background: rgba(56,189,248,0.2);
+      transform: scale(1.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #0f172a;
+      color: #64748b;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    @media (max-width: 768px) {
+      .recorder-container { border-radius: 0; padding: 1.2rem; }
+      .navbar { flex-direction: column; gap: 0.5rem; }
+      nav ul { flex-wrap: wrap; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="navbar">
+      <div class="logo">Wanpot</div>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/translator">Translator</a></li>
+          <li><a href="/file-converter">File Converter</a></li>
+          <li><a href="/voice-recorder">Voice Recorder</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Voice-to-Text Recorder</h1>
+
+    <div class="recorder-container">
+      <button id="recordBtn"><i class="fas fa-microphone"></i></button>
+      <div id="transcript">🎙️ Start speaking to record your note...</div>
+
+      <div class="controls">
+        <button id="copyBtn" class="action"><i class="fas fa-copy"></i> Copy</button>
+        <button id="downloadBtn" class="action"><i class="fas fa-download"></i> Download</button>
+        <button id="clearBtn" class="action"><i class="fas fa-trash"></i> Clear</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>© <%= new Date().getFullYear() %> Wanpot — Smart Tools for Everyone</footer>
+
+  <script>
+    const recordBtn = document.getElementById('recordBtn');
+    const transcriptEl = document.getElementById('transcript');
+    const copyBtn = document.getElementById('copyBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const clearBtn = document.getElementById('clearBtn');
+
+    let recognition;
+    let isRecording = false;
+
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+    } else {
+      alert("Sorry, your browser doesn't support Speech Recognition. Try Chrome or Edge.");
+    }
+
+    recordBtn.addEventListener('click', () => {
+      if (!recognition) return;
+
+      if (isRecording) {
+        recognition.stop();
+        recordBtn.classList.remove('recording');
+        recordBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+        isRecording = false;
+      } else {
+        recognition.start();
+        recordBtn.classList.add('recording');
+        recordBtn.innerHTML = '<i class="fas fa-stop"></i>';
+        isRecording = true;
+      }
+    });
+
+    recognition.onresult = (event) => {
+      let text = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        text += event.results[i][0].transcript;
+      }
+      transcriptEl.textContent = text.trim();
+    };
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(transcriptEl.textContent);
+      alert('Copied to clipboard!');
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      const blob = new Blob([transcriptEl.textContent], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'transcript.txt';
+      link.click();
+    });
+
+    clearBtn.addEventListener('click', () => {
+      transcriptEl.textContent = '🎙️ Start speaking to record your note...';
+    });
+  </script>
+</body>
+</html>

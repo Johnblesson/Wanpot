@@ -7,7 +7,8 @@ import {
         scanEquation,
         getTranslatorPage, 
         translateText,
-        renderPDFTools, processPDF
+        renderPDFTools, processPDF,
+        renderVoiceRecorder
     } from "../controllers/controllers.js"
 
 const upload = multer({ dest: "uploads/" });
@@ -88,8 +89,7 @@ router.post("/scan", upload.single("equationImage"), scanEquation);
 // Translation
 router.get("/translator", getTranslatorPage);
 router.post("/translate", translateText);
-
-
+ router.get("/voice-recorder", renderVoiceRecorder);
 // Pomodoro Timer
 router.get("/pomodoro", (req, res) => {
     res.render("pomodoro");

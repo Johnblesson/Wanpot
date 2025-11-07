@@ -5,6 +5,7 @@ import path from "path";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import viewRoutes from "./server/routes/routes.js";
+import fileConverterRoutes from "./server/routes/fileConverterRoutes.js";
 import http from "http";
 import compression from "compression";
 import { Server } from "socket.io";
@@ -57,7 +58,8 @@ app.get('/favicon.svg', (req, res) => {
 
 
 // Routes
-app.use("/", viewRoutes); // Use viewRoutes
+app.use("/", viewRoutes); // Use viewRoutes fileConverterRoutes
+app.use(fileConverterRoutes);
 
 // Set up the server to listen on port 5000
 const PORT = 5000;

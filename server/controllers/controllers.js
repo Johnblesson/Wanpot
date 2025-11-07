@@ -280,3 +280,13 @@ export const renderResumeBuilder = (req, res) => {
   const colors = ["#3b82f6", "#06b6d4", "#ef4444", "#f59e0b"]; // blue, cyan, red, yellow
   res.render("resume", { templates, colors, pageTitle: "Wanpot | Resume Builder" });
 };
+
+
+
+// =============================
+// Voice Recorder Controller
+// =============================
+export const renderVoiceRecorder = (req, res) => {
+  res.render("voice-recorder", { pageTitle: "Wanpot | Voice Recorder" });
+};
+// Would you like me to extend it next so it stores transcriptions in a database (with timestamps and optional titles for each note)?

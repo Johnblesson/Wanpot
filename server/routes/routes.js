@@ -11,6 +11,8 @@ import {
         renderVoiceRecorder
     } from "../controllers/controllers.js"
 
+    import ensureAuthenticated from "../middlewares/auth.js";
+
 const upload = multer({ dest: "uploads/" });
 
 // Multer setup
@@ -20,83 +22,98 @@ const storage = multer.diskStorage({
 });
 const uploadPDF = multer({ storage });
 
+// // login
+// router.get('/login', (req, res) => {
+//     res.render('login');
+// });
+
+// // Signup
+// router.get('/signup', (req, res) => {
+//     res.render('signup');
+// });
+
 router.get('/pdf-tools', renderPDFTools);
 router.post('/pdf-tools/process', uploadPDF.array('pdfs'), processPDF);
 
 // Define your routes here
 router.get("/", (req, res) => {
+  res.render("guest-page");
+});
+
+// dashboard
+router.get("/dashboard", ensureAuthenticated, (req, res) => {
   res.render("index");
 });
 
-router.get("/calculator", (req, res) => {
+router.get("/calculator", ensureAuthenticated, (req, res) => {
   res.render("calculator");
 });
 
-router.get("/stopwatch", (req, res) => {
+router.get("/stopwatch", ensureAuthenticated, (req, res) => {
     res.render("stopwatch");
 });
 
 // quiz route
-router.get("/quiz", (req, res) => {
+router.get("/quiz", ensureAuthenticated, (req, res) => {
     res.render("quiz");
 })
 
 // typing-game route
-router.get("/typing-game", (req, res) => {
+router.get("/typing-game", ensureAuthenticated, (req, res) => {
     res.render("typing-game");
 });
 
 // password-generator route
-router.get("/password-generator", (req, res) => {
+router.get("/password-generator", ensureAuthenticated, (req, res) => {
     res.render("password-generator");
 });
 
 // Qrcode generator route
-router.get("/qrcode-generator", (req, res) => {
+router.get("/qrcode-generator", ensureAuthenticated, (req, res) => {
     res.render("qr-code");
 }); 
 
 // Note keepeer route
-router.get("/note-keeper", (req, res) => {
+router.get("/note-keeper", ensureAuthenticated, (req, res) => {
     res.render("note-keeper");
 });
 
 // Gpa Calculator route
-router.get("/gpa-calculator", (req, res) => {
+router.get("/gpa-calculator", ensureAuthenticated, (req, res) => {
     res.render("gpa-calculator");
 });
 
 // Dictionary route
-router.get("/dictionary", (req, res) => {
+router.get("/dictionary", ensureAuthenticated, (req, res) => {
     res.render("dictionary");
 });
 
 // Unit Converter route
-router.get("/unit-converter", (req, res) => {
+router.get("/unit-converter", ensureAuthenticated, (req, res) => {
     res.render("unit-converter");
 });
 
 // flashcards route
-router.get("/flashcards", (req, res) => {
+router.get("/flashcards", ensureAuthenticated, (req, res) => {
     res.render("flashcards");
 });
 
 // equation-solver route
-router.post("/equation", solveEquation)
-router.get("/equation-solver", getSolverPage);
-router.post("/scan", upload.single("equationImage"), scanEquation);
+router.post("/equation", ensureAuthenticated, solveEquation)
+router.get("/equation-solver", ensureAuthenticated, getSolverPage);
+router.post("/scan", ensureAuthenticated, upload.single("equationImage"), scanEquation);
 
 // Translation
-router.get("/translator", getTranslatorPage);
-router.post("/translate", translateText);
- router.get("/voice-recorder", renderVoiceRecorder);
+router.get("/translator", ensureAuthenticated, getTranslatorPage);
+router.post("/translate", ensureAuthenticated, translateText);
+ router.get("/voice-recorder", ensureAuthenticated, renderVoiceRecorder);
 // Pomodoro Timer
-router.get("/pomodoro", (req, res) => {
+router.get("/pomodoro", ensureAuthenticated, (req, res) => {
     res.render("pomodoro");
 });
 
 // Email Signature Generator
-router.get("/signature-generator", (req, res) => {
+router.get("/signature-generator", ensureAuthenticated, (req, res) => {
     res.render("signature-generator");
 });
 

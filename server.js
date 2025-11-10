@@ -1,9 +1,15 @@
 import express from "express";
 import cors from "cors";
 import ejs from "ejs";
+import dotenv from "dotenv";
+import session from 'express-session';
+import flash from 'connect-flash';
 import path from "path"; 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import connectDB from './server/database/connection.js';
+import passport from './server/passport/passport-config.js';
+import authRoutes from "./server/routes/auth.js";
 import viewRoutes from "./server/routes/routes.js";
 import fileConverterRoutes from "./server/routes/fileConverterRoutes.js";
 import http from "http";
@@ -15,7 +21,8 @@ import os from "os";
 const app = express(); // Create an Express application
 const server = http.createServer(app); // Create HTTP server
 const io = new Server(server); // Create Socket.io server
-
+dotenv.config(); // Configure dotenv to use environment variables
+connectDB(); // Connect to the database
 // app.use(express.json()); // Parse JSON bodies
 // Body parsers
 app.use(express.json()); // for JSON requests
@@ -25,7 +32,7 @@ app.use(express.urlencoded({ extended: true })); // for form submissions
 // app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
 // app.use(cookieParser()); // Use cookie-parser
-// app.use(flash()); // Use connect-flash
+app.use(flash()); // Use connect-flash
 app.use(cors()); // Use cors
 app.set('trust proxy', true) // Trust proxy
 app.use(compression()); // Use compression
@@ -56,13 +63,27 @@ app.get('/favicon.svg', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/favicon.svg'));
 });
 
+// Session middleware
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+  },
+}));
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Routes
+app.use(authRoutes)
 app.use("/", viewRoutes); // Use viewRoutes fileConverterRoutes
 app.use(fileConverterRoutes);
 
 // Set up the server to listen on port 5000
-const PORT = 5000;
+const PORT = process.env.PORT;
 // server.listen(PORT, '0.0.0.0', () => {
 //   console.log(`Server is running on port ${PORT}`);
 // });

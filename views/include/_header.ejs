@@ -70,6 +70,32 @@
       color: #fff;
     }
 
+    /* GET STARTED BUTTON */
+    /* GET STARTED BUTTON - OUTLINED STYLE */
+    .get-started-btn {
+      background: transparent;
+      color: #38bdf8 !important;
+      padding: 0.6rem 1.3rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 2px solid transparent;
+      background-image: linear-gradient(#0f172a, #0f172a),
+                        linear-gradient(90deg, #3b82f6, #06b6d4);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      transition: 0.3s ease;
+    }
+
+    .get-started-btn:hover {
+      color: #fff !important;
+      background-image: linear-gradient(90deg, #3b82f6, #06b6d4),
+                        linear-gradient(90deg, #3b82f6, #06b6d4);
+      box-shadow: 0 4px 20px rgba(6,182,212,0.4);
+      transform: translateY(-2px);
+    }
+
+
     /* HERO SECTION */
     .hero {
       display: flex;
@@ -220,14 +246,15 @@
   <header>
     <div class="navbar">
       <div class="logo">Wanpot</div>
-      <nav>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="#features">Features</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#download">Download</a></li>
-        </ul>
-      </nav>
+     <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#download">Download</a></li>
+        <!-- <li><a href="/" class="btn-get-started">Get Started</a></li> -->
+      </ul>
+    </nav>
       <div class="menu-toggle" onclick="toggleMenu()">☰</div>
     </div>
   </header>

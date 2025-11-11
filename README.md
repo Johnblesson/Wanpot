@@ -1,8 +1,9 @@
 # Wanpot - All-in-One Smart App
+<a href="https://wanpot.onrender.com">Project Demo</a>
 
  Wanpot is a unified, all-in-one workspace web application designed to provide users with an intelligent, user-friendly platform for managing tasks, communication, and productivity. It includes features such as authentication, user management, two-factor authentication, and more.
 
----
+<img src="public/images/landing-page.png" alt="wanpotai landing page">
 
 ## Table of Contents
 

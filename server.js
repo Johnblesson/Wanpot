@@ -12,6 +12,11 @@ import passport from './server/passport/passport-config.js';
 import authRoutes from "./server/routes/auth.js";
 import viewRoutes from "./server/routes/routes.js";
 import fileConverterRoutes from "./server/routes/fileConverterRoutes.js";
+import noteRoutes from "./server/routes/noteRoutes.js";
+import expenseRoutes from "./server/routes/expenseRoutes.js";
+import meetingRoutes from "./server/routes/meetingRoutes.js";
+import taskRoutes from "./server/routes/taskRoutes.js";
+import todoRoutes from "./server/routes/todoRoutes.js";
 import http from "http";
 import compression from "compression";
 import { Server } from "socket.io";
@@ -81,6 +86,12 @@ app.use(passport.session());
 app.use(authRoutes)
 app.use("/", viewRoutes); // Use viewRoutes fileConverterRoutes
 app.use(fileConverterRoutes);
+app.use("/notes", noteRoutes);
+app.use('/expense-tracker', expenseRoutes);
+app.use('/meeting-scheduler', meetingRoutes);
+app.use('/task-planner', taskRoutes);
+app.use('/todo', todoRoutes);
+
 
 // Set up the server to listen on port 5000
 const PORT = process.env.PORT;

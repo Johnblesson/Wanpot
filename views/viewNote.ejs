@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= note.title %> | Wanpot Notes</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      padding: 20px;
+    }
+
+    .note-container {
+      max-width: 700px;
+      margin: 60px auto;
+      background: #1e293b;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      padding: 20px;
+    }
+
+    .note-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .note-header h1 {
+      font-size: 1.8rem;
+      margin: 0;
+      color: #38bdf8;
+    }
+
+    .note-meta {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-bottom: 15px;
+    }
+
+    .note-content {
+      line-height: 1.6;
+      color: #e2e8f0;
+      word-wrap: break-word;
+    }
+
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .actions a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      text-decoration: none;
+      color: white;
+      background: #334155;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: background 0.3s;
+    }
+
+    .actions a:hover {
+      background: #475569;
+    }
+
+    .edit-btn { background: #3b82f6; }
+    .view-btn { background: #0ea5e9; }
+    .delete-btn { background: #ef4444; }
+
+    @media (max-width: 600px) {
+      .note-header h1 {
+        font-size: 1.4rem;
+      }
+      .actions a {
+        flex: 1;
+        justify-content: center;
+      }
+    }
+  </style>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="note-container">
+    <div class="note-header">
+      <h1><%= note.title %></h1>
+      <div class="note-meta">
+        <small>Created on: <%= note.createdAt.toDateString() %></small>
+      </div>
+    </div>
+
+    <div class="note-content">
+      <p><%= note.content %></p>
+    </div>
+
+    <div class="actions">
+      <a href="/notes/edit/<%= note._id %>" class="edit-btn">
+        <i data-lucide="edit-3"></i> Edit
+      </a>
+      <a href="/notes" class="view-btn">
+        <i data-lucide="arrow-left-circle"></i> Back
+      </a>
+      <a href="/notes/delete/<%= note._id %>" class="delete-btn" onclick="return confirm('Delete this note?')">
+        <i data-lucide="trash-2"></i> Delete
+      </a>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

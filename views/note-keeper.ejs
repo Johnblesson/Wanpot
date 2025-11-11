@@ -1,214 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wanpot | Note Keeper</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
   <style>
     body {
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #0f172a, #1e293b);
       color: #f8fafc;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
       min-height: 100vh;
       margin: 0;
-      padding: 2rem 1rem;
     }
-    .note-container {
-      width: 100%;
-      max-width: 600px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 15px;
-      padding: 2rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-    h1 {
-      color: #38bdf8;
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    textarea {
-      width: 90%;
-      height: 120px;
-      padding: 1rem;
-      border-radius: 10px;
-      border: none;
-      background: rgba(255,255,255,0.1);
-      color: #f8fafc;
-      resize: none;
-      margin-bottom: 1rem;
-    }
-    textarea::placeholder {
-      color: #cbd5e1;
-    }
-    button {
-      background: linear-gradient(90deg, #3b82f6, #06b6d4);
-      border: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 8px;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      margin: 0.3rem;
-      transition: transform 0.2s;
-    }
-    button:hover {
-      transform: scale(1.05);
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 1rem;
-    }
-    li {
-      background: rgba(255,255,255,0.1);
-      padding: 0.8rem 1rem;
-      margin-bottom: 0.5rem;
-      border-radius: 8px;
+
+    header {
+      background: rgba(15, 23, 42, 0.95);
+      padding: 20px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     }
-    li span {
-      flex: 1;
-      margin-right: 0.5rem;
-      word-break: break-word;
+
+    header h1 {
+      color: #38bdf8;
+      font-size: 1.5rem;
     }
-    .note-actions button {
-      background: rgba(255,255,255,0.15);
+
+    header a { color:white; background:#38bdf8; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600;}
+
+    .note-description {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 15px 25px;
+      background: rgba(15,23,42,0.95);
+      border-left: 4px solid #38bdf8;
+      border-radius: 12px;
       color: #f8fafc;
-      padding: 0.3rem 0.6rem;
-      font-size: 0.9rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      text-align: center;
     }
-    .note-actions button:hover {
-      background: rgba(56,189,248,0.3);
+
+
+    .container {
+      max-width: 900px;
+      margin: 100px auto;
+      background: rgba(30, 41, 59, 0.9);
+      padding: 40px;
+      border-radius: 20px;
     }
-    @media (max-width: 480px) {
-      .note-container {
-        padding: 1rem;
-      }
-      textarea {
-        height: 100px;
-      }
-      button {
-        padding: 0.6rem 1rem;
-        font-size: 0.9rem;
-      }
+
+    h2 {
+      color: #38bdf8;
+      text-align: center;
+      margin-bottom: 25px;
     }
+
+    form {
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+      margin-bottom: 30px;
+    }
+
+    input, textarea {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 12px;
+      color: #e2e8f0;
+      font-size: 16px;
+      outline: none;
+    }
+
+    button {
+      background: #38bdf8;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #0ea5e9;
+    }
+
+    .notes-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .note {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid #334155;
+      cursor: pointer;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .note h3 {
+      color: #38bdf8;
+      margin-bottom: 10px;
+    }
+
+    .note .content {
+      color: #cbd5e1;
+      line-height: 1.45;
+      margin-bottom: 12px;
+      flex-grow: 1;
+    }
+
+    .note .content p {
+      margin: 0 0 0.6em 0;
+    }
+
+    .note .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+   
+
+    .edit-controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      justify-content: flex-end;
+    }
+
+  
+    .actions {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: flex-end;
+    }
+
+    .actions a {
+      color: #94a3b8;
+      font-size: 1.2rem;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .actions a:hover {
+      transform: scale(1.2);
+    }
+
+    .edit-btn:hover {
+      color: #60a5fa; /* blue */
+    }
+
+    .view-btn:hover {
+      color: #22c55e; /* green */
+    }
+
+    .delete-btn:hover {
+      color: #ef4444; /* red */
+    }
+
+
+    .small-btn {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .save-btn { background: #10b981; color: white; }
+    .cancel-btn { background: #64748b; color: white; }
+
+ 
   </style>
 </head>
 <body>
+  <header>
+  <h1>Wanpot</h1>
+  <a href="/logout">Logout</a>
+</header>
 
-  <div class="note-container">
-    <h1>Note Keeper 📝</h1>
-    <textarea id="note-input" placeholder="Write your note here..."></textarea>
-    <div>
-      <button id="add-note">Add Note</button>
-      <button id="export-notes">Export JSON</button>
-      <input type="file" id="import-notes" style="display:none;">
-      <button onclick="document.getElementById('import-notes').click()">Import JSON</button>
-    </div>
-    <ul id="notes-list"></ul>
-  </div>
+  <!-- Short description / note about the Note Keeper -->
+<div class="note-description">
+  <p>📝 Quickly jot down, edit, and organize your notes in one secure place. Everything you need to keep your ideas flowing!</p>
+</div>
 
-  <script>
-    let notes = [];
+  <div class="container">
+    <h2>Welcome, <%= user.fullname %></h2>
 
-    const noteInput = document.getElementById('note-input');
-    const addBtn = document.getElementById('add-note');
-    const notesList = document.getElementById('notes-list');
-    const exportBtn = document.getElementById('export-notes');
-    const importInput = document.getElementById('import-notes');
+    <form action="/notes/add" method="POST">
+      <input type="text" name="title" placeholder="Note Title" required>
+      <textarea name="content" rows="3" placeholder="Write your note..." required></textarea>
+      <button type="submit">Add Note</button>
+    </form>
+<div class="notes-list">
+  <% if (notes.length > 0) { %>
+    <% notes.forEach(note => { %>
+      <div class="note" data-id="<%= note._id %>">
+        <h3><%= note.title %></h3>
 
-    // Add a new note
-    addBtn.addEventListener('click', () => {
-      const text = noteInput.value.trim();
-      if (!text) return alert("Enter a note first!");
-      notes.push(text);
-      noteInput.value = '';
-      renderNotes();
+        <!-- content container: data-full holds the raw text -->
+        <div class="content" data-full="<%- (note.content || '').replace(/\n/g, '\\n').replace(/\"/g, '&quot;') %>"></div>
+
+        <div class="actions">
+          <a href="/notes/edit/<%= note._id %>" class="edit-btn" title="Edit Note">
+            <i class="fas fa-edit"></i>
+          </a>
+          <a href="/notes/view/<%= note._id %>" class="view-btn" title="View Note">
+            <i class="fas fa-eye"></i>
+          </a>
+          <a href="/notes/delete/<%= note._id %>" class="delete-btn" title="Delete Note" onclick="return confirm('Delete this note?')">
+            <i class="fas fa-trash"></i>
+          </a>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p style="text-align:center; color:#94a3b8;">No notes yet. Add one above!</p>
+  <% } %>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.note').forEach(noteEl => {
+    const contentEl = noteEl.querySelector('.content');
+    const raw = (contentEl.dataset.full || '').replace(/\\n/g, '\n');
+    contentEl.innerHTML = truncatedHtmlFromText(raw, 100);
+
+    // Permanent edit button triggers edit mode
+    const editBtn = noteEl.querySelector('.edit-btn');
+    editBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // prevent accidental outer clicks
+      enterEditMode(noteEl);
     });
+  });
+});
 
-    // Render notes
-    function renderNotes() {
-      notesList.innerHTML = '';
-      notes.forEach((note, index) => {
-        const li = document.createElement('li');
-        const span = document.createElement('span');
-        span.textContent = note;
-        const actions = document.createElement('div');
-        actions.classList.add('note-actions');
+function enterEditMode(noteEl) {
+  const id = noteEl.dataset.id;
+  const contentEl = noteEl.querySelector('.content');
+  const raw = (contentEl.dataset.full || '').replace(/\\n/g, '\n');
+  const titleEl = noteEl.querySelector('h3');
 
-        const editBtn = document.createElement('button');
-        editBtn.textContent = 'Edit';
-        editBtn.onclick = () => editNote(index);
+  const textarea = document.createElement('textarea');
+  textarea.value = raw;
+  textarea.rows = 8;
+  textarea.style.width = '100%';
+  textarea.style.background = 'transparent';
+  textarea.style.border = '1px solid #334155';
+  textarea.style.color = '#e2e8f0';
+  textarea.style.borderRadius = '8px';
+  textarea.style.padding = '10px';
+  textarea.style.fontFamily = 'inherit';
+  textarea.style.fontSize = '15px';
 
-        const delBtn = document.createElement('button');
-        delBtn.textContent = 'Delete';
-        delBtn.onclick = () => deleteNote(index);
+  const titleInput = document.createElement('input');
+  titleInput.type = 'text';
+  titleInput.value = titleEl.textContent.trim();
+  titleInput.style.width = '100%';
+  titleInput.style.marginBottom = '8px';
+  titleInput.style.padding = '8px';
+  titleInput.style.borderRadius = '8px';
+  titleInput.style.border = '1px solid #334155';
+  titleInput.style.background = 'transparent';
+  titleInput.style.color = '#e2e8f0';
 
-        actions.appendChild(editBtn);
-        actions.appendChild(delBtn);
-        li.appendChild(span);
-        li.appendChild(actions);
-        notesList.appendChild(li);
+  contentEl.innerHTML = '';
+  contentEl.appendChild(titleInput);
+  contentEl.appendChild(textarea);
+
+  const controls = document.createElement('div');
+  controls.className = 'edit-controls';
+
+  const saveBtn = document.createElement('button');
+  saveBtn.textContent = 'Save';
+  saveBtn.className = 'small-btn save-btn';
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.textContent = 'Cancel';
+  cancelBtn.className = 'small-btn cancel-btn';
+
+  controls.appendChild(cancelBtn);
+  controls.appendChild(saveBtn);
+  contentEl.appendChild(controls);
+
+  cancelBtn.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    contentEl.dataset.full = raw.replace(/\n/g, '\\n');
+    contentEl.innerHTML = truncatedHtmlFromText(raw, 100);
+    titleEl.textContent = titleInput.defaultValue || titleInput.value;
+  });
+
+  saveBtn.addEventListener('click', async (ev) => {
+    ev.stopPropagation();
+    const newContent = textarea.value.trim();
+    const newTitle = titleInput.value.trim() || 'Untitled';
+
+    contentEl.dataset.full = newContent.replace(/\n/g, '\\n');
+    contentEl.innerHTML = truncatedHtmlFromText(newContent, 100);
+    titleEl.textContent = newTitle;
+
+    try {
+      const res = await fetch(`/notes/edit/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ title: newTitle, content: newContent })
       });
-    }
 
-    // Edit note
-    function editNote(index) {
-      const newText = prompt("Edit your note:", notes[index]);
-      if (newText !== null) {
-        notes[index] = newText.trim();
-        renderNotes();
+      if (!res.ok) {
+        alert('Could not save note. Refresh to try again.');
+        window.location.reload();
       }
+    } catch (err) {
+      console.error(err);
+      alert('An error occurred while saving.');
+      window.location.reload();
     }
+  });
+}
 
-    // Delete note
-    function deleteNote(index) {
-      if (confirm("Are you sure you want to delete this note?")) {
-        notes.splice(index, 1);
-        renderNotes();
-      }
+// Helper functions
+function truncatedHtmlFromText(text, wordLimit = 100) {
+  if (!text) return '';
+  const paras = text.split(/\n\n+/).map(p => p.trim()).filter(Boolean);
+  const words = text.split(/\s+/).filter(Boolean);
+  if (words.length <= wordLimit) return paras.map(p => `<p>${escapeHtml(p)}</p>`).join('');
+  let count = 0;
+  const outParas = [];
+  for (const p of paras) {
+    const pWords = p.split(/\s+/).filter(Boolean);
+    if (count + pWords.length <= wordLimit) {
+      outParas.push(`<p>${escapeHtml(p)}</p>`);
+      count += pWords.length;
+    } else {
+      const remaining = wordLimit - count;
+      if (remaining > 0) outParas.push(`<p>${escapeHtml(pWords.slice(0, remaining).join(' '))}...</p>`);
+      break;
     }
+  }
+  return outParas.join('');
+}
 
-    // Export notes to JSON
-    exportBtn.addEventListener('click', () => {
-      if (notes.length === 0) return alert("No notes to export!");
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(notes));
-      const a = document.createElement('a');
-      a.href = dataStr;
-      a.download = "notes.json";
-      a.click();
-    });
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+}
 
-    // Import notes from JSON
-    importInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        try {
-          const importedNotes = JSON.parse(event.target.result);
-          if (Array.isArray(importedNotes)) {
-            notes = importedNotes;
-            renderNotes();
-          } else {
-            alert("Invalid JSON file.");
-          }
-        } catch(err) {
-          alert("Failed to parse JSON.");
-        }
-      }
-      reader.readAsText(file);
-    });
-
-    // Initial render
-    renderNotes();
-  </script>
-
+</script>
 </body>
-</html>

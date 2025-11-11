@@ -74,10 +74,6 @@ router.get("/qrcode-generator", ensureAuthenticated, (req, res) => {
     res.render("qr-code");
 }); 
 
-// Note keepeer route
-router.get("/note-keeper", ensureAuthenticated, (req, res) => {
-    res.render("note-keeper");
-});
 
 // Gpa Calculator route
 router.get("/gpa-calculator", ensureAuthenticated, (req, res) => {

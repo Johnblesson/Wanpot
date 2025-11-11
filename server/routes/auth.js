@@ -10,6 +10,7 @@ import
     edituser, 
     updateUser, 
     deleteUser, 
+    settings,
     viewChangePwdPage, 
     changePassword,  
     googleAuth, 
@@ -54,7 +55,8 @@ router.get("/update-password/:id", ensureAuthenticated, viewChangePwdPage)
 // router.get("/update-password-user/:id", ensureAuthenticated, viewChangePwdPageUser)
 router.patch("/update-password/:id", ensureAuthenticated, changePassword)
 
-
+// settings page
+router.get("/settings", ensureAuthenticated, settings);
 // google oauth
 // router.get('/auth/google', googleAuth);
 // router.get('/auth/google/callback', googleAuthCallback);

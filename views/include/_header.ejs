@@ -5,256 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wanpot - All-in-One Smart App</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: #f8fafc;
-      overflow-x: hidden;
-    }
-
-    header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 100;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .navbar {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 1.7rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #3b82f6, #06b6d4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    nav ul li a {
-      text-decoration: none;
-      color: #f1f5f9;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-
-    nav ul li a:hover {
-      color: #38bdf8;
-    }
-
-    .menu-toggle {
-      display: none;
-      font-size: 1.8rem;
-      cursor: pointer;
-      color: #fff;
-    }
-
-    /* GET STARTED BUTTON */
-    /* GET STARTED BUTTON - OUTLINED STYLE */
-    .get-started-btn {
-      background: transparent;
-      color: #38bdf8 !important;
-      padding: 0.6rem 1.3rem;
-      border-radius: 50px;
-      font-weight: 600;
-      text-decoration: none;
-      border: 2px solid transparent;
-      background-image: linear-gradient(#0f172a, #0f172a),
-                        linear-gradient(90deg, #3b82f6, #06b6d4);
-      background-origin: border-box;
-      background-clip: padding-box, border-box;
-      transition: 0.3s ease;
-    }
-
-    .get-started-btn:hover {
-      color: #fff !important;
-      background-image: linear-gradient(90deg, #3b82f6, #06b6d4),
-                        linear-gradient(90deg, #3b82f6, #06b6d4);
-      box-shadow: 0 4px 20px rgba(6,182,212,0.4);
-      transform: translateY(-2px);
-    }
-
-
-    /* HERO SECTION */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      min-height: 100vh;
-      background: radial-gradient(circle at 30% 50%, rgba(59,130,246,0.3), transparent 70%),
-                  radial-gradient(circle at 70% 60%, rgba(6,182,212,0.3), transparent 70%);
-      padding: 2rem 1rem;
-    }
-
-    .hero h1 {
-      font-size: 2.6rem;
-      max-width: 700px;
-      margin-bottom: 1rem;
-      line-height: 1.3;
-    }
-
-    .hero p {
-      color: #cbd5e1;
-      max-width: 650px;
-      margin-bottom: 2rem;
-      font-size: 1.1rem;
-    }
-
-    .hero .cta-btn {
-      background: linear-gradient(90deg, #3b82f6, #06b6d4);
-      padding: 0.9rem 2rem;
-      border-radius: 50px;
-      color: #fff;
-      font-weight: 600;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    .hero .cta-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 5px 20px rgba(6,182,212,0.4);
-    }
-
-    /* FEATURES */
-    .features {
-      max-width: 1200px;
-      margin: 4rem auto;
-      padding: 0 1rem;
-    }
-
-    .features h2 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .feature-card {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 15px;
-      padding: 2rem;
-      text-align: center;
-      transition: 0.4s;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-5px);
-      background: rgba(255,255,255,0.1);
-    }
-
-    .feature-icon {
-      font-size: 2.3rem;
-      margin-bottom: 1rem;
-      color: #38bdf8;
-    }
-
-    .feature-card h3 {
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
-
-    .feature-card p {
-      color: #94a3b8;
-      font-size: 0.95rem;
-    }
-
-    /* ABOUT SECTION */
-    .about {
-      text-align: center;
-      background: linear-gradient(90deg, #1e3a8a, #2563eb);
-      padding: 3rem 1rem;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      color: #f8fafc;
-    }
-
-    .about h2 {
-      margin-bottom: 1rem;
-    }
-
-    .about p {
-      max-width: 700px;
-      margin: 0 auto;
-      color: #e2e8f0;
-    }
-
-    /* FOOTER */
-    footer {
-      text-align: center;
-      padding: 2rem 1rem;
-      background: #0f172a;
-      color: #64748b;
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 768px) {
-      nav ul {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        right: 20px;
-        top: 70px;
-        width: 200px;
-        background: rgba(15,23,42,0.9);
-        border-radius: 10px;
-        padding: 1rem;
-      }
-
-      nav ul.active {
-        display: flex;
-      }
-
-      .menu-toggle {
-        display: block;
-      }
-
-      .hero h1 {
-        font-size: 2.1rem;
-      }
-    }
+    
   </style>
 </head>
 <body>
   <header>
     <div class="navbar">
       <div class="logo">Wanpot</div>
-     <nav>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#download">Download</a></li>
-        <!-- <li><a href="/" class="btn-get-started">Get Started</a></li> -->
-      </ul>
-    </nav>
-      <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+      <nav>
+        <ul>
+          <li><a href="/dashboard">Home</a></li>
+          <li><a href="/dashboard#features">Features</a></li>
+          <li><a href="/dashboard#about">About</a></li>
+          <li><a href="/dashboard#download">Download</a></li>
+        </ul>
+      </nav>
+
+      <div style="display: flex; align-items: center;">
+        <!-- USER PHOTO DROPDOWN -->
+        <div class="user-menu">
+          <img src="<%= user.photo || '/images/wanpot.png' %>" alt="User" class="user-photo" onclick="toggleDropdown()" />
+          <ul class="dropdown-menu">
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/settings">Settings</a></li>
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+        </div>
+
+        <!-- MENU TOGGLE FOR MOBILE -->
+        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+      </div>
     </div>
   </header>
+
+  <!-- HERO SECTION -->
+  <!-- <section class="hero">
+    <h1>Welcome to Wanpot - Your All-in-One Smart App</h1>
+    <p>Manage your work, projects, and personal life seamlessly in one place.</p>
+    <a href="#features" class="cta-btn">Get Started</a>
+  </section> -->
+
+  <script>
+    // Toggle user dropdown
+    function toggleDropdown() {
+      const dropdown = document.querySelector('.dropdown-menu');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close dropdown if clicked outside
+    window.onclick = function(event) {
+      if (!event.target.matches('.user-photo')) {
+        const dropdown = document.querySelector('.dropdown-menu');
+        if (dropdown) dropdown.style.display = 'none';
+      }
+    }
+
+    // Toggle nav menu for mobile
+    function toggleMenu() {
+      const nav = document.querySelector('nav ul');
+      nav.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>

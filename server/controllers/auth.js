@@ -42,7 +42,7 @@ export const signUp = async (req, res) => {
     }
 
     // Use default photo for all users
-    const defaultPhoto = '/images/default-user.png'; // replace with your default image path
+    const defaultPhoto = '/images/wanpot.png'; // replace with your default image path
 
     // Save user data to the database
     const userData = new User({
@@ -684,19 +684,6 @@ export const changePassword = async (req, res) => {
 
 // View Edit password GET REQUEST Admin
 export const settings = async (req, res) => {
-
-  // Function to determine the time of the day
-  const getTimeOfDay = () => {
-    const currentHour = new Date().getHours();
-  
-    if (currentHour >= 5 && currentHour < 12) {
-      return 'Good Morning';
-    } else if (currentHour >= 12 && currentHour < 18) {
-      return 'Good Afternoon';
-    } else {
-      return 'Good Evening';
-    }
-  };
     try {
     const user = req.isAuthenticated() ? req.user : null;
 
@@ -712,12 +699,9 @@ export const settings = async (req, res) => {
 
     // Check if the user exists
     const isAdmin = role === 'admin'; // Define isAdmin based on the role
-  
-    // Determine the time of the day
-    const greeting = getTimeOfDay();  
+ 
         // Render the admin update password page
-        res.render('admin-settings', {
-            greeting,
+        res.render('settings', {
             user,
             role,
             sudo,
@@ -725,7 +709,6 @@ export const settings = async (req, res) => {
             manager,
             users,
             isAdmin, // Pass isAdmin to the template
-            alert: req.query.alert, // Pass the alert message
         });
     } catch (error) {
       console.error(error);

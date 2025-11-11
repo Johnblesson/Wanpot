@@ -42,7 +42,8 @@ router.get("/", (req, res) => {
 
 // dashboard
 router.get("/dashboard", ensureAuthenticated, (req, res) => {
-  res.render("index");
+     const user = req.isAuthenticated() ? req.user : null;
+  res.render("index", { user });
 });
 
 router.get("/calculator", ensureAuthenticated, (req, res) => {
@@ -85,7 +86,8 @@ router.get("/gpa-calculator", ensureAuthenticated, (req, res) => {
 
 // Dictionary route
 router.get("/dictionary", ensureAuthenticated, (req, res) => {
-    res.render("dictionary");
+    const user = req.isAuthenticated() ? req.user : null;
+    res.render("dictionary", { user });
 });
 
 // Unit Converter route

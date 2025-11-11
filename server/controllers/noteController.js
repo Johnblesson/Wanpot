@@ -1,4 +1,4 @@
-import Note from "../models/Note.js";
+import Note from "../models/note.js";
 
 // 📄 Render the Note Keeper Page
 export const renderNotesPage = async (req, res) => {

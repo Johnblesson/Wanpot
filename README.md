@@ -42,4 +42,44 @@
 ---
 
 ## Project Structure
+wanpot/
+│
+├─ node_modules/ # Node dependencies
+├─ public/ # Static assets (CSS, JS, images)
+├─ routes/ # Express route handlers
+├─ views/ # EJS templates
+│ ├─ login.ejs
+│ ├─ signup.ejs
+│ ├─ settings.ejs
+│ └─ ...
+├─ .env # Environment variables (not committed)
+├─ app.js / server.js # Main application entry
+├─ package.json # NPM dependencies & scripts
+├─ package-lock.json
+└─ README.md
 
+
+## Installation
+
+1. **Clone the repository**
+
+```bash
+git clone git@github.com:Johnblesson/Wanpot.git
+cd Wanpot
+
+npm install
+
+touch .env file
+PORT=3000
+MONGODB_URI=your_mongodb_connection_string
+SESSION_SECRET=your_session_secret
+OPENAI_API_KEY=your_openai_api_key
+
+
+npm run dev
+
+
+Scripts
+npm start - Start the server in production mode
+npm run dev - Start the server with nodemon for development
+npm test - Run tests (if applicable)

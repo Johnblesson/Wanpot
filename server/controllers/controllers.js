@@ -11,7 +11,7 @@ const uploadDir = path.join(process.cwd(), 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
 export const renderPDFTools = (req, res) => {
-  res.render('pdf-tools', { pageTitle: 'Wanpot | PDF Tools' });
+  res.render('features/pdf-tools', { pageTitle: 'Wanpot | PDF Tools' });
 };
 
 // POST /pdf-tools/process
@@ -87,7 +87,7 @@ export const processPDF = async (req, res) => {
 
 
 export const getSolverPage = (req, res) => {
-  res.render("equation-solver", { result: null, equation: "", error: null });
+  res.render("features/equation-solver", { result: null, equation: "", error: null });
 };
 
 // export const solveEquation = (req, res) => {
@@ -126,7 +126,7 @@ export const getSolverPage = (req, res) => {
 export const solveEquation = (req, res) => {
   const { equation } = req.body;
   if (!equation || equation.trim() === "") {
-    return res.render("equation-solver", { result: null, equation: "", error: "Please enter an equation.", steps: [] });
+    return res.render("features/equation-solver", { result: null, equation: "", error: "Please enter an equation.", steps: [] });
   }
 
   try {
@@ -145,16 +145,16 @@ export const solveEquation = (req, res) => {
 
     const result = `Simplified: ${simplified}\nFactored: ${factored}\nRoots: ${roots}`;
 
-    res.render("equation-solver", { result, equation, error: null, steps });
+    res.render("features/equation-solver", { result, equation, error: null, steps });
   } catch (err) {
-    res.render("equation-solver", { result: null, equation, error: "Error solving equation. Check syntax.", steps: [] });
+    res.render("features/equation-solver", { result: null, equation, error: "Error solving equation. Check syntax.", steps: [] });
   }
 };
 
 
 export const scanEquation = async (req, res) => {
   if (!req.file) {
-    return res.render("equation-solver", {
+    return res.render("features/equation-solver", {
       result: null,
       equation: "",
       error: "No image uploaded.",
@@ -167,9 +167,9 @@ export const scanEquation = async (req, res) => {
 
     fs.unlinkSync(req.file.path); // remove uploaded file
 
-    res.render("equation-solver", { result: null, equation: text, error: null });
+    res.render("features/equation-solver", { result: null, equation: text, error: null });
   } catch (err) {
-    res.render("equation-solver", {
+    res.render("features/equation-solver", {
       result: null,
       equation: "",
       error: "Failed to extract text from image.",
@@ -181,7 +181,7 @@ export const scanEquation = async (req, res) => {
 
 // GET Translator Page
 export const getTranslatorPage = (req, res) => {
-  res.render("translator");
+  res.render("features/translator");
 };
 
 // // POST — Translate Text
@@ -287,6 +287,6 @@ export const renderResumeBuilder = (req, res) => {
 // Voice Recorder Controller
 // =============================
 export const renderVoiceRecorder = (req, res) => {
-  res.render("voice-recorder", { pageTitle: "Wanpot | Voice Recorder" });
+  res.render("features/voice-recorder", { pageTitle: "Wanpot | Voice Recorder" });
 };
 // Would you like me to extend it next so it stores transcriptions in a database (with timestamps and optional titles for each note)?

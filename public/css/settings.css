@@ -32,8 +32,22 @@
       align-items: center;
     }
 
+    /* LOGO SECTION */
     .logo {
-      font-size: 1.7rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
       font-weight: 700;
       background: linear-gradient(90deg, #3b82f6, #06b6d4);
       -webkit-background-clip: text;

@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Johnblesson/Wanpot#readme",
   "dependencies": {
+    "@google/genai": "^1.29.0",
     "@vitalets/google-translate-api": "^9.2.1",
     "algebrite": "^1.4.0",
     "bcrypt": "^6.0.0",

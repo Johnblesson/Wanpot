@@ -9,344 +9,322 @@
     body {
       font-family: "Poppins", sans-serif;
       margin: 0;
-      background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
-      color: #333;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
 
     header {
-      background: #2196f3;
+      background: #2563eb;
       color: white;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 1rem 0;
-      font-size: 1.5rem;
-      font-weight: 600;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
     }
 
-    main {
-      flex: 1;
+    header .logo {
       display: flex;
-      justify-content: center;
       align-items: center;
-      padding: 2rem;
+      gap: 10px;
+    }
+
+    header .logo img {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    header .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .typing-container {
-      background: white;
-      border-radius: 20px;
+      background: rgba(30,41,59,0.95);
       padding: 2rem;
-      width: 90%;
+      border-radius: 20px;
+      width: 80%;
       max-width: 750px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
       text-align: center;
-      margin-top: 3rem;
+      margin: 3rem auto;
+      color: #f8fafc;
     }
 
-    h2 {
-      color: #2196f3;
+    .typing-container h2 {
+      color: #60a5fa;
       margin-bottom: 1rem;
     }
 
-    select, button, input {
-      padding: 0.8rem 1rem;
-      border: none;
+    select, button, input, textarea {
       border-radius: 10px;
+      padding: 0.8rem 1rem;
       font-size: 1rem;
       margin: 0.5rem;
-      cursor: pointer;
       transition: all 0.3s;
+      outline: none;
     }
 
     select {
-      background: #e3f2fd;
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #334155;
     }
 
     button {
-      background: #2196f3;
-      color: white;
+      background: linear-gradient(90deg, #2563eb, #3b82f6);
+      color: #fff;
+      border: none;
+      cursor: pointer;
     }
 
     button:hover {
-      background: #1976d2;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      transform: translateY(-2px);
     }
 
-    input {
-      background: #f9f9f9;
-      border: 1px solid #ccc;
-      width: 60%;
+    input, textarea {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #334155;
     }
 
     #text-display {
-      margin: 2rem 0;
-      font-size: 1.2rem;
-      background: #f9f9f9;
+      background: #1e293b;
+      border: 1px solid #334155;
       padding: 1.5rem;
       border-radius: 10px;
-      text-align: left;
-      line-height: 1.8;
-      border: 1px solid #ddd;
       min-height: 100px;
-    }
-
-    #text-input {
-      width: 90%;
-      padding: 1rem;
-      font-size: 1rem;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      outline: none;
-      resize: none;
-      height: 120px;
-    }
-
-    #stats {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-      font-size: 1rem;
+      text-align: left;
+      line-height: 1.6;
+      margin: 2rem 0;
     }
 
     #stats p {
-      margin: 0.3rem 0;
-      background: #e3f2fd;
+      background: #2563eb;
+      color: #fff;
       padding: 0.5rem 1rem;
       border-radius: 8px;
       flex: 1;
-      text-align: center;
       margin: 0.3rem;
-    }
-
-    .leaderboard {
-      margin-top: 2rem;
-      text-align: left;
+      text-align: center;
     }
 
     .leaderboard h3 {
-      color: #2196f3;
+      color: #60a5fa;
       text-align: center;
-      margin-bottom: 0.5rem;
     }
 
     .leaderboard table {
-      width: 100%;
+      width: 95%;
       border-collapse: collapse;
-      background: #f9f9f9;
       border-radius: 10px;
       overflow: hidden;
+      background: #1e293b;
+      color: #f8fafc;
     }
 
     .leaderboard th, .leaderboard td {
       padding: 0.7rem;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #334155;
       text-align: center;
-      font-size: 0.95rem;
     }
 
     .leaderboard th {
-      background: #e3f2fd;
-      color: #333;
+      background: #2563eb;
     }
 
     footer {
+      background: #2563eb;
+      color: white;
       text-align: center;
       padding: 1rem;
-      background: #2196f3;
-      color: white;
       font-size: 0.9rem;
     }
 
-    @media (max-width: 600px) {
-      #stats {
-        flex-direction: column;
-      }
-    }
-
-    /* 🔹 Responsive Design */
     @media (max-width: 768px) {
-      .game-container {
+      .typing-container {
+        width: 88%;
+        padding: 1.5rem;
+      }
+
+      input, textarea, select, button {
         width: 90%;
-        padding: 20px;
-      }
-
-      .word-display {
-        font-size: 1.6rem;
-      }
-
-      input {
-        width: 90%;
-        font-size: 1rem;
-      }
-
-      select, button {
-        width: 100%;
-        margin: 5px 0;
       }
     }
 
     @media (max-width: 480px) {
-      header {
+      header .logo-text {
         font-size: 1.2rem;
-        padding: 10px 0;
       }
 
-      .word-display {
-        font-size: 1.4rem;
-      }
-
-      .stats {
-        font-size: 1rem;
+      #text-display {
+        font-size: 0.95rem;
       }
     }
   </style>
 </head>
 <body>
-  <header>⌨️ Typing Game | Wanpot</header>
-  <main>
-    <div class="typing-container">
-      <h2>Sharpen Your Typing Skills</h2>
-      <p>Select a difficulty and test your typing speed!</p>
+<header>
+  <div class="logo">
+    <img src="/images/wanpot.ico" alt="Wanpot Logo" />
+    <span class="logo-text">Wanpot </span>
+  </div>
+</header>
 
-      <div>
-        <select id="mode">
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-        </select>
-        <button id="start-btn">Start Game</button>
-      </div>
+<main>
+  <div class="typing-container">
+    <h2>Sharpen Your Typing Skills</h2>
+    <p>Select a difficulty and test your typing speed!</p>
 
-      <div id="text-display"></div>
-
-      <textarea id="text-input" placeholder="Start typing here..." disabled></textarea>
-
-      <div id="stats">
-        <p>⏱ Time: <span id="time">0</span>s</p>
-        <p>⚡ WPM: <span id="wpm">0</span></p>
-        <p>🎯 Accuracy: <span id="accuracy">0</span>%</p>
-      </div>
-
-      <div class="leaderboard">
-        <h3>🏆 Top Typists</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Mode</th>
-              <th>WPM</th>
-              <th>Accuracy</th>
-              <th>Time (s)</th>
-            </tr>
-          </thead>
-          <tbody id="leaderboard-body">
-            <tr><td colspan="5">No records yet</td></tr>
-          </tbody>
-        </table>
-      </div>
+    <div>
+      <select id="mode">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+      <button id="start-btn">Start Game</button>
     </div>
-  </main>
 
-  <footer>
-    <p>© 2025 Wanpot | Built by <b>Kharis Pro Tech</b> with ❤️ in Sierra Leone | Empowering Productivity Everywhere</p>
-  </footer>
+    <div id="text-display"></div>
 
-  <script>
-    const textDisplay = document.getElementById("text-display");
-    const textInput = document.getElementById("text-input");
-    const startBtn = document.getElementById("start-btn");
-    const modeSelect = document.getElementById("mode");
-    const timeEl = document.getElementById("time");
-    const wpmEl = document.getElementById("wpm");
-    const accEl = document.getElementById("accuracy");
-    const leaderboardBody = document.getElementById("leaderboard-body");
+    <textarea id="text-input" style="width: 90%;" placeholder="Start typing here..." disabled></textarea>
 
-    let startTime, timer, correctChars = 0, totalChars = 0, currentText = "";
+    <div id="stats">
+      <p>⏱ Time: <span id="time">0</span>s</p>
+      <p>⚡ WPM: <span id="wpm">0</span></p>
+      <p>🎯 Accuracy: <span id="accuracy">0</span>%</p>
+    </div>
 
-    async function loadText(mode) {
-      const res = await fetch("/typing-texts.json");
-      const data = await res.json();
-      const texts = data[mode];
-      return texts[Math.floor(Math.random() * texts.length)];
-    }
+    <div class="leaderboard">
+      <h3>🏆 Top Typists</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Mode</th>
+            <th>WPM</th>
+            <th>Accuracy</th>
+            <th>Time (s)</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <% if (typists && typists.length > 0) { %>
+            <% typists.forEach(t => { %>
+              <tr>
+                <td><%= t.name %></td>
+                <td><%= t.mode %></td>
+                <td><%= t.wpm %></td>
+                <td><%= t.accuracy %></td>
+                <td><%= t.time %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr><td colspan="5">No records yet</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
 
-    function calculateWPM(time, correctWords) {
-      return Math.round((correctWords / time) * 60);
-    }
+<footer>
+  <p>© 2025 Wanpot | Built by <b>Kharis Pro Tech</b> with ❤️ in Sierra Leone | Empowering Productivity Everywhere</p>
+</footer>
 
-    function startTimer() {
-      startTime = new Date();
-      timer = setInterval(() => {
-        const elapsed = Math.floor((new Date() - startTime) / 1000);
-        timeEl.textContent = elapsed;
-      }, 1000);
-    }
+<script>
+const textDisplay = document.getElementById("text-display");
+const textInput = document.getElementById("text-input");
+const startBtn = document.getElementById("start-btn");
+const modeSelect = document.getElementById("mode");
+const timeEl = document.getElementById("time");
+const wpmEl = document.getElementById("wpm");
+const accEl = document.getElementById("accuracy");
 
-    async function startGame() {
-      const mode = modeSelect.value;
-      currentText = await loadText(mode);
-      textDisplay.textContent = currentText;
-      textInput.value = "";
-      textInput.disabled = false;
-      textInput.focus();
-      correctChars = 0;
-      totalChars = currentText.length;
-      clearInterval(timer);
-      timeEl.textContent = 0;
-      wpmEl.textContent = 0;
-      accEl.textContent = 0;
-      startTimer();
-    }
+let startTime, timer, correctChars = 0, totalChars = 0, currentText = "";
 
-    function saveToLeaderboard(name, mode, wpm, accuracy, time) {
-      const record = { name, mode, wpm, accuracy, time };
-      const records = JSON.parse(localStorage.getItem("typingLeaderboard") || "[]");
-      records.push(record);
-      records.sort((a, b) => b.wpm - a.wpm);
-      localStorage.setItem("typingLeaderboard", JSON.stringify(records.slice(0, 5)));
-      loadLeaderboard();
-    }
+async function loadText(mode) {
+  const res = await fetch("/typing-texts.json");
+  const data = await res.json();
+  const texts = data[mode];
+  return texts[Math.floor(Math.random() * texts.length)];
+}
 
-    function loadLeaderboard() {
-      const records = JSON.parse(localStorage.getItem("typingLeaderboard") || "[]");
-      leaderboardBody.innerHTML = records.length
-        ? records.map(r =>
-          `<tr><td>${r.name}</td><td>${r.mode}</td><td>${r.wpm}</td><td>${r.accuracy}%</td><td>${r.time}</td></tr>`
-        ).join("")
-        : `<tr><td colspan="5">No records yet</td></tr>`;
-    }
+function calculateWPM(time, correctWords) {
+  return Math.round((correctWords / time) * 60);
+}
 
-    textInput.addEventListener("input", () => {
-      const input = textInput.value;
-      let correct = 0;
+function startTimer() {
+  startTime = new Date();
+  timer = setInterval(() => {
+    const elapsed = Math.floor((new Date() - startTime) / 1000);
+    timeEl.textContent = elapsed;
+  }, 1000);
+}
 
-      for (let i = 0; i < input.length; i++) {
-        if (input[i] === currentText[i]) correct++;
-      }
+async function startGame() {
+  const mode = modeSelect.value;
+  currentText = await loadText(mode);
+  textDisplay.textContent = currentText;
+  textInput.value = "";
+  textInput.disabled = false;
+  textInput.focus();
+  correctChars = 0;
+  totalChars = currentText.length;
+  clearInterval(timer);
+  timeEl.textContent = 0;
+  wpmEl.textContent = 0;
+  accEl.textContent = 0;
+  startTimer();
+}
 
-      correctChars = correct;
-      const elapsedTime = Math.max((new Date() - startTime) / 1000 / 60, 1 / 60);
-      const wpm = calculateWPM(elapsedTime, correct / 5);
-      const accuracy = Math.round((correct / input.length) * 100) || 0;
-
-      wpmEl.textContent = wpm;
-      accEl.textContent = accuracy;
-
-      if (input === currentText) {
-        clearInterval(timer);
-        const totalTime = timeEl.textContent;
-        const name = prompt("🎉 Great job! Enter your name for the leaderboard:");
-        if (name) saveToLeaderboard(name, modeSelect.value, wpm, accuracy, totalTime);
-        textInput.disabled = true;
-      }
+async function saveToLeaderboard(name, mode, wpm, accuracy, time) {
+  try {
+    await fetch("/api/typists", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, mode, wpm, accuracy, time })
     });
+    location.reload();
+  } catch (err) {
+    console.error(err);
+  }
+}
 
-    startBtn.addEventListener("click", startGame);
+textInput.addEventListener("input", () => {
+  const input = textInput.value;
+  let correct = 0;
 
-    // Initialize leaderboard
-    loadLeaderboard();
-  </script>
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] === currentText[i]) correct++;
+  }
+
+  correctChars = correct;
+  const elapsedTime = Math.max((new Date() - startTime) / 1000 / 60, 1 / 60);
+  const wpm = calculateWPM(elapsedTime, correct / 5);
+  const accuracy = Math.round((correct / input.length) * 100) || 0;
+
+  wpmEl.textContent = wpm;
+  accEl.textContent = accuracy;
+
+  if (input === currentText) {
+    clearInterval(timer);
+    const totalTime = timeEl.textContent;
+    const name = prompt("🎉 Great job! Enter your name for the leaderboard:");
+    if (name) saveToLeaderboard(name, modeSelect.value, wpm, accuracy, totalTime);
+    textInput.disabled = true;
+  }
+});
+
+startBtn.addEventListener("click", startGame);
+</script>
 </body>
 </html>

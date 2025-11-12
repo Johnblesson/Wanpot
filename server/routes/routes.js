@@ -63,10 +63,10 @@ router.get("/quiz", ensureAuthenticated, (req, res) => {
 })
 
 // typing-game route
-router.get("/typing-game", ensureAuthenticated, (req, res) => {
-    const user = req.isAuthenticated() ? req.user : null;
-    res.render("features/typing-game", { user });
-});
+// router.get("/typing-game", ensureAuthenticated, (req, res) => {
+//     const user = req.isAuthenticated() ? req.user : null;
+//     res.render("features/typing-game", { user });
+// });
 
 // password-generator route
 router.get("/password-generator", ensureAuthenticated, (req, res) => {

@@ -69,6 +69,28 @@
       color: #38bdf8;
     }
 
+    /* LOGO SECTION */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
     .menu-toggle {
       display: none;
       font-size: 1.8rem;
@@ -267,7 +289,11 @@
 <body>
   <header>
     <div class="navbar">
-      <div class="logo">Wanpot</div>
+      <!-- LOGO SECTION -->
+    <div class="logo">
+      <img src="/images/wanpot.ico" alt="Wanpot Logo">
+      <span class="logo-text">Wanpot</span>
+    </div>
      <nav>
       <ul>
         <li><a href="/">Home</a></li>
@@ -409,7 +435,7 @@
       <p>Challenge your brain or prepare for tests the fun way.</p>
     </a>
 
-    <a href="/typing-game" class="feature-card">
+    <a href="/api/typists/game" class="feature-card">
       <div class="feature-icon"><i class="fas fa-keyboard"></i></div>
       <h3>Typing Game</h3>
       <p>Improve your typing skills with interactive fun.</p>

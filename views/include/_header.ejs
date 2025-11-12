@@ -10,33 +10,41 @@
 </head>
 <body>
   <header>
-    <div class="navbar">
-      <div class="logo">Wanpot</div>
-      <nav>
-        <ul>
-          <li><a href="/dashboard">Home</a></li>
-          <li><a href="/dashboard#features">Features</a></li>
-          <li><a href="/dashboard#about">About</a></li>
-          <li><a href="/dashboard#download">Download</a></li>
-        </ul>
-      </nav>
-
-      <div style="display: flex; align-items: center;">
-        <!-- USER PHOTO DROPDOWN -->
-        <div class="user-menu">
-          <img src="<%= user.photo || '/images/wanpot.png' %>" alt="User" class="user-photo" onclick="toggleDropdown()" />
-          <ul class="dropdown-menu">
-            <li><a href="/profile">Profile</a></li>
-            <li><a href="/settings">Settings</a></li>
-            <li><a href="/logout">Logout</a></li>
-          </ul>
-        </div>
-
-        <!-- MENU TOGGLE FOR MOBILE -->
-        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
-      </div>
+  <div class="navbar">
+    <!-- LOGO SECTION -->
+    <div class="logo">
+      <img src="/images/wanpot.ico" alt="Wanpot Logo">
+      <span class="logo-text">Wanpot</span>
     </div>
-  </header>
+
+    <!-- NAVIGATION -->
+    <nav>
+      <ul>
+        <li><a href="/dashboard">Home</a></li>
+        <li><a href="/dashboard#features">Features</a></li>
+        <li><a href="/dashboard#about">About</a></li>
+        <li><a href="/dashboard#download">Download</a></li>
+      </ul>
+    </nav>
+
+    <!-- USER + MENU -->
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <!-- USER PHOTO DROPDOWN -->
+      <div class="user-menu">
+        <img src="<%= user.photo || '/images/wanpot.png' %>" alt="User" class="user-photo" onclick="toggleDropdown()" />
+        <ul class="dropdown-menu">
+          <li><a href="/profile">Profile</a></li>
+          <li><a href="/settings">Settings</a></li>
+          <li><a href="/logout">Logout</a></li>
+        </ul>
+      </div>
+
+      <!-- MENU TOGGLE FOR MOBILE -->
+      <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    </div>
+  </div>
+</header>
+
 
   <!-- HERO SECTION -->
   <!-- <section class="hero">

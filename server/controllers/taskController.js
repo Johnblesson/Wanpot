@@ -10,7 +10,7 @@ export const getTaskPlanner = async (req, res) => {
       completed: tasks.filter(t => t.status === 'Completed').length,
     };
 
-    res.render('taskPlanner', { user: req.user, tasks, totals });
+    res.render('features/taskPlanner', { user: req.user, tasks, totals });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');

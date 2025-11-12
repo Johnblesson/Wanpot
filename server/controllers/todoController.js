@@ -8,7 +8,7 @@ export const getTodos = async (req, res) => {
       completed: todos.filter(t => t.completed).length,
       pending: todos.filter(t => !t.completed).length
     };
-    res.render('todo', { user: req.user, todos, totals });
+    res.render('features/todo', { user: req.user, todos, totals });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');

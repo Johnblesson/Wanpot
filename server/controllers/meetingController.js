@@ -5,7 +5,7 @@ export const getMeetingScheduler = async (req, res) => {
   try {
     const meetings = await Meeting.find({ user: req.user._id }).sort({ date: 1, time: 1 });
 
-    res.render('meetingScheduler', {
+    res.render('features/meetingScheduler', {
       title: 'Meeting Scheduler',
       user: req.user,
       meetings

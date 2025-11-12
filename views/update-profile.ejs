@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wanpot | Profile Details</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="icon" href="/images/wanpot.ico" type="image/x-icon">
+<style>
+/* Global Styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg,#0f172a,#1e293b);
+  color: #f8fafc;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.container {
+  background: rgba(30,41,59,0.95);
+  padding: 40px;
+  border-radius: 25px;
+  max-width: 520px;
+  width: 100%;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+  transition: all 0.3s ease;
+}
+
+h1 {
+  color: #38bdf8;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.profile-photo {
+  display: block;
+  margin: 0 auto 15px;
+  border-radius: 50%;
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border: 3px solid #38bdf8;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+p {
+  text-align: center;
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 25px;
+}
+
+/* Form Card */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #38bdf8;
+}
+
+input[type="text"],
+input[type="email"],
+select {
+  width: 90%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: #1e293b;
+  color: #f8fafc;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid #38bdf8;
+  background: #16202b;
+}
+
+button {
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #38bdf8;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+button:hover {
+  background: #0ea5e9;
+  transform: translateY(-2px);
+}
+
+/* Responsive Enhancements */
+@media(max-width:600px){
+  .container {
+    padding: 30px 20px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  .profile-photo {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 12px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  select,
+  button {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+@media(max-width:400px){
+  .container {
+    padding: 25px 15px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .profile-photo {
+    width: 75px;
+    height: 75px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>PROFILE DETAILS</h1>
+
+  <img src="<%= users.photo %>" alt="User Photo" class="profile-photo">
+  <p>Update your details below</p>
+
+  <form action="/update-profile/<%= users._id %>?_method=PATCH" method="POST">
+    <input type="hidden" name="aid" id="aid" value="">
+
+    <div class="form-group">
+      <label for="title">Fullname:</label>
+      <input type="text" id="title" name="title" value="<%= users.fullname %>" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" value="<%= users.username %>" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="role">Role:</label>
+      <input type="text" id="role" name="role" value="<%= users.role %> <%= users.sudo ? '(sudo administrator)' : '' %> <%= users.overseer ? '(General Overseer)' : '' %>" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" value="<%= users.email %>" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone:</label>
+      <input type="text" id="phone" name="phone" value="<%= users.phone %>" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status:</label>
+      <select id="status" name="status">
+        <option value="" disabled selected hidden>Select Status</option>
+        <option value="active" <%= users.status==='active' ? 'selected' : '' %>>Active</option>
+        <option value="inactive" <%= users.status==='inactive' ? 'selected' : '' %>>Inactive</option>
+      </select>
+    </div>
+
+    <button type="submit">SAVE DETAILS</button>
+  </form>
+</div>
+
+</body>
+</html>

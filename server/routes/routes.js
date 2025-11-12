@@ -47,53 +47,62 @@ router.get("/dashboard", ensureAuthenticated, (req, res) => {
 });
 
 router.get("/calculator", ensureAuthenticated, (req, res) => {
-  res.render("calculator");
+    const user = req.isAuthenticated() ? req.user : null;
+  res.render("features/calculator", { user });
 });
 
 router.get("/stopwatch", ensureAuthenticated, (req, res) => {
-    res.render("stopwatch");
+    const user = req.isAuthenticated() ? req.user : null;
+    res.render("features/stopwatch", { user });
 });
 
 // quiz route
 router.get("/quiz", ensureAuthenticated, (req, res) => {
-    res.render("quiz");
+    const user = req.isAuthenticated() ? req.user : null;
+    res.render("features/quiz", { user });
 })
 
 // typing-game route
 router.get("/typing-game", ensureAuthenticated, (req, res) => {
-    res.render("typing-game");
+    const user = req.isAuthenticated() ? req.user : null;
+    res.render("features/typing-game", { user });
 });
 
 // password-generator route
 router.get("/password-generator", ensureAuthenticated, (req, res) => {
-    res.render("password-generator");
+    const user = req.isAuthenticated() ? req.user : null;
+    res.render("features/password-generator", { user });
 });
 
 // Qrcode generator route
 router.get("/qrcode-generator", ensureAuthenticated, (req, res) => {
-    res.render("qr-code");
+    const user = req.isAuthenticated() ? req.user : null;
+    res.render("features/qr-code", { user });
 }); 
 
 
 // Gpa Calculator route
 router.get("/gpa-calculator", ensureAuthenticated, (req, res) => {
-    res.render("gpa-calculator");
+    const user = req.isAuthenticated() ? req.user : null;
+    res.render("features/gpa-calculator", { user });
 });
 
 // Dictionary route
 router.get("/dictionary", ensureAuthenticated, (req, res) => {
     const user = req.isAuthenticated() ? req.user : null;
-    res.render("dictionary", { user });
+    res.render("features/dictionary", { user });
 });
 
 // Unit Converter route
 router.get("/unit-converter", ensureAuthenticated, (req, res) => {
-    res.render("unit-converter");
+    const user = req.isAuthenticated() ? req.user : null;
+    res.render("features/unit-converter", { user });
 });
 
 // flashcards route
 router.get("/flashcards", ensureAuthenticated, (req, res) => {
-    res.render("flashcards");
+    const user = req.isAuthenticated() ? req.user : null;
+    res.render("features/flashcards", { user });
 });
 
 // equation-solver route
@@ -107,12 +116,14 @@ router.post("/translate", ensureAuthenticated, translateText);
  router.get("/voice-recorder", ensureAuthenticated, renderVoiceRecorder);
 // Pomodoro Timer
 router.get("/pomodoro", ensureAuthenticated, (req, res) => {
-    res.render("pomodoro");
+    const user = req.isAuthenticated() ? req.user : null;
+    res.render("features/pomodoro", { user });
 });
 
 // Email Signature Generator
 router.get("/signature-generator", ensureAuthenticated, (req, res) => {
-    res.render("signature-generator");
+    const user = req.isAuthenticated() ? req.user : null;
+    res.render("features/signature-generator", { user });
 });
 
 // Export the router

@@ -7,7 +7,7 @@ export const renderNotesPage = async (req, res) => {
     if (!userId) return res.redirect("/login");
 
     const notes = await Note.find({ userId }).sort({ createdAt: -1 });
-    res.render("note-keeper", { user: req.user, notes });
+    res.render("features/note-keeper", { user: req.user, notes });
   } catch (error) {
     console.error("Error fetching notes:", error);
     res.status(500).send("Server Error");

@@ -34,7 +34,7 @@ export const getExpenseTracker = async (req, res) => {
     const monthlyTotal = calcTotal(monthStart);
     const yearlyTotal = calcTotal(yearStart);
 
-    res.render('expenseTracker', {
+    res.render('features/expenseTracker', {
       title: 'Expense Tracker',
       user: req.user,
       expenses,

@@ -46,11 +46,11 @@ router.post("/signup", signUp);
 router.post("/login", logIn);
 router.get("/login", getLoginPage);
 router.get("/signup", cacheMiddleware, getSignUpPage);
-router.get("/active-sessions", ensureAuthenticated, isAdmin, activeUserSessions)
-router.get("/edit-user/:id", ensureAuthenticated, isAdmin, edituser);
-router.patch("/edit-user/:id", ensureAuthenticated, isAdmin, checkManagerMiddleware, updateUser)
-router.delete("/delete-user/:id", ensureAuthenticated, isAdmin, checkManagerMiddleware, deleteUser)
-router.get("/delete-user/:id", ensureAuthenticated, isAdmin, checkManagerMiddleware, deleteUser)
+router.get("/active-sessions", ensureAuthenticated, activeUserSessions)
+router.get("/update-profile/:id", ensureAuthenticated, edituser);
+router.patch("/update-profile/:id", ensureAuthenticated, checkManagerMiddleware, updateUser)
+router.delete("/delete-user/:id", ensureAuthenticated, checkManagerMiddleware, deleteUser)
+router.get("/delete-user/:id", ensureAuthenticated, checkManagerMiddleware, deleteUser)
 router.get("/update-password/:id", ensureAuthenticated, viewChangePwdPage)
 // router.get("/update-password-user/:id", ensureAuthenticated, viewChangePwdPageUser)
 router.patch("/update-password/:id", ensureAuthenticated, changePassword)

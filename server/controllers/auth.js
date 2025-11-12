@@ -79,6 +79,72 @@ export const googleAuthCallback = passport.authenticate('google', {
 
 
 // Login Controller
+// export const logIn = (req, res, next) => {
+//   passport.authenticate('local', async (err, user, info) => {
+//     try {
+//       if (err) {
+//         return res.render('login', {
+//           errorMessages: ['An error occurred during login. Please try again.'],
+//         });
+//       }
+
+//       if (!user) {
+//         return res.render('login', {
+//           errorMessages: [info.message || 'User does not exist.'],
+//         });
+//       }
+
+//       if (user.status !== 'active') {
+//         return res.render('login', {
+//           errorMessages: ['Forbidden: User status is inactive.'],
+//         });
+//       }
+
+//       // Log the user in
+//       req.login(user, async (loginErr) => {
+//         if (loginErr) {
+//           return res.render('login', {
+//             errorMessages: ['Login failed. Please try again.'],
+//           });
+//         }
+
+//         // Save user in session
+//         delete user.password;
+//         req.session.user = user;
+
+//         // Handle 2FA
+//         if (user.twoFactorEnabled) {
+//           return res.redirect('/2fa-verify');
+//         }
+
+//         // Generate JWT token
+//         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+
+//         // Check if user has messages
+//         const hasMessages = user.messages && user.messages.length > 0;
+
+//         // Redirect user accordingly
+//         let redirectUrl = user.role === 'admin' 
+//           ? `/admin-dashboard?token=${token}` 
+//           : `/dashboard?token=${token}`;
+
+//         if (hasMessages) {
+//           redirectUrl += '&alert=You have new messages';
+//         }
+
+//         return res.redirect(redirectUrl);
+//       });
+//     } catch (catchErr) {
+//       console.error('Login Error:', catchErr);
+//       return res.render('login', {
+//         errorMessages: ['An internal server error occurred. Please try again later.'],
+//       });
+//     }
+//   })(req, res, next);
+// };
+
+
+// Login Controller
 export const logIn = (req, res, next) => {
   passport.authenticate('local', async (err, user, info) => {
     try {
@@ -112,6 +178,28 @@ export const logIn = (req, res, next) => {
         delete user.password;
         req.session.user = user;
 
+        // --- Post-Login / Security Updates ---
+        const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        const agent = useragent.parse(req.headers['user-agent']);
+        const country = geoip.lookup(ip)?.country || 'Unknown';
+
+        // Update last login details and append to loginHistory
+        await User.findByIdAndUpdate(user._id, {
+          $set: {
+            lastLoginIP: ip,
+            lastLoginDevice: agent.toString(),
+            lastLoginCountry: country,
+          },
+          $push: {
+            loginHistory: { 
+              ip, 
+              device: agent.toString(), 
+              country, 
+              date: new Date() 
+            },
+          },
+        });
+
         // Handle 2FA
         if (user.twoFactorEnabled) {
           return res.redirect('/2fa-verify');
@@ -142,6 +230,7 @@ export const logIn = (req, res, next) => {
     }
   })(req, res, next);
 };
+
 
 
 
@@ -485,29 +574,8 @@ export const allAdminUser = async (req, res) => {
 
 // Get
 export const edituser = async (req, res) => {
-  const locals = {
-    title: "Edit user",
-    description: "This is the edit user page.",
-  };
-
-  // Function to determine the time of the day
-  const getTimeOfDay = () => {
-    const currentHour = new Date().getHours();
-
-    if (currentHour >= 5 && currentHour < 12) {
-      return 'Good Morning';
-    } else if (currentHour >= 12 && currentHour < 18) {
-      return 'Good Afternoon';
-    } else {
-      return 'Good Evening';
-    }
-  };
-
   try {
     const users = await User.findOne({ _id: req.params.id });
-
-    // Determine the time of the day
-    const greeting = getTimeOfDay();
 
     const user = req.isAuthenticated() ? req.user : null;
 
@@ -516,15 +584,12 @@ export const edituser = async (req, res) => {
     const manager = user && user.manager ? user.manager : false; 
     const accountant = user && user.accountant ? user.accountant : false;
 
-    res.render("edit-user", {
-      locals,
+    res.render("update-profile", {
       users,
-      greeting,
       user,
       sudo,
       manager,
       accountant,
-      alert: req.query.alert, // Pass the alert message
     });
   } catch (error) {
     // Handle errors gracefully
@@ -569,19 +634,6 @@ export const deleteUser = async (req, res) => {
 
 // View Edit password GET REQUEST Admin
 export const viewChangePwdPage = async (req, res) => {
-
-// Function to determine the time of the day
-const getTimeOfDay = () => {
-  const currentHour = new Date().getHours();
-
-  if (currentHour >= 5 && currentHour < 12) {
-    return 'Good Morning';
-  } else if (currentHour >= 12 && currentHour < 18) {
-    return 'Good Afternoon';
-  } else {
-    return 'Good Evening';
-  }
-};
   try {
     const users = await User.findOne({ _id: req.params.id });
 
@@ -599,14 +651,12 @@ const getTimeOfDay = () => {
   const sudo = user && user.sudo ? user.sudo : false;
   const accountant = user && user.accountant ? user.accountant : false;
   const manager = user && user.manager ? user.manager : false;
-  const greeting = getTimeOfDay();
 
     // Check the role and render the appropriate page
     if (role === 'admin') {
       // Render the admin update password page
       res.render('update-password', {
           users,
-          greeting,
           user,
           sudo,
           accountant,
@@ -615,9 +665,8 @@ const getTimeOfDay = () => {
       });
   } else if (role === 'user') {
       // Render the user update password page
-      res.render('update-password-user', {
-          users, 
-          greeting,
+      res.render('update-password', {
+          users,
           user,
           role
       });

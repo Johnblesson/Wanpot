@@ -42,7 +42,7 @@ export const signUp = async (req, res) => {
     }
 
     // Use default photo for all users
-    const defaultPhoto = '/images/wanpot.png'; // replace with your default image path
+    const defaultPhoto = '/images/avatar.png'; // replace with your default image path
 
     // Save user data to the database
     const userData = new User({

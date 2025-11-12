@@ -92,7 +92,6 @@ app.use('/meeting-scheduler', meetingRoutes);
 app.use('/task-planner', taskRoutes);
 app.use('/todo', todoRoutes);
 
-
 // Set up the server to listen on port 5000
 const PORT = process.env.PORT;
 // server.listen(PORT, '0.0.0.0', () => {

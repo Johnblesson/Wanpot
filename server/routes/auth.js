@@ -96,6 +96,12 @@ router.get('/forbidden', (req, res) => {
     res.render('404');
 });
 
+//  Route
+router.get('/notAuthenticated', (req, res) => {
+    res.render('notAuthenticated');
+});
+
+
 // Sudo only
 router.get("/sudo-only", getSudoOnly)
 router.get("/admin-only", getAdminOnly)

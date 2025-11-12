@@ -6,7 +6,7 @@ const ensureAuthenticated = (req, res, next) => {
       next();
     } else {
       // If the user is not authenticated, redirect them to the login page or send an unauthorized response
-      res.redirect("/");
+      res.redirect("/notAuthenticated");
     }
   };
     

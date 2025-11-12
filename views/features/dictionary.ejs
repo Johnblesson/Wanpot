@@ -247,99 +247,7 @@
   <footer>
     <p>© 2025 Wanpot | Built with ❤️ in Sierra Leone by <strong>Kharis Pro Tech</strong> | Empowering Productivity Everywhere</p>
   </footer>
-
-  <!-- <script>
-    function toggleMenu() { document.querySelector('nav ul').classList.toggle('active'); }
-
-    const searchBtn = document.getElementById('searchBtn');
-    const wordInput = document.getElementById('wordInput');
-    const resultDiv = document.getElementById('result');
-    const historyList = document.getElementById('historyList');
-    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
-    let searchHistory = JSON.parse(localStorage.getItem('dictionaryHistory')) || [];
-
-    searchBtn.addEventListener('click', searchWord);
-    wordInput.addEventListener('keypress', e => { if(e.key==='Enter') searchWord(); });
-    clearHistoryBtn.addEventListener('click', clearHistory);
-
-    function updateHistoryUI() {
-      historyList.innerHTML = '';
-      searchHistory.slice().reverse().forEach(word => {
-        const div = document.createElement('div');
-        div.textContent = word;
-        div.classList.add('history-item');
-        div.onclick = () => { wordInput.value = word; searchWord(); };
-        historyList.appendChild(div);
-      });
-    }
-
-    function addToHistory(word) {
-      if (!searchHistory.includes(word)) {
-        searchHistory.push(word);
-        localStorage.setItem('dictionaryHistory', JSON.stringify(searchHistory));
-        updateHistoryUI();
-      }
-    }
-
-    function clearHistory() {
-      searchHistory = [];
-      localStorage.removeItem('dictionaryHistory');
-      updateHistoryUI();
-    }
-
-    async function searchWord() {
-      const word = wordInput.value.trim();
-      if(!word) return;
-      resultDiv.innerHTML = "<p>Loading...</p>";
-
-      try {
-        const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
-        if(!res.ok) throw new Error("Word not found");
-        const data = await res.json();
-        displayResult(data[0]);
-        addToHistory(word);
-      } catch(err) {
-        resultDiv.innerHTML = `<p style="color:#ef4444;">Word not found or no internet connection.</p>`;
-      }
-    }
-
-    function displayResult(data) {
-      const meanings = data.meanings.map(m => `
-        <div class="definition">
-          <div class="part-of-speech">${m.partOfSpeech}</div>
-          ${m.definitions.map(d => `
-            <p>• ${d.definition}</p>
-            ${d.example ? `<p class="example">"${d.example}"</p>` : ''}
-          `).join('')}
-          ${m.synonyms && m.synonyms.length ? 
-            `<div class="synonyms"><strong>Synonyms:</strong> ${m.synonyms.map(s => `<span class="badge">${s}</span>`).join('')}</div>` : ''}
-          ${m.antonyms && m.antonyms.length ? 
-            `<div class="antonyms"><strong>Antonyms:</strong> ${m.antonyms.map(a => `<span class="badge">${a}</span>`).join('')}</div>` : ''}
-        </div>
-      `).join('');
-
-      const phoneticText = data.phonetics?.[0]?.text || '';
-      const audio = data.phonetics?.find(p => p.audio)?.audio || '';
-
-      resultDiv.innerHTML = `
-        <div class="word-header">
-          <div class="word">${data.word}</div>
-          ${audio ? `<button class="voice-btn" onclick="playAudio('${audio}')"><i class='fa-solid fa-volume-high'></i></button>` : ''}
-        </div>
-        ${phoneticText ? `<div class="phonetic">${phoneticText}</div>` : ''}
-        ${meanings}
-      `;
-    }
-
-    function playAudio(audioUrl) {
-      const audio = new Audio(audioUrl);
-      audio.play();
-    }
-
-    // Initialize
-    updateHistoryUI();
-  </script> -->
-
+<!-- 
 <script>
 const searchBtn = document.getElementById('searchBtn');
 const wordInput = document.getElementById('wordInput');
@@ -414,6 +322,109 @@ function displayResult(data) {
         `<div class="synonyms"><strong>Synonyms:</strong> ${m.synonyms.map(s => `<span class="badge">${s}</span>`).join('')}</div>` : ''}
       ${m.antonyms?.length ? 
         `<div class="antonyms"><strong>Antonyms:</strong> ${m.antonyms.map(a => `<span class="badge">${a}</span>`).join('')}</div>` : ''}
+    </div>
+  `).join('');
+
+  const phoneticText = data.phonetics?.[0]?.text || '';
+  const audio = data.phonetics?.find(p => p.audio)?.audio || '';
+
+  resultDiv.innerHTML = `
+    <div class="word-header">
+      <div class="word">${data.word}</div>
+      ${audio ? `<button class="voice-btn" onclick="playAudio('${audio}')"><i class='fa-solid fa-volume-high'></i></button>` : ''}
+    </div>
+    ${phoneticText ? `<div class="phonetic">${phoneticText}</div>` : ''}
+    ${meanings}
+  `;
+}
+
+function playAudio(audioUrl) {
+  const audio = new Audio(audioUrl);
+  audio.play();
+}
+
+// Event listeners
+searchBtn.addEventListener('click', searchWord);
+wordInput.addEventListener('keypress', e => { if(e.key==='Enter') searchWord(); });
+clearHistoryBtn.addEventListener('click', clearHistoryDB);
+
+// Initialize
+loadHistory();
+</script> -->
+
+
+<script>
+const searchBtn = document.getElementById('searchBtn');
+const wordInput = document.getElementById('wordInput');
+const resultDiv = document.getElementById('result');
+const historyList = document.getElementById('historyList');
+const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+
+// Fetch search history from DB (newest first)
+async function loadHistory() {
+  try {
+    const res = await fetch('/search/history');
+    if (!res.ok) throw new Error('Failed to fetch history');
+    const history = await res.json();
+    historyList.innerHTML = '';
+    history.slice().reverse().forEach(item => { // newest on top
+      const div = document.createElement('div');
+      div.textContent = item.word;
+      div.classList.add('history-item');
+      div.onclick = () => { wordInput.value = item.word; searchWord(); };
+      historyList.appendChild(div);
+    });
+  } catch(err) { console.error(err); }
+}
+
+// Add word to DB history (prevents duplicates)
+async function addToHistoryDB(word) {
+  try {
+    await fetch('/search/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ word })
+    });
+    loadHistory();
+  } catch(err) { console.error(err); }
+}
+
+// Clear DB history
+async function clearHistoryDB() {
+  try {
+    await fetch('/search/clear', { method: 'DELETE' });
+    loadHistory();
+  } catch(err) { console.error(err); }
+}
+
+// Search word in dictionary API
+async function searchWord() {
+  const word = wordInput.value.trim();
+  if (!word) return;
+  resultDiv.innerHTML = "<p>Loading...</p>";
+
+  try {
+    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+    if (!res.ok) throw new Error('Word not found');
+    const data = await res.json();
+    displayResult(data[0]);
+    addToHistoryDB(word); // Save to DB (duplicates prevented in backend)
+  } catch(err) {
+    resultDiv.innerHTML = `<p style="color:#ef4444;">Word not found or no internet connection.</p>`;
+  }
+}
+
+// Display API result
+function displayResult(data) {
+  const meanings = data.meanings.map(m => `
+    <div class="definition">
+      <div class="part-of-speech">${m.partOfSpeech}</div>
+      ${m.definitions.map(d => `
+        <p>• ${d.definition}</p>
+        ${d.example ? `<p class="example">"${d.example}"</p>` : ''}
+      `).join('')}
+      ${m.synonyms?.length ? `<div class="synonyms"><strong>Synonyms:</strong> ${m.synonyms.map(s => `<span class="badge">${s}</span>`).join('')}</div>` : ''}
+      ${m.antonyms?.length ? `<div class="antonyms"><strong>Antonyms:</strong> ${m.antonyms.map(a => `<span class="badge">${a}</span>`).join('')}</div>` : ''}
     </div>
   `).join('');
 

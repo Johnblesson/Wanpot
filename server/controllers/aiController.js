@@ -10,7 +10,8 @@ export const renderAIPage = async (req, res) => {
     const messages = chatRecord ? chatRecord.messages : [];
     const chatId = chatRecord ? chatRecord._id : null;
 
-    const user = req.user ? req.user.username : "Guest";
+    const user = req.isAuthenticated() ? req.user : null;
+    
     res.render("ai", { messages, chatId, user });
   } catch (err) {
     console.error(err);

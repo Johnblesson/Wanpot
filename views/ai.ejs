@@ -24,7 +24,7 @@
 </header>
 
 <section class="ai-about">
-  <h2>About Wanpot AI</h2>
+  <h2>Welcome, <%= user.fullname || 'Guest' %></h2>
   <p>Wanpot AI is your intelligent assistant powered by next-generation machine learning. Ask questions, get instant explanations, brainstorm ideas, or clarify technical and academic concepts — all in your familiar Wanpot environment.</p>
 </section>
 
@@ -34,7 +34,7 @@
 
 <form id="chatForm" class="chat-input-wrapper">
   <div class="input-container">
-    <input type="text" name="prompt" id="prompt" placeholder="Type your message..." autocomplete="off" required>
+    <input type="text" name="prompt" id="prompt" placeholder="Type your message, <%= user.fullname || 'Guest' %>..." autocomplete="off" required>
     <button type="submit" id="sendButton"><i class="fas fa-paper-plane"></i></button>
   </div>
   <input type="hidden" name="chatHistory" id="chatHistory" value='<%= JSON.stringify(messages || []) %>'>

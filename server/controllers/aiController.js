@@ -1,3 +1,4 @@
+// controllers/aiController.js
 import { GoogleGenAI } from "@google/genai";
 import ChatHistory from "../models/chatHistory.js";
 
@@ -6,13 +7,18 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 // Render the AI chat page
 export const renderAIPage = async (req, res) => {
   try {
-    // Optionally, fetch last 1 chat for the user
-    const chatRecord = await ChatHistory.findOne({ user: req.user?._id }).sort({ createdAt: -1 }).lean();
+    // Fetch the latest chat for this user
+    const chatRecord = await ChatHistory.findOne({ user: req.user?._id })
+      .sort({ createdAt: -1 })
+      .lean();
+
     const messages = chatRecord ? chatRecord.messages : [];
-    res.render("ai", { messages });
+    const chatId = chatRecord ? chatRecord._id : null;
+
+    res.render("ai", { messages, chatId });
   } catch (err) {
     console.error(err);
-    res.render("ai", { messages: [] });
+    res.render("ai", { messages: [], chatId: null });
   }
 };
 
@@ -26,30 +32,33 @@ export const generateAIResponse = async (req, res) => {
     // Generate AI response
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: prompt
+      contents: prompt,
     });
 
-    // Find or create chat history
+    // Find existing chat or create a new one
     let chatRecord;
     if (chatId) {
       chatRecord = await ChatHistory.findById(chatId);
-      if (!chatRecord) {
-        chatRecord = new ChatHistory({ user: req.user?._id, messages: [] });
-      }
-    } else {
+    }
+
+    if (!chatRecord) {
       chatRecord = new ChatHistory({ user: req.user?._id, messages: [] });
     }
 
-    // Append messages
+    // Append user and AI messages
     chatRecord.messages.push({ sender: "user", text: prompt });
     chatRecord.messages.push({ sender: "ai", text: response.text });
 
     await chatRecord.save();
 
-    res.render("ai", { messages: chatRecord.messages });
+    // Render updated chat with persistent chatId
+    res.render("ai", { messages: chatRecord.messages, chatId: chatRecord._id });
   } catch (err) {
     console.error(err);
-    const messages = [{ sender: "user", text: req.body.prompt }, { sender: "ai", text: "Error generating response. Try again." }];
-    res.render("ai", { messages });
+    const messages = [
+      { sender: "user", text: req.body.prompt },
+      { sender: "ai", text: "Error generating response. Try again." },
+    ];
+    res.render("ai", { messages, chatId: null });
   }
 };

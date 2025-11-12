@@ -17,6 +17,7 @@ import expenseRoutes from "./server/routes/expenseRoutes.js";
 import meetingRoutes from "./server/routes/meetingRoutes.js";
 import taskRoutes from "./server/routes/taskRoutes.js";
 import todoRoutes from "./server/routes/todoRoutes.js";
+import searchHistoryRoutes from "./server/routes/searchRoutes.js";
 import http from "http";
 import compression from "compression";
 import { Server } from "socket.io";
@@ -91,6 +92,7 @@ app.use('/expense-tracker', expenseRoutes);
 app.use('/meeting-scheduler', meetingRoutes);
 app.use('/task-planner', taskRoutes);
 app.use('/todo', todoRoutes);
+app.use('/search', searchHistoryRoutes);
 
 // Set up the server to listen on port 5000
 const PORT = process.env.PORT;

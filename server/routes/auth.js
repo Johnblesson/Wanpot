@@ -43,7 +43,7 @@ import { checkManagerMiddleware } from '../middlewares/manager.js'
 
 //Auth Routes
 router.post("/signup", signUp);
-router.post("/login", logIn);
+router.post("/api/auth/login", logIn);
 router.get("/login", getLoginPage);
 router.get("/signup", cacheMiddleware, getSignUpPage);
 router.get("/active-sessions", ensureAuthenticated, activeUserSessions)

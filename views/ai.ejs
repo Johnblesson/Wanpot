@@ -28,6 +28,7 @@
       align-items: center;
       justify-content: space-between;
       box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      position: relative;
     }
 
     .logo {
@@ -51,16 +52,54 @@
       -webkit-text-fill-color: transparent;
     }
 
-    header a {
+    .menu-icon {
+      font-size: 1.6rem;
       color: #ffffff;
-      font-size: 1.5rem;
-      text-decoration: none;
-      transition: color 0.2s, transform 0.2s;
+      cursor: pointer;
+      transition: transform 0.3s ease;
     }
 
-    header a:hover {
-      color: #f87171;
-      transform: scale(1.2);
+    .menu-icon:hover {
+      transform: rotate(90deg);
+      color: #38bdf8;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 60px;
+      right: 2rem;
+      background: rgba(30, 41, 59, 0.95);
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      padding: 0.5rem 0;
+      display: none;
+      flex-direction: column;
+      z-index: 10;
+      width: 200px;
+    }
+
+    .dropdown-menu.show {
+      display: flex;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    .dropdown-menu a, .dropdown-menu button {
+      color: #e2e8f0;
+      text-decoration: none;
+      padding: 0.8rem 1.2rem;
+      font-size: 0.95rem;
+      background: none;
+      border: none;
+      text-align: left;
+      width: 100%;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .dropdown-menu a:hover, .dropdown-menu button:hover {
+      background: rgba(56,189,248,0.15);
+      color: #38bdf8;
     }
 
     .ai-about {
@@ -80,14 +119,9 @@
       margin-bottom: 0.5rem;
     }
 
-    .ai-about p {
-      font-size: 0.95rem;
-      line-height: 1.5;
-      color: #e2e8f0;
-    }
-
     .chat-container {
       flex: 1;
+      width: 85%;
       max-width: 800px;
       margin: 0.5rem auto;
       padding: 1rem;
@@ -103,12 +137,10 @@
       padding: 0.8rem 1rem;
       border-radius: 12px;
       margin: 0.6rem 0;
-      max-width: 75%;
+      max-width: 85%;
       line-height: 1.6;
-      word-wrap: break-word;
       white-space: pre-wrap;
       animation: fadeIn 0.3s ease;
-      overflow-wrap: break-word;
     }
 
     .user-msg {
@@ -127,16 +159,6 @@
       text-align: left;
     }
 
-    .message-wrapper span {
-      display: block;
-      margin-bottom: 0.3rem;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     .chat-input-wrapper {
       width: 90%;
       max-width: 800px;
@@ -145,15 +167,15 @@
     }
 
     .input-container {
-      position: relative;
       display: flex;
       align-items: center;
       background: rgba(255,255,255,0.1);
       border-radius: 12px;
       overflow: hidden;
+      position: relative;
     }
 
-    .input-container input[type="text"] {
+    .input-container input {
       width: 100%;
       padding: 0.9rem 3rem 0.9rem 1rem;
       border: none;
@@ -161,10 +183,6 @@
       background: transparent;
       color: #f8fafc;
       font-size: 1rem;
-    }
-
-    .input-container input::placeholder {
-      color: #94a3b8;
     }
 
     .input-container button {
@@ -183,14 +201,38 @@
       transform: scale(1.15);
     }
 
-    .sending i {
-      animation: pulse 0.4s ease;
+    .clear-btn {
+      display: none;
     }
 
-    @keyframes pulse {
-      0% { transform: scale(1); color: #38bdf8; }
-      50% { transform: scale(1.3); color: #06b6d4; }
-      100% { transform: scale(1); color: #38bdf8; }
+    .ai-typing {
+      font-style: italic;
+      font-size: 0.9rem;
+      color: #94a3b8;
+      display: inline-block;
+      margin-left: 5px;
+      margin-bottom: 5px;
+    }
+
+    .ai-typing::after {
+      animation: typingDots 1s infinite steps(4, end);
+      content: '';
+      display: inline-block;
+      width: 1em;
+      text-align: left;
+    }
+
+    @keyframes typingDots {
+      0% { content: ''; }
+      25% { content: '.'; }
+      50% { content: '..'; }
+      75% { content: '...'; }
+      100% { content: ''; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     footer {
@@ -201,81 +243,22 @@
       font-size: 0.9rem;
     }
 
-    .chat-container::-webkit-scrollbar { width: 8px; }
-    .chat-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 4px; }
-    .chat-container::-webkit-scrollbar-thumb { background: rgba(56,189,248,0.3); border-radius: 4px; }
-
-    .clear-btn {
-      display: block;
-      margin: 10px auto;
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-      background: #ef4444;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .clear-btn:hover { background: #dc2626; }
-
-    .ai-typing {
-      font-style: italic;
-      font-size: 0.9rem;
-      color: #94a3b8;
-      margin-left: 5px;
-      margin-bottom: 5px;
-    }
-
-    @media (max-width: 768px) {
-      .chat-container { height: 58vh; margin: 0.5rem; padding: 0.8rem; }
-      .ai-about { width: 90%; }
-    }
-    @media (max-width: 480px) {
-      .chat-container { height: 55vh; padding: 0.6rem; }
-      .message { max-width: 85%; font-size: 0.9rem; }
-      .input-container input[type="text"] { padding: 0.7rem 2.8rem 0.7rem 1rem; font-size: 0.9rem; }
-      .input-container button { font-size: 1.1rem; right: 0.6rem; }
-    }
-
-    /* Animated dots for AI typing */
-.ai-typing {
-  font-style: italic;
-  font-size: 0.9rem;
-  color: #94a3b8;
-  margin-left: 5px;
-  margin-bottom: 5px;
-  display: inline-block;
-}
-
-.ai-typing::after {
-  content: '';
-  display: inline-block;
-  width: 1em;
-  text-align: left;
-}
-
-@keyframes typingDots {
-  0% { content: ''; }
-  25% { content: '.'; }
-  50% { content: '..'; }
-  75% { content: '...'; }
-  100% { content: ''; }
-}
-
-.ai-typing::after {
-  animation: typingDots 1s infinite steps(4, end);
-}
   </style>
 </head>
-<body>
 
+<body>
   <header>
     <div class="logo">
       <a href="/dashboard"><img src="/images/wanpot.ico" alt="Wanpot Logo"></a>
       <span class="logo-text">Wanpot</span>
     </div>
-    <a href="/logout" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
+    <i class="fas fa-bars menu-icon" id="menuToggle"></i>
+
+    <div class="dropdown-menu" id="dropdownMenu">
+      <button onclick="clearAllChat()"><i class="fas fa-trash"></i> Clear Chat</button>
+      <button onclick="downloadChatPDF()"><i class="fas fa-file-pdf"></i> Download PDF</button>
+      <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
   </header>
 
   <section class="ai-about">
@@ -287,23 +270,22 @@
     </p>
   </section>
 
-  <button class="clear-btn" onclick="clearAllChat()">🗑️ Clear All Chat</button>
-
   <div class="chat-container" id="chatContainer"></div>
 
   <form id="chatForm" class="chat-input-wrapper">
     <div class="input-container">
-      <input type="text" name="prompt" id="prompt" placeholder="Type your message, <%= user.fullname || 'Guest' %>..." autocomplete="off" required>
+      <input type="text" name="prompt" id="prompt" placeholder="Ask Anything, <%= user.fullname || 'Guest' %>..." autocomplete="off" required>
       <button type="submit" id="sendButton"><i class="fas fa-paper-plane"></i></button>
     </div>
     <input type="hidden" name="chatHistory" id="chatHistory" value='<%= JSON.stringify(messages || []) %>'>
     <input type="hidden" name="chatId" id="chatId" value="<%= chatId || '' %>">
   </form>
 
-  <footer>
-    <p>© 2025 Wanpot | Built with ❤️ in Sierra Leone by <strong>Kharis Pro Tech</strong> | Empowering Productivity Everywhere</p>
-  </footer>
+   <footer>
+  <p>© <%= new Date().getFullYear() %> Wanpot | Built with ❤️ in Sierra Leone by <strong>Kharis Pro Tech</strong> | Empowering Productivity Everywhere</p>
+</footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     const chatContainer = document.getElementById('chatContainer');
     const chatForm = document.getElementById('chatForm');
@@ -311,11 +293,23 @@
     const chatHistoryInput = document.getElementById('chatHistory');
     const chatIdInput = document.getElementById('chatId');
     const sendButton = document.getElementById('sendButton');
+    const menuToggle = document.getElementById('menuToggle');
+    const dropdownMenu = document.getElementById('dropdownMenu');
 
+    // Toggle dropdown
+    menuToggle.addEventListener('click', () => {
+      dropdownMenu.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!menuToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove('show');
+      }
+    });
+
+    // Render existing chat
     let chatHistory = chatHistoryInput.value ? JSON.parse(chatHistoryInput.value) : [];
     renderChatHistory(chatHistory);
-
-    function scrollToBottom() { chatContainer.scrollTop = chatContainer.scrollHeight; }
 
     chatForm.addEventListener('submit', async e => {
       e.preventDefault();
@@ -341,9 +335,8 @@
         chatIdInput.value = data.chatId || chatIdInput.value;
         chatHistory = data.messages;
         renderChatHistory(chatHistory, true);
-      } catch (err) {
-        console.error(err);
-        addMessage('ai', '⚠️ Error generating response. Please try again later.', Date.now().toString());
+      } catch {
+        addMessage('ai', '⚠️ Error generating response. Please try again.', Date.now().toString());
       }
     });
 
@@ -367,12 +360,9 @@
         div.appendChild(wrapper);
         chatContainer.appendChild(div);
 
-        typeWriterEffect(span, text, () => {
-          typingIndicator.remove();
-        });
+        typeWriterEffect(span, text, () => typingIndicator.remove());
       } else {
-        const formattedText = text.replace(/\n/g, '<br>');
-        wrapper.innerHTML = `<span>${formattedText}</span>`;
+        wrapper.innerHTML = `<span>${text.replace(/\n/g, '<br>')}</span>`;
         div.appendChild(wrapper);
         chatContainer.appendChild(div);
         scrollToBottom();
@@ -389,7 +379,7 @@
     }
 
     async function clearAllChat() {
-      if (!confirm("Are you sure you want to clear all chat history? This cannot be undone.")) return;
+      if (!confirm("Clear all chat history?")) return;
       try {
         const res = await fetch('/ai/clear', {
           method: 'POST',
@@ -402,6 +392,22 @@
       } catch (err) { console.error(err); }
     }
 
+    function downloadChatPDF() {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+      let y = 10;
+      pdf.setFont('helvetica', 'normal');
+      pdf.text("Wanpot Chat Conversation", 10, y);
+      y += 10;
+      chatHistory.forEach(msg => {
+        const sender = msg.sender === 'user' ? "You: " : "AI: ";
+        pdf.text(sender + msg.text, 10, y);
+        y += 10;
+      });
+      const filename = `WanpotChat_${new Date().toISOString().slice(0,10)}.pdf`;
+      pdf.save(filename);
+    }
+
     function renderChatHistory(history, aiTyping=false) {
       chatContainer.innerHTML = '';
       if (history.length === 0) {
@@ -411,14 +417,15 @@
       history.forEach((msg, index) => {
         if (msg.sender === 'ai' && aiTyping && index === history.length - 1) {
           addMessage(msg.sender, msg.text, msg._id, true);
-        } else {
-          addMessage(msg.sender, msg.text, msg._id);
-        }
+        } else addMessage(msg.sender, msg.text, msg._id);
       });
       chatHistoryInput.value = JSON.stringify(history);
       scrollToBottom();
     }
-  </script>
 
+    function scrollToBottom() {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+  </script>
 </body>
 </html>

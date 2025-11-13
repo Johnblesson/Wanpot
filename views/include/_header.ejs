@@ -3,10 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <!-- iOS Home Screen Support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Wanpot">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/images/wanpot.ico">
+
   <title>Wanpot - All-in-One Smart App</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/images/wanpot.ico" type="image/x-icon">
   <link rel="stylesheet" href="/css/main.css" />
+  <link rel="manifest" href="/manifest.json">
 </head>
 <body>
   <header>
@@ -23,7 +30,7 @@
         <li><a href="/dashboard">Home</a></li>
         <li><a href="/dashboard#features">Features</a></li>
         <li><a href="/dashboard#about">About</a></li>
-        <li><a href="/dashboard#download">Download</a></li>
+        <li><a href="#" onclick="installApp()">Download</a></li>
       </ul>
     </nav>
 
@@ -74,5 +81,32 @@
       nav.classList.toggle('active');
     }
   </script>
+    <script>
+  let deferredPrompt;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+  });
+
+  function installApp() {
+    const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
+
+    if (isIOS && !isInStandaloneMode) {
+      alert('📱 Tap the "Share" icon at the bottom, then choose "Add to Home Screen" to install Wanpot.');
+    } else if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(choice => {
+        if (choice.outcome === 'accepted') {
+          alert('🎉 Wanpot added to your home screen!');
+        }
+        deferredPrompt = null;
+      });
+    } else {
+      alert('💡 Use your browser’s “Install” or “Add to Home Screen” option to install Wanpot.');
+    }
+  }
+</script>
 </body>
 </html>

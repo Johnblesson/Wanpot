@@ -1,0 +1,22 @@
+{
+  "name": "Wanpot",
+  "short_name": "Wanpot",
+  "description": "All-in-One Smart App — Simplifying productivity, learning, and creativity in one pot.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/images/wanpot.ico",
+      "sizes": "48x48 72x72 96x96 128x128 256x256",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/images/wanpot-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

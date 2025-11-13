@@ -3,288 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- iOS Home Screen Support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Wanpot">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/images/wanpot.ico">
+
   <title>Wanpot - All-in-One Smart App</title>
   <link rel="icon" href="/images/wanpot.ico" type="image/x-icon">
+  <link rel="manifest" href="/manifest.json">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <!-- Include Font Awesome -->
 <link
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: #f8fafc;
-      overflow-x: hidden;
-    }
-
-    header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 100;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .navbar {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 1.7rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #3b82f6, #06b6d4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    nav ul li a {
-      text-decoration: none;
-      color: #f1f5f9;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-
-    nav ul li a:hover {
-      color: #38bdf8;
-    }
-
-    /* LOGO SECTION */
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo img {
-      height: 40px;
-      width: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
-    .logo-text {
-      font-size: 1.5rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #3b82f6, #06b6d4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .menu-toggle {
-      display: none;
-      font-size: 1.8rem;
-      cursor: pointer;
-      color: #fff;
-    }
-
-    /* GET STARTED BUTTON */
-    /* GET STARTED BUTTON - OUTLINED STYLE */
-    .get-started-btn {
-      background: transparent;
-      color: #38bdf8 !important;
-      padding: 0.6rem 1.3rem;
-      border-radius: 50px;
-      font-weight: 600;
-      text-decoration: none;
-      border: 2px solid transparent;
-      background-image: linear-gradient(#0f172a, #0f172a),
-                        linear-gradient(90deg, #3b82f6, #06b6d4);
-      background-origin: border-box;
-      background-clip: padding-box, border-box;
-      transition: 0.3s ease;
-    }
-
-    .get-started-btn:hover {
-      color: #fff !important;
-      background-image: linear-gradient(90deg, #3b82f6, #06b6d4),
-                        linear-gradient(90deg, #3b82f6, #06b6d4);
-      box-shadow: 0 4px 20px rgba(6,182,212,0.4);
-      transform: translateY(-2px);
-    }
-
-
-    /* HERO SECTION */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      min-height: 100vh;
-      background: radial-gradient(circle at 30% 50%, rgba(59,130,246,0.3), transparent 70%),
-                  radial-gradient(circle at 70% 60%, rgba(6,182,212,0.3), transparent 70%);
-      padding: 2rem 1rem;
-    }
-
-    .hero h1 {
-      font-size: 2.6rem;
-      max-width: 700px;
-      margin-bottom: 1rem;
-      line-height: 1.3;
-    }
-
-    .hero p {
-      color: #cbd5e1;
-      max-width: 650px;
-      margin-bottom: 2rem;
-      font-size: 1.1rem;
-    }
-
-    .hero .cta-btn {
-      background: linear-gradient(90deg, #3b82f6, #06b6d4);
-      padding: 0.9rem 2rem;
-      border-radius: 50px;
-      color: #fff;
-      font-weight: 600;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    .hero .cta-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 5px 20px rgba(6,182,212,0.4);
-    }
-
-    /* FEATURES */
-    .features {
-      max-width: 1200px;
-      margin: 4rem auto;
-      padding: 0 1rem;
-    }
-
-    .features h2 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .feature-card {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 15px;
-      padding: 2rem;
-      text-align: center;
-      transition: 0.4s;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-5px);
-      background: rgba(255,255,255,0.1);
-    }
-
-    .feature-icon {
-      font-size: 2.3rem;
-      margin-bottom: 1rem;
-      color: #38bdf8;
-    }
-
-    .feature-card h3 {
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
-
-    .feature-card p {
-      color: #94a3b8;
-      font-size: 0.95rem;
-    }
-
-    /* ABOUT SECTION */
-    .about {
-      text-align: center;
-      background: linear-gradient(90deg, #1e3a8a, #2563eb);
-      padding: 3rem 1rem;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      color: #f8fafc;
-    }
-
-    .about h2 {
-      margin-bottom: 1rem;
-    }
-
-    .about p {
-      max-width: 700px;
-      margin: 0 auto;
-      color: #e2e8f0;
-    }
-
-    /* FOOTER */
-    footer {
-      text-align: center;
-      padding: 2rem 1rem;
-      background: #0f172a;
-      color: #64748b;
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 768px) {
-      nav ul {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        right: 20px;
-        top: 70px;
-        width: 200px;
-        background: rgba(15,23,42,0.9);
-        border-radius: 10px;
-        padding: 1rem;
-      }
-
-      nav ul.active {
-        display: flex;
-      }
-
-      .menu-toggle {
-        display: block;
-      }
-
-      .hero h1 {
-        font-size: 2.1rem;
-      }
-    }
- 
-
-    /*  */
-  a {
-    text-decoration: none;
-    color: #ffffff;
-  }
-  .feature-icon i {
-    font-size: 2rem;
-    color: #fff;
-  }
-  .feature-card:hover .feature-icon i {
-    color: #ffb703;
-    transform: scale(1.2);
-    transition: 0.3s ease;
-  }
-</style>
+  <link rel="stylesheet" href="/css/guest.css">
 </head>
 <body>
   <header>
@@ -296,10 +30,10 @@
     </div>
      <nav>
       <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#download">Download</a></li>
+        <li><a href="/dashboard">Home</a></li>
+        <li><a href="/dashboard#features">Features</a></li>
+        <li><a href="/dashboard#about">About</a></li>
+        <li><a href="#" onclick="installApp()">Download</a></li>
         <li><a href="/login" class="btn-get-started">Login</a></li>
       </ul>
     </nav>
@@ -308,7 +42,7 @@
   </header>
 
   <section class="hero" id="home">
-    <h1>One App, Many Tools — Welcome to <span style="color:#38bdf8;">Wanpot</span></h1>
+    <h1>One App, Many Tools — Welcome to <span style="color:#38bdf8;">Wanpot AI</span></h1>
     <p>The all-in-one smart application designed to simplify student life, empower professionals, and make daily productivity effortless — everything in one pot!</p>
     <a href="/signup" class="cta-btn">Get Started</a>
   </section>
@@ -478,9 +212,33 @@
 </footer>
 
   <script>
-    function toggleMenu() {
-      document.querySelector('nav ul').classList.toggle('active');
+  let deferredPrompt;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+  });
+
+  function installApp() {
+    const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
+
+    if (isIOS && !isInStandaloneMode) {
+      alert('📱 Tap the "Share" icon at the bottom, then choose "Add to Home Screen" to install Wanpot.');
+    } else if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(choice => {
+        if (choice.outcome === 'accepted') {
+          alert('🎉 Wanpot added to your home screen!');
+        }
+        deferredPrompt = null;
+      });
+    } else {
+      alert('💡 Use your browser’s “Install” or “Add to Home Screen” option to install Wanpot.');
     }
-  </script>
+  }
+</script>
+
+
 </body>
 </html>

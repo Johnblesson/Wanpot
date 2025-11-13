@@ -19,17 +19,69 @@ export const renderAIPage = async (req, res) => {
   }
 };
 
-// Generate AI response
+// // Generate AI response
+// export const generateAIResponse = async (req, res) => {
+//   try {
+//     const { prompt, chatId } = req.body;
+//     if (!prompt) return res.status(400).json({ error: "Prompt is required" });
+
+//     const aiResponse = await ai.models.generateContent({
+//       model: "gemini-2.5-flash",
+//       contents: prompt
+//     });
+
+//     let chatRecord;
+//     if (chatId) {
+//       chatRecord = await ChatHistory.findById(chatId);
+//       if (!chatRecord) chatRecord = new ChatHistory({ user: req.user?._id, messages: [] });
+//     } else {
+//       chatRecord = new ChatHistory({ user: req.user?._id, messages: [] });
+//     }
+
+//     chatRecord.messages.push({ sender: "user", text: prompt });
+//     chatRecord.messages.push({ sender: "ai", text: aiResponse.text });
+//     await chatRecord.save();
+
+//     res.json({ chatId: chatRecord._id, messages: chatRecord.messages });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ messages: [{ sender: "ai", text: "Error generating response. Try again." }] });
+//   }
+// };
+
+// Generate AI response with retry on overload
 export const generateAIResponse = async (req, res) => {
   try {
     const { prompt, chatId } = req.body;
     if (!prompt) return res.status(400).json({ error: "Prompt is required" });
 
-    const aiResponse = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt
-    });
+    const MAX_RETRIES = 3;          // Number of retry attempts
+    const RETRY_DELAY = 1000;       // Initial delay in ms
+    let aiResponse;
 
+    // Retry loop for overloaded model
+    for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+      try {
+        aiResponse = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: prompt
+        });
+        break; // Success, exit loop
+      } catch (error) {
+        if (error.status === 503) { // Model overloaded
+          if (attempt < MAX_RETRIES - 1) {
+            console.warn(`Model overloaded. Retrying in ${RETRY_DELAY * (attempt + 1)}ms...`);
+            await new Promise(r => setTimeout(r, RETRY_DELAY * (attempt + 1)));
+          } else {
+            throw new Error("AI service is currently busy. Please try again later.");
+          }
+        } else {
+          throw error; // Other errors
+        }
+      }
+    }
+
+    // Load or create chat record
     let chatRecord;
     if (chatId) {
       chatRecord = await ChatHistory.findById(chatId);
@@ -38,16 +90,22 @@ export const generateAIResponse = async (req, res) => {
       chatRecord = new ChatHistory({ user: req.user?._id, messages: [] });
     }
 
+    // Save user message
     chatRecord.messages.push({ sender: "user", text: prompt });
-    chatRecord.messages.push({ sender: "ai", text: aiResponse.text });
+    // Save AI message
+    chatRecord.messages.push({ sender: "ai", text: aiResponse.text || "AI did not return a response." });
+
     await chatRecord.save();
 
     res.json({ chatId: chatRecord._id, messages: chatRecord.messages });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ messages: [{ sender: "ai", text: "Error generating response. Try again." }] });
+    res.status(500).json({
+      messages: [{ sender: "ai", text: err.message || "Error generating response. Try again later." }]
+    });
   }
 };
+
 
 // Delete single message
 export const deleteChatMessage = async (req, res) => {

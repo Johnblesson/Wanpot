@@ -372,7 +372,27 @@ clearHistoryBtn.addEventListener('click', clearHistoryDB);
 // Initialize
 loadHistory();
 </script> -->
+ <script>
+    // Toggle user dropdown
+    function toggleDropdown() {
+      const dropdown = document.querySelector('.dropdown-menu');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
 
+    // Close dropdown if clicked outside
+    window.onclick = function(event) {
+      if (!event.target.matches('.user-photo')) {
+        const dropdown = document.querySelector('.dropdown-menu');
+        if (dropdown) dropdown.style.display = 'none';
+      }
+    }
+
+    // Toggle nav menu for mobile
+    function toggleMenu() {
+      const nav = document.querySelector('nav ul');
+      nav.classList.toggle('active');
+    }
+  </script>
 
 <script>
 const searchBtn = document.getElementById('searchBtn');

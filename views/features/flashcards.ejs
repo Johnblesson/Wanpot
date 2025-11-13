@@ -18,31 +18,30 @@
     /* Header */
     header {
       position: fixed;
-      top:0; width:100%; z-index:100;
-      background: rgba(15,23,42,0.85);
+      top:0; left:0; width:100%; z-index:1000;
+      background: rgba(15,23,42,0.95);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
     .navbar {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 1rem 2rem;
+      padding: 0.8rem 1rem;
       display:flex; justify-content:space-between; align-items:center;
     }
+
     /* LOGO SECTION */
     .logo {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-
     .logo img {
       height: 40px;
       width: 40px;
       border-radius: 50%;
       object-fit: cover;
     }
-
     .logo-text {
       font-size: 1.5rem;
       font-weight: 700;
@@ -50,10 +49,22 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    nav ul {list-style:none; display:flex; gap:1.5rem;}
-    nav ul li a {text-decoration:none; color:#f1f5f9; font-weight:500; transition:0.3s;}
-    nav ul li a:hover {color:#38bdf8;}
-    .menu-toggle {display:none; font-size:1.8rem; cursor:pointer; color:#fff;}
+
+    /* Navbar links */
+    nav ul {
+      list-style:none;
+      display:flex;
+      gap:1.5rem;
+    }
+    nav ul li a {
+      text-decoration:none;
+      color:#f1f5f9;
+      font-weight:500;
+      transition:0.3s;
+    }
+    nav ul li a:hover { color:#38bdf8; }
+
+    .menu-toggle { display:none; font-size:1.8rem; cursor:pointer; color:#fff; }
 
     /* Container */
     .container {
@@ -65,18 +76,30 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 
-    h1,h2 {text-align:center; color:#38bdf8; margin-bottom:1rem;}
-    .mode-selector {text-align:center; margin-bottom:2rem;}
+    h1,h2 { text-align:center; color:#38bdf8; margin-bottom:1rem; }
+
+    .mode-selector { text-align:center; margin-bottom:2rem; }
     .mode-selector button {
       background: linear-gradient(90deg,#3b82f6,#06b6d4);
-      border:none; padding:0.7rem 1.5rem; margin:0 0.5rem; border-radius:10px;
-      color:#fff; font-weight:600; cursor:pointer; transition:0.2s;
+      border:none;
+      padding:0.7rem 1.5rem;
+      margin:0 0.5rem;
+      border-radius:10px;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.2s;
     }
-    .mode-selector button:hover {transform:scale(1.05);}
+    .mode-selector button:hover { transform:scale(1.05); }
 
     /* Flashcards */
-    #flashcards {display:none; display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:1rem;}
-    .flashcard {perspective:1000px;}
+    #flashcards {
+      display:none;
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      gap:1rem;
+    }
+    .flashcard { perspective:1000px; }
     .card-inner {
       position: relative; width:100%; min-height:150px; cursor:pointer;
       transition: transform 0.6s; transform-style: preserve-3d;
@@ -84,25 +107,70 @@
       display:flex; justify-content:center; align-items:center;
       font-size:1.2rem; padding:1rem;
     }
-    .card-inner.flipped {transform: rotateY(180deg);}
+    .card-inner.flipped { transform: rotateY(180deg); }
     .card-front, .card-back {
       position:absolute; backface-visibility:hidden;
       width:100%; height:100%;
       display:flex; justify-content:center; align-items:center;
       text-align:center; padding:1rem;
     }
-    .card-back {transform:rotateY(180deg);}
+    .card-back { transform:rotateY(180deg); }
 
     /* API Quiz */
-    #quiz-api-area {display:none;}
-    #api-quiz-question {font-size:1.2rem; margin-bottom:1rem; text-align:center;}
-    #api-options {display:flex; flex-wrap:wrap; justify-content:center; gap:0.5rem; margin-bottom:1rem;}
-    #api-options button {
-      flex:1 1 45%; max-width:200px; padding:0.6rem 1rem; border:none; border-radius:10px;
-      background: rgba(56,189,248,0.2); color:#f8fafc; cursor:pointer; transition:0.2s;
+    #quiz-api-area {
+      display:none;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+      text-align: center;
     }
-    #api-options button:hover {background: rgba(56,189,248,0.4);}
-    #api-score-section {display:none; text-align:center; margin-top:2rem;}
+    #quiz-api-area h2 { color: #38bdf8; margin-bottom: 1rem; }
+    #quiz-api-area p { color: #cbd5e1; margin-bottom: 0.5rem; }
+    #quiz-category {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255,255,255,0.1);
+      color: #f8fafc;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #quiz-category:hover { background: rgba(56,189,248,0.2); }
+
+    #quiz-api-area > button, #api-score-section button {
+      background: linear-gradient(90deg,#3b82f6,#06b6d4);
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+      margin-bottom: 1rem;
+    }
+    #quiz-api-area > button:hover, #api-score-section button:hover { transform: scale(1.05); }
+
+    #api-quiz-question { font-size: 1.2rem; margin-bottom: 1rem; color: #e2e8f0; }
+    #api-options { display:flex; flex-wrap:wrap; justify-content:center; gap:0.6rem; margin-bottom:1rem; }
+    #api-options button {
+      flex: 1 1 45%;
+      max-width: 220px;
+      padding:0.6rem 1rem;
+      border:none;
+      border-radius:10px;
+      background: rgba(56,189,248,0.2);
+      color:#f8fafc;
+      cursor:pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    #api-options button:hover { background: rgba(56,189,248,0.4); transform: translateY(-2px); }
+
+    #api-score-section { display:none; text-align:center; margin-top:1.5rem; }
+    #api-score-section p { font-size:1.3rem; color:#22c55e; margin-bottom:1rem; }
 
     /* Footer */
     footer {
@@ -110,144 +178,35 @@
       background: #0f172a; color:#64748b; font-size:0.9rem; margin-top:2rem;
     }
 
+    /* Responsive */
     @media(max-width:768px){
-      nav ul {display:none; flex-direction:column; position:absolute; right:20px; top:70px; width:200px; background:rgba(15,23,42,0.9); border-radius:10px; padding:1rem;}
-      nav ul.active {display:flex;}
-      .menu-toggle {display:block;}
-      #api-options button {flex:1 1 100%; max-width:none;}
-      #flashcards {grid-template-columns: repeat(auto-fit, minmax(150px,1fr));}
+      nav ul {
+        display:none;
+        flex-direction:column;
+        position:absolute;
+        right:20px;
+        top:60px;
+        width:200px;
+        background:rgba(15,23,42,0.95);
+        border-radius:10px;
+        padding:1rem;
+      }
+      nav ul.active { display:flex; }
+      .menu-toggle { display:block; }
+
+      #flashcards { grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); }
+      #api-options button { flex:1 1 100%; max-width:none; }
+      #quiz-category { width:100%; }
+      .container { margin:7rem 1rem 2rem; padding:1rem; }
+      .mode-selector button { margin:0.3rem 0.2rem; padding:0.6rem 1rem; }
+      .card-inner { min-height:120px; font-size:1rem; }
     }
-
-    /* API Quiz Styles */
-#quiz-api-area {
-  display: none;
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background: rgba(255,255,255,0.05);
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
-  text-align: center;
-}
-
-#quiz-api-area h2 {
-  color: #38bdf8;
-  margin-bottom: 1rem;
-}
-
-#quiz-api-area p {
-  color: #cbd5e1;
-  margin-bottom: 0.5rem;
-}
-
-#quiz-category {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: none;
-  background: rgba(255,255,255,0.1);
-  color: #f8fafc;
-  margin-bottom: 1rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-#quiz-category:hover {
-  background: rgba(56,189,248,0.2);
-}
-
-#quiz-api-area > button {
-  background: linear-gradient(90deg,#3b82f6,#06b6d4);
-  border: none;
-  padding: 0.7rem 1.5rem;
-  border-radius: 10px;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s;
-  margin-bottom: 1.5rem;
-}
-
-#quiz-api-area > button:hover {
-  transform: scale(1.05);
-}
-
-#api-quiz-question {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  color: #e2e8f0;
-}
-
-#api-options {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.6rem;
-  margin-bottom: 1rem;
-}
-
-#api-options button {
-  flex: 1 1 45%;
-  max-width: 220px;
-  padding: 0.6rem 1rem;
-  border: none;
-  border-radius: 10px;
-  background: rgba(56,189,248,0.2);
-  color: #f8fafc;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-}
-
-#api-options button:hover {
-  background: rgba(56,189,248,0.4);
-  transform: translateY(-2px);
-}
-
-#api-score-section {
-  display: none;
-  text-align: center;
-  margin-top: 1.5rem;
-}
-
-#api-score-section p {
-  font-size: 1.3rem;
-  color: #22c55e;
-  margin-bottom: 1rem;
-}
-
-#api-score-section button {
-  background: linear-gradient(90deg,#3b82f6,#06b6d4);
-  border: none;
-  padding: 0.7rem 1.5rem;
-  border-radius: 10px;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-#api-score-section button:hover {
-  transform: scale(1.05);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  #api-options button {
-    flex: 1 1 100%;
-    max-width: none;
-  }
-
-  #quiz-category {
-    width: 100%;
-  }
-}
-
   </style>
 </head>
 <body>
 
 <header>
   <div class="navbar">
-     <!-- LOGO SECTION -->
     <div class="logo">
       <img src="/images/wanpot.ico" alt="Wanpot Logo">
       <span class="logo-text">Wanpot</span>
@@ -255,8 +214,10 @@
 
     <nav>
       <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="#flashcards">Flashcards & Quiz</a></li>
+        <li><a href="/dashboard">Home</a></li>
+        <li><a href="/dashboard#features">Features</a></li>
+        <li><a href="/dashboard#about">About</a></li>
+        <li><a href="#" onclick="installApp()">Download</a></li>
       </ul>
     </nav>
     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
@@ -322,24 +283,14 @@
 
 <script>
   function toggleMenu(){document.querySelector('nav ul').classList.toggle('active');}
-
   function showMode(mode){
-    if(mode==='flashcards'){
-      document.getElementById('flashcards').style.display='grid';
-      document.getElementById('quiz-api-area').style.display='none';
-      document.getElementById('api-score-section').style.display='none';
-    } else {
-      document.getElementById('flashcards').style.display='none';
-      document.getElementById('quiz-api-area').style.display='block';
-      document.getElementById('api-score-section').style.display='none';
-    }
+    document.getElementById('flashcards').style.display = (mode==='flashcards') ? 'grid':'none';
+    document.getElementById('quiz-api-area').style.display = (mode==='api') ? 'block':'none';
+    document.getElementById('api-score-section').style.display = 'none';
   }
-
   function flipCard(el){el.classList.toggle('flipped');}
 
-  // API Quiz
   let apiQuestions=[], currentAPIQ=0, apiScore=0;
-
   async function fetchAPIQuiz(){
     const cat = document.getElementById('quiz-category').value;
     const url = `https://opentdb.com/api.php?amount=10&type=multiple${cat?`&category=${cat}`:''}`;
@@ -351,9 +302,8 @@
         correct: decodeHtml(q.correct_answer),
         options: shuffleArray([...q.incorrect_answers.map(a=>decodeHtml(a)), decodeHtml(q.correct_answer)])
       }));
-      currentAPIQ = 0; apiScore = 0;
-      showAPIQuestion();
-    } catch(err){console.error(err); document.getElementById('api-quiz-question').textContent='Failed to load quiz.';}
+      currentAPIQ = 0; apiScore = 0; showAPIQuestion();
+    }catch(err){console.error(err); document.getElementById('api-quiz-question').textContent='Failed to load quiz.';}
   }
 
   function showAPIQuestion(){
@@ -362,11 +312,11 @@
     const qEl = document.getElementById('api-quiz-question');
     const optEl = document.getElementById('api-options');
     qEl.textContent = `Q${currentAPIQ+1}: ${q.question}`;
-    optEl.innerHTML = '';
+    optEl.innerHTML='';
     q.options.forEach(opt=>{
-      const btn = document.createElement('button');
-      btn.textContent = opt;
-      btn.onclick = () => selectAPIAnswer(btn,opt,q.correct);
+      const btn=document.createElement('button');
+      btn.textContent=opt;
+      btn.onclick=()=>selectAPIAnswer(btn,opt,q.correct);
       optEl.appendChild(btn);
     });
   }
@@ -384,12 +334,19 @@
     document.getElementById('api-score-section').style.display='block';
     document.getElementById('api-score').textContent=`You scored ${apiScore} / ${apiQuestions.length}`;
   }
-
   function restartAPIQuiz(){fetchAPIQuiz();}
-
   function decodeHtml(html){var txt=document.createElement('textarea'); txt.innerHTML=html; return txt.value;}
   function shuffleArray(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]];} return arr;}
-</script>
 
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt=e; });
+  function installApp(){
+    const isIOS=/iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    const isInStandaloneMode=('standalone' in window.navigator)&&window.navigator.standalone;
+    if(isIOS&&!isInStandaloneMode){alert('📱 Tap "Share" then "Add to Home Screen".');}
+    else if(deferredPrompt){deferredPrompt.prompt(); deferredPrompt.userChoice.then(choice=>{if(choice.outcome==='accepted'){alert('🎉 Added to Home screen!');} deferredPrompt=null;});}
+    else{alert('💡 Use your browser’s “Install” option to install Wanpot.');}
+  }
+</script>
 </body>
 </html>

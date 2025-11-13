@@ -6,6 +6,7 @@
   <title>Wanpot | GPA Calculator</title>
   <link rel="icon" href="/images/wanpot.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -16,8 +17,60 @@
       align-items: flex-start;
       min-height: 100vh;
       margin: 0;
-      padding: 2rem 1rem;
+      padding: 6rem 1rem 2rem; /* increased top padding for fixed header */
     }
+
+    /* --- Header --- */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Logout always visible */
+    header a.logout {
+      color: #ffffff;
+      font-size: 1.5rem;
+      text-decoration: none;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    header a.logout:hover {
+      color: #f87171;
+      transform: scale(1.2);
+    }
+
+    /* --- GPA Container --- */
     .gpa-container {
       width: 100%;
       max-width: 600px;
@@ -25,26 +78,32 @@
       border-radius: 15px;
       padding: 2rem;
       box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      margin-top: 20px; /* small margin since body padding ensures space */
     }
+
     h1 {
       text-align: center;
       color: #38bdf8;
       margin-bottom: 1rem;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 1rem;
     }
+
     th, td {
       padding: 0.8rem;
       text-align: center;
       border: 1px solid rgba(255,255,255,0.2);
     }
+
     th {
       background: rgba(56,189,248,0.3);
     }
-    input[type="number"], select {
+
+    input[type="number"], input[type="text"], select {
       width: 100%;
       padding: 0.5rem;
       border-radius: 8px;
@@ -53,9 +112,11 @@
       color: #f8fafc;
       text-align: center;
     }
-    input[type="number"]::placeholder {
+
+    input::placeholder {
       color: #cbd5e1;
     }
+
     button {
       background: linear-gradient(90deg, #3b82f6, #06b6d4);
       border: none;
@@ -67,30 +128,38 @@
       margin: 0.3rem;
       transition: transform 0.2s;
     }
+
     button:hover {
       transform: scale(1.05);
     }
+
     #gpa-result {
       text-align: center;
       font-size: 1.4rem;
       margin-top: 1rem;
       color: #22c55e;
     }
+
     @media (max-width: 480px) {
-      .gpa-container {
-        padding: 1rem;
-      }
-      table, th, td {
-        font-size: 0.9rem;
-      }
-      button {
-        padding: 0.6rem 1rem;
-        font-size: 0.9rem;
-      }
+      body { padding: 6rem 0.5rem 2rem; }
+      .gpa-container { padding: 1rem; }
+      table, th, td { font-size: 0.9rem; }
+      button { padding: 0.6rem 1rem; font-size: 0.9rem; }
     }
   </style>
 </head>
 <body>
+
+  <header>
+    <div class="logo">
+      <a href="/dashboard"><img src="/images/wanpot.ico" alt="Wanpot Logo"></a>
+      <span class="logo-text">Wanpot</span>
+    </div>
+
+    <a href="/logout" class="logout" title="Logout">
+      <i class="fas fa-sign-out-alt"></i>
+    </a>
+  </header>
 
   <div class="gpa-container">
     <h1>GPA Calculator 🎓</h1>
@@ -103,9 +172,7 @@
           <th>Credit Unit</th>
         </tr>
       </thead>
-      <tbody id="courses-body">
-        <!-- Rows will be added dynamically -->
-      </tbody>
+      <tbody id="courses-body"></tbody>
     </table>
 
     <button id="add-course">Add Course</button>
@@ -133,7 +200,6 @@
     function addCourseRow() {
       const row = document.createElement('tr');
 
-      // Course name
       const courseTd = document.createElement('td');
       const courseInput = document.createElement('input');
       courseInput.type = 'text';
@@ -141,7 +207,6 @@
       courseTd.appendChild(courseInput);
       row.appendChild(courseTd);
 
-      // Grade
       const gradeTd = document.createElement('td');
       const gradeSelect = document.createElement('select');
       grades.forEach(g => {
@@ -153,7 +218,6 @@
       gradeTd.appendChild(gradeSelect);
       row.appendChild(gradeTd);
 
-      // Credit
       const creditTd = document.createElement('td');
       const creditInput = document.createElement('input');
       creditInput.type = 'number';
@@ -166,7 +230,6 @@
     }
 
     addCourseBtn.addEventListener('click', addCourseRow);
-
     calculateBtn.addEventListener('click', () => {
       const rows = coursesBody.querySelectorAll('tr');
       let totalPoints = 0;
@@ -197,6 +260,5 @@
     // Add initial row
     addCourseRow();
   </script>
-
 </body>
 </html>

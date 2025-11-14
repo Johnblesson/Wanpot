@@ -46,6 +46,12 @@ router.get("/dashboard", ensureAuthenticated, (req, res) => {
   res.render("index", { user });
 });
 
+// admin dashboard
+router.get("/admin-dashboard", ensureAuthenticated, (req, res) => {
+     const user = req.isAuthenticated() ? req.user : null;
+  res.render("index-admin", { user });
+});
+
 router.get("/calculator", ensureAuthenticated, (req, res) => {
     const user = req.isAuthenticated() ? req.user : null;
   res.render("features/calculator", { user });

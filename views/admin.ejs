@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WANPOT | Admin Dashboard</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="/images/wanpot.ico" type="image/x-icon">
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f1f5f9;
+      display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: #111827;
+      height: 100vh;
+      padding: 25px 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
+
+    .sidebar h2 {
+      font-size: 22px;
+      margin-bottom: 40px;
+      color: #38bdf8;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 12px 10px;
+      margin: 12px 0;
+      text-decoration: none;
+      color: #e2e8f0;
+      transition: 0.3s;
+      border-radius: 8px;
+    }
+
+    .sidebar a:hover {
+      background: #1e293b;
+      color: #38bdf8;
+    }
+
+    .sidebar a i {
+      margin-right: 12px;
+      font-size: 18px;
+    }
+
+    /* Main Content */
+    .main {
+      margin-left: 260px;
+      padding: 30px 40px;
+      width: 100%;
+    }
+
+    .header {
+      font-size: 30px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid #334155;
+    }
+
+    th {
+      background: #0f172a;
+      color: #7dd3fc;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    tr:hover td {
+      background: #243249;
+      transition: 0.2s;
+    }
+
+    /* Buttons */
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .active {
+      background: #10b981;
+      color: #fff;
+    }
+
+    .inactive {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    /* Status badge */
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .active-badge {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+    }
+
+    .inactive-badge {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+
+  <!-- WANPOT LOGO -->
+  <div style="text-align: center; margin-bottom: 25px;">
+    <img 
+      src="/images/wanpot.ico" 
+      alt="WANPOT Logo" 
+      style="width: 65px; height: 65px; border-radius: 12px;"
+    >
+    <h2 style="margin-top: 10px; font-size: 20px; color: #38bdf8;">
+      WANPOT ADMIN
+    </h2>
+  </div>
+
+  <a href="/admin-dashboard"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+  <a href="#"><i class="fa-solid fa-users"></i> Users</a>
+  <a href="#"><i class="fa-solid fa-money-check-dollar"></i> Subscriptions</a>
+  <a href="/settings"><i class="fa-solid fa-gear"></i> Settings</a>
+  <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+</div>
+
+
+<!-- Main -->
+<div class="main">
+  <div class="header">Manage Users</div>
+
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Subscription</th>
+      <th>Action</th>
+    </tr>
+
+    <% users.forEach(user => { %>
+      <tr>
+        <td><%= user.fullname %></td>
+        <td><%= user.email %></td>
+
+        <td>
+          <% if (user.subscription) { %>
+            <span class="status-badge active-badge">Active</span>
+          <% } else { %>
+            <span class="status-badge inactive-badge">Inactive</span>
+          <% } %>
+        </td>
+
+        <td>
+          <form action="/toggle/<%= user._id %>" method="POST">
+            <% if (user.subscription) { %>
+              <button class="inactive">Deactivate</button>
+            <% } else { %>
+              <button class="active">Activate</button>
+            <% } %>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+
+  </table>
+
+</div>
+
+</body>
+</html>

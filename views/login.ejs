@@ -6,37 +6,55 @@
   <title>WANPOT | Login</title>
   <link rel="icon" href="/images/wanpot.ico" type="image/x-icon">
 
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
   <div class="auth-container">
-    <!-- ✅ WANPOT LOGO -->
+
+    <!-- Logo -->
     <div class="logo">
       <img src="/images/wanpot.ico" alt="Wanpot Logo">
     </div>
 
-    <!-- <h1>WANPOT</h1> -->
     <p>Login to your unified workspace</p>
 
+    <!-- SUCCESS MESSAGE (after signup) -->
+    <% if (successMessage) { %>
+      <div class="success-message"><%= successMessage %></div>
+    <% } %>
+
+    <!-- ERROR MESSAGES -->
     <% if (errorMessages && errorMessages.length > 0) { %>
       <% errorMessages.forEach(msg => { %>
         <div class="error-message"><%= msg %></div>
       <% }) %>
     <% } %>
 
+    <!-- LOGIN FORM -->
     <form action="/api/auth/login" method="POST">
       <div class="input-group">
-        <input type="text" name="username" placeholder="Username" required>
+        <input 
+          type="text" 
+          name="username" 
+          placeholder="Username"
+          value="<%= autoFill ? autoFill.username : '' %>"
+          required
+        >
       </div>
 
       <div class="input-group">
-        <input type="password" name="password" id="password" placeholder="Password" required>
+        <input 
+          type="password" 
+          name="password" 
+          id="password" 
+          placeholder="Password"
+          value="<%= autoFill ? autoFill.password : '' %>"
+          required
+        >
         <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
       </div>
 
@@ -47,6 +65,7 @@
   </div>
 
   <script>
+    // Toggle Password
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
 

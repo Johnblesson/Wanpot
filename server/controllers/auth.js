@@ -20,32 +20,34 @@ export const signUp = async (req, res) => {
 
   if (!errors.isEmpty()) {
     errorMessages = errors.array().map(err => err.msg);
-    return res.render('signup', { errorMessages });
+    return res.render("signup", { errorMessages });
   }
 
   try {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
-    // Check for duplicate username
+    // Check existing username
     const existingUser = await User.findOne({ username: req.body.username });
     if (existingUser) {
-      errorMessages.push('Username is already taken. Please choose another.');
-      return res.render('signup', { errorMessages });
+      errorMessages.push("Username already taken. Choose another.");
+      return res.render("signup", { errorMessages });
     }
 
-    // Ensure the password meets the required criteria
+    // Password strength
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
     if (!passwordPattern.test(req.body.password)) {
-      errorMessages.push('Password is weak. It must contain at least one uppercase letter, one lowercase letter, and be at least 6 characters long.');
-      return res.render('signup', { errorMessages });
+      errorMessages.push(
+        "Password must contain at least 1 uppercase, 1 lowercase and be 6+ characters."
+      );
+      return res.render("signup", { errorMessages });
     }
 
-    // Use default photo for all users
-    const defaultPhoto = '/images/avatar.png'; // replace with your default image path
+    // Default photo
+    const defaultPhoto = "/images/avatar.png";
 
-    // Save user data to the database
-    const userData = new User({
+    // Save user
+    const newUser = new User({
       fullname: req.body.fullname,
       username: req.body.username,
       email: req.body.email,
@@ -56,17 +58,25 @@ export const signUp = async (req, res) => {
       updatedAt: new Date(),
     });
 
-    await userData.save();
+    await newUser.save();
 
-    // Redirect to login after successful signup
-    res.redirect('/login');
+    // 🔥 STORE TEMP LOGIN DATA FOR AUTO-FILL
+    req.session.justSignedUp = {
+      username: req.body.username,
+      password: req.body.password,
+    };
+
+    // 🔥 SUCCESS MESSAGE
+    req.session.signupSuccess = `Account created successfully. Welcome, ${req.body.username}!`;
+
+    // Redirect
+    return res.redirect("/login");
   } catch (error) {
-    console.error('Sign-Up Error:', error);
-    errorMessages.push('An error occurred while signing up. Please try again later.');
-    return res.render('signup', { errorMessages });
+    console.error("Sign-Up Error:", error);
+    errorMessages.push("Signup error occurred. Try again later.");
+    return res.render("signup", { errorMessages });
   }
 };
-
 
 
 // Google Oauth
@@ -76,72 +86,6 @@ export const googleAuthCallback = passport.authenticate('google', {
   failureRedirect: '/login',
   successRedirect: '/'
 });
-
-
-// Login Controller
-// export const logIn = (req, res, next) => {
-//   passport.authenticate('local', async (err, user, info) => {
-//     try {
-//       if (err) {
-//         return res.render('login', {
-//           errorMessages: ['An error occurred during login. Please try again.'],
-//         });
-//       }
-
-//       if (!user) {
-//         return res.render('login', {
-//           errorMessages: [info.message || 'User does not exist.'],
-//         });
-//       }
-
-//       if (user.status !== 'active') {
-//         return res.render('login', {
-//           errorMessages: ['Forbidden: User status is inactive.'],
-//         });
-//       }
-
-//       // Log the user in
-//       req.login(user, async (loginErr) => {
-//         if (loginErr) {
-//           return res.render('login', {
-//             errorMessages: ['Login failed. Please try again.'],
-//           });
-//         }
-
-//         // Save user in session
-//         delete user.password;
-//         req.session.user = user;
-
-//         // Handle 2FA
-//         if (user.twoFactorEnabled) {
-//           return res.redirect('/2fa-verify');
-//         }
-
-//         // Generate JWT token
-//         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
-
-//         // Check if user has messages
-//         const hasMessages = user.messages && user.messages.length > 0;
-
-//         // Redirect user accordingly
-//         let redirectUrl = user.role === 'admin' 
-//           ? `/admin-dashboard?token=${token}` 
-//           : `/dashboard?token=${token}`;
-
-//         if (hasMessages) {
-//           redirectUrl += '&alert=You have new messages';
-//         }
-
-//         return res.redirect(redirectUrl);
-//       });
-//     } catch (catchErr) {
-//       console.error('Login Error:', catchErr);
-//       return res.render('login', {
-//         errorMessages: ['An internal server error occurred. Please try again later.'],
-//       });
-//     }
-//   })(req, res, next);
-// };
 
 
 // Login Controller
@@ -267,19 +211,36 @@ export const activeUserSessions = async (req, res) => {
 // Render the login page
 export const getLoginPage = (req, res) => {
   const ip =
-    req.headers['cf-connecting-ip'] ||
-    req.headers['x-real-ip'] ||
-    req.headers['x-forwarded-for'] ||
-    req.socket.remoteAddress || '';
+    req.headers["cf-connecting-ip"] ||
+    req.headers["x-real-ip"] ||
+    req.headers["x-forwarded-for"] ||
+    req.socket.remoteAddress ||
+    "";
 
-  const timestamp = new Date().toISOString();
-  console.log('IP address:', ip, '/login', timestamp);
+  console.log("IP address:", ip, "/login", new Date().toISOString());
 
-  // Get error messages from flash
-  const errorMessages = req.flash('error');
+  const errorMessages = req.flash("error");
 
-  res.render('login', { errorMessages });
+  // ⬇️ NEW: Success message after signup
+  const successMessage = req.session.signupSuccess || null;
+  req.session.signupSuccess = null;
+
+  // ⬇️ NEW: Auto-fill credentials only ONCE
+  let autoFill = null;
+  if (req.session.justSignedUp) {
+    autoFill = {
+      username: req.session.justSignedUp.username,
+      password: req.session.justSignedUp.password,
+    };
+
+    // Destroy after first view
+    req.session.justSignedUp = null;
+  }
+
+  res.render("login", { errorMessages, autoFill, successMessage });
 };
+
+
 
 
 // Render the login page
@@ -777,7 +738,7 @@ export const getSudoOnly = (req, res) => {
 
   const timestamp = new Date().toISOString();
   console.log('ip address:', ip, 'attempt accessing the sudo-only route', timestamp);
-  res.render('404-sudo', {
+  res.render('errors/404-sudo', {
   });
 };
 
@@ -793,25 +754,9 @@ export const getAdminOnly = (req, res) => {
 
   const timestamp = new Date().toISOString();
   console.log('ip address:', ip, 'attempt accessing the admin-only route', timestamp);
-  res.render('404-admin', {
+  res.render('errors/404-admin', {
   });
 };
-
-// Get sudo only Page Controller
-export const getFarmerOnly = (req, res) => {
-  const ip =
-    req.headers['cf-conneting-ip'] ||
-    req.headers['x-real-ip'] ||
-    req.headers['x-forwarded-for'] ||
-    req.socket.remoteAddress || '';
-
-  const timestamp = new Date().toISOString();
-  console.log('ip address:', ip, 'attempt accessing the admin-only route', timestamp);
-  res.render('404-farmer', {
-  });
-};
-
-
 
 // Go back function
 export const goBack = async (req, res) => {
@@ -839,4 +784,25 @@ export const deleteUserAccount = async (req, res) => {
       console.error(error);
       res.status(500).send("Server error");
   }
+};
+
+
+// Admin
+export const adminPanel = async (req, res) => {
+  const users = await User.find();
+  res.render("admin", { users });
+};
+
+export const toggleSubscription = async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  user.subscription = !user.subscription;
+
+  // when turning off subscription, also clear expiry date
+  if (!user.subscription) {
+    user.subscriptionExpiresAt = null;
+  }
+
+  await user.save();
+  res.redirect("/admin");
 };

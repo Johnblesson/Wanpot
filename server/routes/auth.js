@@ -21,7 +21,9 @@ import
     activeUserSessions,
     loginHistory,
     removeLoginHistory,
-    clearLoginHistory
+    clearLoginHistory,
+    adminPanel,
+    toggleSubscription
 }
 from "../controllers/auth.js";
 
@@ -38,8 +40,6 @@ import { isAdmin } from "../middlewares/isAdmin.js";
 // import { checkSudoMiddleware } from "../middlewares/sudo.js";
 import cacheMiddleware from "../middlewares/cacheMiddleware.js"
 import { checkManagerMiddleware } from '../middlewares/manager.js'
-
-
 
 //Auth Routes
 router.post("/signup", signUp);
@@ -85,6 +85,9 @@ router.get('/2fa-verify', ensureAuthenticated, (req, res) => {
     res.render('2fa-verify', { user });
 })
 
+router.get("/admin", ensureAuthenticated, isAdmin, adminPanel);
+router.post("/toggle/:id", ensureAuthenticated, isAdmin, toggleSubscription);
+
 // Logout route
 router.get('/logout', (req, res) => {
     req.session.destroy();
@@ -93,7 +96,7 @@ router.get('/logout', (req, res) => {
 
 // 404 Route
 router.get('/forbidden', (req, res) => {
-    res.render('404');
+    res.render('errors/404');
 });
 
 //  Route

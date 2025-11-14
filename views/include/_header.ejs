@@ -34,21 +34,37 @@
       </ul>
     </nav>
 
-    <!-- USER + MENU -->
+   <!-- USER + MENU -->
     <div style="display: flex; align-items: center; gap: 1rem;">
+
       <!-- USER PHOTO DROPDOWN -->
       <div class="user-menu">
-        <img src="<%= user.photo || '/images/wanpot.png' %>" alt="User" class="user-photo" onclick="toggleDropdown()" />
+        <img 
+          src="<%= user.photo || '/images/wanpot.png' %>" 
+          alt="User" 
+          class="user-photo" 
+          onclick="toggleDropdown()" 
+        />
+
         <ul class="dropdown-menu">
+
           <li><a href="/profile">Profile</a></li>
           <li><a href="/settings">Settings</a></li>
+
+          <% if (user.role === 'admin') { %>
+            <li><a href="/admin">Administration</a></li>
+          <% } %>
+
           <li><a href="/logout">Logout</a></li>
+
         </ul>
       </div>
 
       <!-- MENU TOGGLE FOR MOBILE -->
       <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+
     </div>
+
   </div>
 </header>
 

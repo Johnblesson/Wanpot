@@ -20,6 +20,7 @@ import todoRoutes from "./server/routes/todoRoutes.js";
 import searchHistoryRoutes from "./server/routes/searchRoutes.js";
 import aiRoutes from './server/routes/aiRoutes.js';
 import typistRoutes from "./server/routes/typistRoutes.js";
+import { checkSubscriptionStatus } from './server/middlewares/checkSubscription.js'
 import http from "http";
 import compression from "compression";
 import { Server } from "socket.io";
@@ -97,6 +98,9 @@ app.use('/todo', todoRoutes);
 app.use('/search', searchHistoryRoutes);
 app.use('/ai', aiRoutes);
 app.use("/api/typists", typistRoutes);
+
+app.use(checkSubscriptionStatus);
+
 
 // Set up the server to listen on port 5000
 const PORT = process.env.PORT;

@@ -31,218 +31,81 @@
       position: relative;
     }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+    .logo-text { font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #3b82f6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .menu-icon { font-size: 1.6rem; color: #ffffff; cursor: pointer; transition: transform 0.3s ease; }
+    .menu-icon:hover { transform: rotate(90deg); color: #38bdf8; }
+    .dropdown-menu { position: absolute; top: 60px; right: 2rem; background: rgba(30, 41, 59, 0.95); border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); padding: 0.5rem 0; display: none; flex-direction: column; z-index: 10; width: 200px; }
+    .dropdown-menu.show { display: flex; animation: fadeIn 0.2s ease-in-out; }
+    .dropdown-menu a, .dropdown-menu button { color: #e2e8f0; text-decoration: none; padding: 0.8rem 1.2rem; font-size: 0.95rem; background: none; border: none; text-align: left; width: 100%; cursor: pointer; transition: background 0.2s; font-family: 'Poppins', sans-serif; }
+    .dropdown-menu a:hover, .dropdown-menu button:hover { background: rgba(56,189,248,0.15); color: #38bdf8; }
 
-    .logo img {
-      height: 40px;
-      width: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
+    .ai-about { text-align: center; padding: 1rem; margin: 1rem auto; width: 85%; max-width: 800px; background: rgba(255, 255, 255, 0.05); border-radius: 12px; color: #cbd5e1; }
+    .ai-about h2 { color: #38bdf8; font-size: 1.3rem; margin-bottom: 0.5rem; }
 
-    .logo-text {
-      font-size: 1.5rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #3b82f6, #06b6d4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    .chat-container { flex: 1; width: 85%; max-width: 800px; margin: 0.5rem auto; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; display: flex; flex-direction: column; overflow-y: auto; height: 60vh; }
+    .message { padding: 0.8rem 1rem; border-radius: 12px; margin: 0.6rem 0; max-width: 85%; line-height: 1.6; white-space: pre-wrap; animation: fadeIn 0.3s ease; }
+    .user-msg { align-self: flex-end; background: #3b82f6; color: #fff; border-bottom-right-radius: 0; text-align: right; }
+    .ai-msg { align-self: flex-start; background: #1e293b; color: #38bdf8; border-bottom-left-radius: 0; text-align: left; }
 
-    .menu-icon {
-      font-size: 1.6rem;
-      color: #ffffff;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
+    .chat-input-wrapper { width: 90%; max-width: 800px; margin: 0 auto 1rem auto; padding: 0 1rem; }
+    .input-container { display: flex; align-items: center; background: rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; position: relative; }
+    .input-container input { width: 100%; padding: 0.9rem 3rem 0.9rem 1rem; border: none; outline: none; background: transparent; color: #f8fafc; font-size: 1rem; }
+    .input-container button { position: absolute; right: 0.5rem; background: none; border: none; color: #38bdf8; font-size: 1.4rem; cursor: pointer; transition: color 0.2s, transform 0.2s; }
+    .input-container button:hover { color: #06b6d4; transform: scale(1.15); }
+    .clear-btn { display: none; }
 
-    .menu-icon:hover {
-      transform: rotate(90deg);
-      color: #38bdf8;
-    }
+    .ai-typing { font-style: italic; font-size: 0.9rem; color: #94a3b8; display: inline-block; margin-left: 5px; margin-bottom: 5px; }
+    .ai-typing::after { animation: typingDots 1s infinite steps(4, end); content: ''; display: inline-block; width: 1em; text-align: left; }
 
-    .dropdown-menu {
-      position: absolute;
-      top: 60px;
-      right: 2rem;
-      background: rgba(30, 41, 59, 0.95);
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      padding: 0.5rem 0;
-      display: none;
-      flex-direction: column;
-      z-index: 10;
-      width: 200px;
-    }
+    @keyframes typingDots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } 100% { content: ''; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-    .dropdown-menu.show {
-      display: flex;
-      animation: fadeIn 0.2s ease-in-out;
-    }
+    footer { text-align: center; padding: 1rem; background: #0f172a; color: #64748b; font-size: 0.9rem; }
 
-    .dropdown-menu a, .dropdown-menu button {
-      color: #e2e8f0;
-      text-decoration: none;
-      padding: 0.8rem 1.2rem;
-      font-size: 0.95rem;
-      background: none;
-      border: none;
-      text-align: left;
-      width: 100%;
-      cursor: pointer;
-      transition: background 0.2s;
-      font-family: 'Poppins', sans-serif;
-    }
+    /* Copy button above the AI message text */
+  .message-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
 
-    .dropdown-menu a:hover, .dropdown-menu button:hover {
-      background: rgba(56,189,248,0.15);
-      color: #38bdf8;
-    }
+  .copy-btn {
+    position: absolute;
+    top: -22px; /* above the message text */
+    right: 8px;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid #3b82f6;
+    color: #3b82f6;
+    padding: 3px 6px;
+    font-size: 0.75rem;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+  }
 
-    .ai-about {
-      text-align: center;
-      padding: 1rem;
-      margin: 1rem auto;
-      width: 85%;
-      max-width: 800px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      color: #cbd5e1;
-    }
+  .copy-btn i { pointer-events: none; }
+  .copy-btn:hover { background: #3b82f6; color: #fff; transform: scale(1.15); }
 
-    .ai-about h2 {
-      color: #38bdf8;
-      font-size: 1.3rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .chat-container {
-      flex: 1;
-      width: 85%;
-      max-width: 800px;
-      margin: 0.5rem auto;
-      padding: 1rem;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      height: 60vh;
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    .copy-btn {
+      top: -20px;
+      right: 6px;
+      font-size: 0.65rem;
+      padding: 2px 5px;
     }
 
     .message {
-      padding: 0.8rem 1rem;
-      border-radius: 12px;
-      margin: 0.6rem 0;
-      max-width: 85%;
-      line-height: 1.6;
-      white-space: pre-wrap;
-      animation: fadeIn 0.3s ease;
+      max-width: 90%;
+      font-size: 0.95rem;
     }
-
-    .user-msg {
-      align-self: flex-end;
-      background: #3b82f6;
-      color: #fff;
-      border-bottom-right-radius: 0;
-      text-align: right;
-    }
-
-    .ai-msg {
-      align-self: flex-start;
-      background: #1e293b;
-      color: #38bdf8;
-      border-bottom-left-radius: 0;
-      text-align: left;
-    }
-
-    .chat-input-wrapper {
-      width: 90%;
-      max-width: 800px;
-      margin: 0 auto 1rem auto;
-      padding: 0 1rem;
-    }
-
-    .input-container {
-      display: flex;
-      align-items: center;
-      background: rgba(255,255,255,0.1);
-      border-radius: 12px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .input-container input {
-      width: 100%;
-      padding: 0.9rem 3rem 0.9rem 1rem;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: #f8fafc;
-      font-size: 1rem;
-    }
-
-    .input-container button {
-      position: absolute;
-      right: 0.5rem;
-      background: none;
-      border: none;
-      color: #38bdf8;
-      font-size: 1.4rem;
-      cursor: pointer;
-      transition: color 0.2s, transform 0.2s;
-    }
-
-    .input-container button:hover {
-      color: #06b6d4;
-      transform: scale(1.15);
-    }
-
-    .clear-btn {
-      display: none;
-    }
-
-    .ai-typing {
-      font-style: italic;
-      font-size: 0.9rem;
-      color: #94a3b8;
-      display: inline-block;
-      margin-left: 5px;
-      margin-bottom: 5px;
-    }
-
-    .ai-typing::after {
-      animation: typingDots 1s infinite steps(4, end);
-      content: '';
-      display: inline-block;
-      width: 1em;
-      text-align: left;
-    }
-
-    @keyframes typingDots {
-      0% { content: ''; }
-      25% { content: '.'; }
-      50% { content: '..'; }
-      75% { content: '...'; }
-      100% { content: ''; }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background: #0f172a;
-      color: #64748b;
-      font-size: 0.9rem;
-    }
-
+  }
+</style>
   </style>
 </head>
 
@@ -281,9 +144,9 @@
     <input type="hidden" name="chatId" id="chatId" value="<%= chatId || '' %>">
   </form>
 
-   <footer>
-  <p>© <%= new Date().getFullYear() %> Wanpot | Built with ❤️ in Sierra Leone by <strong>Kharis Pro Tech</strong> | Empowering Productivity Everywhere</p>
-</footer>
+  <footer>
+    <p>© <%= new Date().getFullYear() %> Wanpot | Built with ❤️ in Sierra Leone by <strong>Kharis Pro Tech</strong> | Empowering Productivity Everywhere</p>
+  </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
@@ -296,18 +159,9 @@
     const menuToggle = document.getElementById('menuToggle');
     const dropdownMenu = document.getElementById('dropdownMenu');
 
-    // Toggle dropdown
-    menuToggle.addEventListener('click', () => {
-      dropdownMenu.classList.toggle('show');
-    });
+    menuToggle.addEventListener('click', () => { dropdownMenu.classList.toggle('show'); });
+    document.addEventListener('click', (e) => { if(!menuToggle.contains(e.target) && !dropdownMenu.contains(e.target)) dropdownMenu.classList.remove('show'); });
 
-    document.addEventListener('click', (e) => {
-      if (!menuToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
-        dropdownMenu.classList.remove('show');
-      }
-    });
-
-    // Render existing chat
     let chatHistory = chatHistoryInput.value ? JSON.parse(chatHistoryInput.value) : [];
     renderChatHistory(chatHistory);
 
@@ -326,11 +180,7 @@
       promptInput.value = '';
 
       try {
-        const res = await fetch('/ai', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt, chatId: chatIdInput.value })
-        });
+        const res = await fetch('/ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt, chatId: chatIdInput.value }) });
         const data = await res.json();
         chatIdInput.value = data.chatId || chatIdInput.value;
         chatHistory = data.messages;
@@ -342,13 +192,13 @@
 
     function addMessage(sender, text, id, typing=false) {
       const div = document.createElement('div');
-      div.classList.add('message', sender === 'user' ? 'user-msg' : 'ai-msg');
+      div.classList.add('message', sender==='user'?'user-msg':'ai-msg');
       div.setAttribute('data-id', id);
 
       const wrapper = document.createElement('div');
       wrapper.classList.add('message-wrapper');
 
-      if (sender === 'ai' && typing) {
+      if(sender==='ai' && typing) {
         const typingIndicator = document.createElement('div');
         typingIndicator.classList.add('ai-typing');
         typingIndicator.textContent = "AI is typing...";
@@ -360,72 +210,70 @@
         div.appendChild(wrapper);
         chatContainer.appendChild(div);
 
-        typeWriterEffect(span, text, () => typingIndicator.remove());
+        typeWriterEffect(span, text, () => { typingIndicator.remove(); addCopyButton(wrapper, text); });
       } else {
-        wrapper.innerHTML = `<span>${text.replace(/\n/g, '<br>')}</span>`;
+        wrapper.innerHTML = `<span>${text.replace(/\n/g,'<br>')}</span>`;
+        if(sender==='ai') addCopyButton(wrapper, text);
         div.appendChild(wrapper);
         chatContainer.appendChild(div);
         scrollToBottom();
       }
     }
 
-    function typeWriterEffect(element, text, callback, i=0) {
-      if (i < text.length) {
-        element.innerHTML += text[i] === '\n' ? '<br>' : text[i];
-        i++;
-        setTimeout(() => typeWriterEffect(element, text, callback, i), 20);
-        scrollToBottom();
-      } else if (callback) callback();
+    function addCopyButton(wrapper, text) {
+      const copyBtn = document.createElement('button');
+      copyBtn.classList.add('copy-btn');
+      copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(text).then(() => {
+          copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+          setTimeout(() => copyBtn.innerHTML = '<i class="fas fa-copy"></i>', 1500);
+        });
+      });
+      wrapper.appendChild(copyBtn);
     }
 
-    async function clearAllChat() {
-      if (!confirm("Clear all chat history?")) return;
-      try {
-        const res = await fetch('/ai/clear', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chatId: chatIdInput.value })
-        });
-        const data = await res.json();
-        chatHistory = data.messages;
-        renderChatHistory(chatHistory);
-      } catch (err) { console.error(err); }
+    function typeWriterEffect(element, text, callback, i=0) {
+      if(i<text.length) {
+        element.innerHTML += text[i]==='\n'?'<br>':text[i];
+        i++;
+        setTimeout(()=>typeWriterEffect(element,text,callback,i),20);
+        scrollToBottom();
+      } else if(callback) callback();
     }
+
+    async function clearAllChat() { if(!confirm("Clear all chat history?")) return; try { const res = await fetch('/ai/clear',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ chatId: chatIdInput.value }) }); const data = await res.json(); chatHistory = data.messages; renderChatHistory(chatHistory); } catch(err){console.error(err);} }
 
     function downloadChatPDF() {
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF();
-      let y = 10;
-      pdf.setFont('helvetica', 'normal');
-      pdf.text("Wanpot Chat Conversation", 10, y);
-      y += 10;
-      chatHistory.forEach(msg => {
-        const sender = msg.sender === 'user' ? "You: " : "AI: ";
-        pdf.text(sender + msg.text, 10, y);
-        y += 10;
-      });
-      const filename = `WanpotChat_${new Date().toISOString().slice(0,10)}.pdf`;
-      pdf.save(filename);
+      const { jsPDF } = window.jspdf; const pdf = new jsPDF(); let y=10; pdf.setFont('helvetica','normal'); pdf.text("Wanpot Chat Conversation",10,y); y+=10; chatHistory.forEach(msg=>{ const sender = msg.sender==='user'?"You: ":"AI: "; pdf.text(sender+msg.text,10,y); y+=10; }); pdf.save(`WanpotChat_${new Date().toISOString().slice(0,10)}.pdf`);
     }
 
     function renderChatHistory(history, aiTyping=false) {
-      chatContainer.innerHTML = '';
-      if (history.length === 0) {
-        chatContainer.innerHTML = `<div class="message ai-msg">👋 Hello! I’m Wanpot AI — how can I assist you today?</div>`;
-        return;
-      }
-      history.forEach((msg, index) => {
-        if (msg.sender === 'ai' && aiTyping && index === history.length - 1) {
-          addMessage(msg.sender, msg.text, msg._id, true);
-        } else addMessage(msg.sender, msg.text, msg._id);
+      chatContainer.innerHTML='';
+      if(!history.length){ chatContainer.innerHTML=`<div class="message ai-msg">👋 Hello! I’m Wanpot AI — how can I assist you today?</div>`; return; }
+      history.forEach((msg,index)=>{
+        if(msg.sender==='ai' && aiTyping && index===history.length-1){ addMessage(msg.sender,msg.text,msg._id,true); }
+        else addMessage(msg.sender,msg.text,msg._id);
       });
-      chatHistoryInput.value = JSON.stringify(history);
-      scrollToBottom();
+      chatHistoryInput.value=JSON.stringify(history);
     }
 
-    function scrollToBottom() {
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
+    function scrollToBottom(){ chatContainer.scrollTop=chatContainer.scrollHeight; }
+  </script>
+
+  <script>
+      function addCopyButton(wrapper, text) {
+    const copyBtn = document.createElement('button');
+    copyBtn.classList.add('copy-btn');
+    copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(text).then(() => {
+        copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+        setTimeout(() => copyBtn.innerHTML = '<i class="fas fa-copy"></i>', 1500);
+      });
+    });
+    wrapper.appendChild(copyBtn);
+  }
   </script>
 </body>
 </html>

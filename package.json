@@ -23,6 +23,7 @@
     "@google/genai": "^1.29.1",
     "@vitalets/google-translate-api": "^9.2.1",
     "algebrite": "^1.4.0",
+    "axios": "^1.13.2",
     "bcrypt": "^6.0.0",
     "compression": "^1.8.1",
     "connect-flash": "^0.1.1",

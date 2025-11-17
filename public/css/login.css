@@ -1,184 +1,240 @@
+/* ===============================
+   WANPOT Signup Page Styles
+=============================== */
 
-  /* Base Styles (as you already have) */
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    color: #f8fafc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
+/* Base body styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #f8fafc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
 
-  .auth-container {
-    background: rgba(30, 41, 59, 0.9);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px;
-    box-shadow: 0 0 40px rgba(0, 102, 255, 0.3);
-    padding: 3rem;
-    width: 400px;
-    text-align: center;
-  }
+/* Container */
+.auth-container {
+  background: rgba(30, 41, 59, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 0 40px rgba(0, 102, 255, 0.3);
+  padding: 3rem;
+  width: 400px;
+  text-align: center;
+}
 
-  .logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1rem;
-  }
+/* Logo */
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
 
-  .logo img {
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-  }
+.logo img {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+}
 
-  .auth-container h1 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    background: linear-gradient(90deg, #3b82f6, #06b6d4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 700;
-  }
+/* Headings and description */
+.auth-container h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(90deg, #3b82f6, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
 
-  .auth-container p {
-    margin-bottom: 1.5rem;
-    color: #cbd5e1;
-  }
+.auth-container p {
+  margin-bottom: 1.5rem;
+  color: #cbd5e1;
+}
 
-  .input-group {
-    position: relative;
-    margin-bottom: 1rem;
-  }
+/* Input Groups */
+.input-group {
+  position: relative;
+  margin-bottom: 1.5rem; /* slightly larger spacing for messages */
+  display: flex;
+  flex-direction: column; /* stack input and messages */
+}
 
-  input {
-    width: 90%;
-    padding: 0.8rem;
-    padding-right: 2.5rem;
-    border: none;
-    border-radius: 8px;
-    background: #1e293b;
-    color: #f8fafc;
-    outline: none;
-    font-size: 1rem;
-  }
+.input-group input {
+  width: 100%;
+  height: 45px; /* fixed height to prevent toggle jump */
+  padding: 0.8rem 2.5rem 0.8rem 0.8rem; /* right padding for toggle */
+  border: none;
+  border-radius: 8px;
+  background: #1e293b;
+  color: #f8fafc;
+  outline: none;
+  font-size: 1rem;
+  line-height: 1.2;
+  box-sizing: border-box;
+}
 
-  input:focus {
-    border: 1px solid #60a5fa;
-    box-shadow: 0 0 8px #60a5fa;
-  }
+.input-group input:focus {
+  border: 1px solid #60a5fa;
+  box-shadow: 0 0 8px #60a5fa;
+}
 
-  .toggle-password {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #94a3b8;
-    font-size: 1.1rem;
-    user-select: none;
-  }
+/* Password toggle icon */
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%); /* always vertically centered */
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 1.1rem;
+  user-select: none;
+  pointer-events: auto;
+}
 
-  .toggle-password:hover {
-    color: #60a5fa;
-  }
+.toggle-password:hover {
+  color: #60a5fa;
+}
 
-  button {
-    width: 100%;
-    background: linear-gradient(90deg, #2563eb, #3b82f6);
-    border: none;
-    padding: 0.9rem;
-    border-radius: 10px;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 1rem;
-    transition: all 0.3s ease;
-  }
+/* Password strength & username suggestion */
+.password-strength,
+.username-status {
+  margin-top: 5px;
+  font-size: 0.85rem;
+  text-align: left;
+}
 
-  button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 15px #3b82f6;
-  }
+/* Password Strength Colors */ 
+#password-strength .weak { color: #ef4444; /* Red for weak */ font-weight: bold; } #password-strength .strong { color: #10b981; /* Green for strong */ font-weight: bold; }
 
-  .link {
-    display: block;
-    margin-top: 1rem;
-    color: #93c5fd;
-    text-decoration: none;
-  }
 
-  .link:hover {
-    text-decoration: underline;
-  }
+.username-status .error {
+  color: #ff3b3b;
+}
 
-  .error-message {
-    background-color: #f87171;
-    color: #fff;
-    padding: 0.7rem 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-  }
+.username-status .success {
+  color: #16a34a;
+}
 
-  .input-error {
-  border: 2px solid #ef4444 !important;
-  background: #1e293b !important;
+/* =======================
+   Success Message Styling
+======================== */
+.success-message {
+  background-color: #16a34a; /* Green background */
+  color: #ffffff;            /* White text */
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(22, 163, 74, 0.5); /* subtle glow */
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Fade-in animation for success */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 
-  /* =======================
-     Responsive Media Queries
-  ======================= */
-  @media (max-width: 500px) {
-    .auth-container {
-      width: 90%;
-      padding: 2rem;
-    }
+/* Input error styling */
+.input-error {
+  border: 2px solid #ff3b3b !important;
+  animation: shake 0.15s 3;
+}
 
-    input {
-      width: 90%;
-      font-size: 0.95rem;
-    }
+@keyframes shake {
+  0% { transform: translateX(0px); }
+  25% { transform: translateX(-3px); }
+  50% { transform: translateX(3px); }
+  75% { transform: translateX(-3px); }
+  100% { transform: translateX(0px); }
+}
 
-    button {
-      font-size: 0.95rem;
-      padding: 0.8rem;
-    }
+/* Buttons */
+button {
+  width: 100%;
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  border: none;
+  padding: 0.9rem;
+  border-radius: 10px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
 
-    .logo img {
-      width: 50px;
-      height: 50px;
-    }
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px #3b82f6;
+}
 
-    .auth-container p {
-      font-size: 0.95rem;
-    }
+/* Links */
+.link {
+  display: block;
+  margin-top: 1rem;
+  color: #93c5fd;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* =======================
+   Responsive Media Queries
+======================== */
+@media (max-width: 500px) {
+  .auth-container {
+    width: 90%;
+    padding: 2rem;
   }
 
-  @media (max-width: 360px) {
-    .auth-container {
-      padding: 1.5rem;
-    }
-
-    .logo img {
-      width: 45px;
-      height: 45px;
-    }
-
-    input {
-      padding: 0.7rem;
-    }
-
-    button {
-      padding: 0.7rem;
-    }
-
-    .auth-container p {
-      font-size: 0.9rem;
-    }
+  input {
+    width: 100%;
+    font-size: 0.95rem;
   }
+
+  button {
+    font-size: 0.95rem;
+    padding: 0.8rem;
+  }
+
+  .logo img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .auth-container p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .auth-container {
+    padding: 1.5rem;
+  }
+
+  .logo img {
+    width: 45px;
+    height: 45px;
+  }
+
+  input {
+    padding: 0.7rem;
+  }
+
+  button {
+    padding: 0.7rem;
+  }
+
+  .auth-container p {
+    font-size: 0.9rem;
+  }
+}

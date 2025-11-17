@@ -13,6 +13,7 @@ import { activeSessions } from '../passport/passport-config.js' // Import the ac
 import dotenv from 'dotenv'; // Environment variable library
 dotenv.config();
 
+
 // Sign Up Controller
 export const signUp = async (req, res) => {
   const errors = validationResult(req);
@@ -38,7 +39,7 @@ export const signUp = async (req, res) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
-    // Username exists?
+    // Check if username exists
     const existingUser = await User.findOne({ username: req.body.username });
     if (existingUser) {
       errorMessages.push("Username already taken. Choose another.");
@@ -51,7 +52,7 @@ export const signUp = async (req, res) => {
       });
     }
 
-    // Password strength
+    // Password strength validation
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
     if (!passwordPattern.test(req.body.password)) {
       errorMessages.push(
@@ -68,6 +69,7 @@ export const signUp = async (req, res) => {
 
     const defaultPhoto = "/images/avatar.png";
 
+    // Create new user
     const newUser = new User({
       fullname: req.body.fullname,
       username: req.body.username,
@@ -81,11 +83,13 @@ export const signUp = async (req, res) => {
 
     await newUser.save();
 
+    // Store temporary login data for auto-fill
     req.session.justSignedUp = {
       username: req.body.username,
       password: req.body.password,
     };
 
+    // Success message
     req.session.signupSuccess = `Account created successfully. Welcome, ${req.body.username}!`;
 
     return res.redirect("/login");
@@ -101,6 +105,35 @@ export const signUp = async (req, res) => {
     });
   }
 };
+
+
+// LIVE USERNAME CHECK
+export const checkUsername = async (req, res) => {
+  const { username } = req.body;
+
+  if (!username) return res.json({ exists: false });
+
+  const user = await User.findOne({ username });
+
+  res.json({ exists: !!user });
+};
+
+
+export const suggestUsernames = async (req, res) => {
+  const base = req.body.fullname || "user";
+  const clean = base.replace(/\s+/g, "").toLowerCase();
+
+  const suggestions = [
+    clean + Math.floor(Math.random() * 900 + 100),
+    clean + "_official",
+    "real_" + clean,
+    clean + "_hq",
+    clean + Date.now().toString().slice(-3)
+  ];
+
+  res.json({ suggestions });
+};
+
 
 
 
@@ -267,27 +300,24 @@ export const getLoginPage = (req, res) => {
 
 
 
-
-// Render the signup page
+// GET SIGNUP PAGE
 export const getSignUpPage = (req, res) => {
   const ip =
     req.headers['cf-connecting-ip'] ||
     req.headers['x-real-ip'] ||
     req.headers['x-forwarded-for'] ||
-    req.socket.remoteAddress || '';
+    req.socket.remoteAddress || "";
 
-  const timestamp = new Date().toISOString();
-  console.log('IP address:', ip, '/signup', timestamp);
+  console.log("IP address:", ip, "/signup", new Date().toISOString());
 
-  const errorMessages = req.flash('error');
-
-  // ALWAYS send old + errorFields so EJS doesn’t break
   res.render("signup", {
-    errorMessages,
-    old: {},             // prevent "old is not defined"
-    errorFields: {}      // prevent "errorFields is not defined"
+    errorMessages: [],
+    old: {},
+    errorFields: {},
+    step: 1 // DEFAULT WIZARD STEP
   });
 };
+
 
 
 // Controller to render the login history page

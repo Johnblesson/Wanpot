@@ -1,0 +1,169 @@
+/* WANPOT Signup - Dark theme, compact, responsive */
+
+/* Base */
+:root {
+  --bg-1: #0f172a;
+  --bg-2: #111827;
+  --card: #0b1220;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --accent2: #6366f1;
+  --success: #10b981;
+  --danger: #ef4444;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, var(--bg-1), #0b1a2a);
+  color: #e6eef8;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  min-height: 100vh;
+}
+
+/* Page layout */
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.auth-card {
+  width: 760px;
+  max-width: 96%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.7);
+}
+
+/* Logo */
+.logo {
+  text-align: center;
+  margin-bottom: 18px;
+}
+.logo img { width: 56px; height: 56px; border-radius: 10px; }
+.logo h1 { margin: 8px 0 0; font-size: 20px; letter-spacing: 1px; color: var(--accent); }
+.logo .muted { margin-top: 6px; color: var(--muted); font-size: 13px; }
+
+/* Flash errors */
+.flash-errors {
+  margin: 10px 0 16px;
+  padding: 10px 12px;
+  background: rgba(239,68,68,0.08);
+  color: #ffd4d4;
+  border-left: 3px solid rgba(239,68,68,0.25);
+  border-radius: 8px;
+  list-style: none;
+}
+
+/* Progress bar */
+.progress-bar {
+  height: 8px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+.progress-fill {
+  height: 100%;
+  width: 50%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transition: width 260ms ease;
+}
+
+/* Form layout */
+.input-group { margin-bottom: 12px; }
+.input-row { display: flex; gap: 12px; }
+.input-row .input-group { flex: 1; }
+
+label { display:block; font-size: 13px; color: var(--muted); margin-bottom:6px; }
+input[type="text"], input[type="email"], input[type="password"], input[type="tel"] {
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.02);
+  color: #e6eef8;
+  outline: none;
+  transition: box-shadow 150ms ease, border-color 150ms ease;
+}
+input:focus { box-shadow: 0 6px 18px rgba(56,189,248,0.06); border-color: rgba(56,189,248,0.18); }
+
+.pw-wrap { position: relative; display:flex; align-items:center; }
+.pw-eye {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: transform 150ms ease;
+}
+.pw-eye.pw-anim { transform: rotate(20deg) scale(1.05); }
+
+/* Password strength */
+.password-strength { font-size: 13px; margin-top:6px; color: var(--muted); }
+.pw-weak { color: #ff7b7b; }
+.pw-medium { color: #f59e0b; }
+.pw-good { color: #60a5fa; }
+.pw-strong { color: var(--success); }
+
+/* Username suggestions */
+.username-suggestions { margin-top:8px; }
+.username-suggestions-list { display:flex; gap:8px; flex-wrap:wrap; }
+.username-suggestion-pill {
+  padding:6px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.03);
+  color: #e6eef8;
+  border: 1px solid rgba(255,255,255,0.02);
+  cursor: pointer;
+  font-size:13px;
+}
+.username-suggestion-pill:hover { background: rgba(255,255,255,0.04); }
+
+/* Availability status */
+.username-availability-status { margin-top:6px; font-size:13px; }
+.username-availability-status .error { color: var(--danger); }
+.username-availability-status .success { color: var(--success); }
+
+/* Buttons */
+.actions { margin-top: 18px; display:flex; justify-content:flex-end; gap: 8px; }
+.actions.two-col { display:flex; justify-content:space-between; }
+.btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn.primary { background: linear-gradient(90deg,var(--accent),var(--accent2)); color: #061126; }
+.btn.ghost { background: transparent; color: var(--muted); border: 1px solid rgba(255,255,255,0.03); }
+
+/* Input error */
+.input-error {
+  border: 2px solid rgba(239,68,68,0.9) !important;
+  animation: shake 0.25s 1;
+  background: rgba(239,68,68,0.02);
+}
+
+/* small shake keyframes */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+/* small helpers */
+.foot { margin-top: 12px; text-align:center; }
+.muted { color: var(--muted); font-size: 13px; }
+
+/* responsive */
+@media (max-width:720px) {
+  .auth-card { padding: 18px; }
+  .input-row { flex-direction: column; }
+}

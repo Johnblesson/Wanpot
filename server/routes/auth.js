@@ -1,12 +1,14 @@
 import { Router } from "express";
 const router = Router();
-
+import User from "../models/auth.js";
 import 
 { 
     signUp, 
     logIn,
     getLoginPage,
     getSignUpPage,
+    checkUsername,
+    suggestUsernames,
     edituser, 
     updateUser, 
     deleteUser, 
@@ -104,13 +106,18 @@ router.get('/notAuthenticated', (req, res) => {
     res.render('notAuthenticated');
 });
 
-
 // Sudo only
 router.get("/sudo-only", getSudoOnly)
 router.get("/admin-only", getAdminOnly)
 
 // Route to handle goBack
 router.get('/go-back', goBack);
+
+router.post("/check-username", checkUsername);
+
+// POST route for username suggestions
+router.post("/suggest-username", suggestUsernames);
+
 
 // router.delete('/delete-account', ensureAuthenticated, deleteUserAccount);
 // router.get('/delete-account', ensureAuthenticated, deleteUserAccount);

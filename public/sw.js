@@ -3,8 +3,8 @@ const urlsToCache = [
   "/",
   "/dashboard",
   "/manifest.json",
-  "/images/wanpot.ico",
-  "/images/wanpot-512.png"
+  "/images/wanpot.png",
+  "/images/wanpot.png"
 ];
 
 self.addEventListener("install", event => {

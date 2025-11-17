@@ -4,8 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Movable AI Icon Button</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
-    /* Basic styling for the button */
+    /* =========================
+       Movable AI Button Styles
+    ========================== */
     #aiButton {
       position: fixed;
       bottom: 20px;
@@ -19,17 +24,24 @@
       align-items: center;
       justify-content: center;
       cursor: move;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      transition: background-color 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: background-color 0.3s, transform 0.2s;
       z-index: 1000;
       font-size: 24px;
     }
 
     #aiButton:hover {
       background-color: #004d40;
+      transform: scale(1.1);
     }
 
-    /* Center-right position for mobile screens */
+    /* Font Awesome AI icon inside the button */
+    #aiButton i {
+      font-size: 1.5rem;
+      color: #60a5fa;
+    }
+
+    /* Mobile view: center-right vertical */
     @media (max-width: 480px) {
       #aiButton {
         top: 50%;
@@ -39,55 +51,53 @@
         height: 50px;
         font-size: 20px;
       }
+
+      #aiButton i {
+        font-size: 1.2rem;
+      }
     }
   </style>
 </head>
 <body>
 
 <!-- Movable AI Button -->
-<div id="aiButton"> <a href="/ai">
-  <span id="aiIcon">🤖</span> <!-- Emoji used as an example icon -->
+<a href="/ai" id="aiButton">
+  <i class="fa-solid fa-robot"></i>
 </a>
-</div>
 
 <script>
-  // JavaScript to make the button draggable on both desktop and mobile
   const aiButton = document.getElementById('aiButton');
   let isDragging = false;
   let offsetX, offsetY;
 
-  // Function to handle the start of dragging
   function startDrag(e) {
     isDragging = true;
     const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
     const clientY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
     offsetX = clientX - aiButton.getBoundingClientRect().left;
     offsetY = clientY - aiButton.getBoundingClientRect().top;
-    aiButton.style.transition = 'none'; // Disable transition during drag
+    aiButton.style.transition = 'none'; // Disable transition while dragging
   }
 
-  // Function to handle dragging movement
   function dragMove(e) {
-    if (isDragging) {
-      const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
-      const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
-      aiButton.style.left = `${clientX - offsetX}px`;
-      aiButton.style.top = `${clientY - offsetY}px`;
-    }
+    if (!isDragging) return;
+    const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+    const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
+    aiButton.style.left = `${clientX - offsetX}px`;
+    aiButton.style.top = `${clientY - offsetY}px`;
   }
 
-  // Function to end dragging
   function endDrag() {
     isDragging = false;
-    aiButton.style.transition = 'background-color 0.3s'; // Re-enable transition
+    aiButton.style.transition = 'background-color 0.3s, transform 0.2s';
   }
 
-  // Event listeners for mouse
+  // Mouse events
   aiButton.addEventListener('mousedown', startDrag);
   document.addEventListener('mousemove', dragMove);
   document.addEventListener('mouseup', endDrag);
 
-  // Event listeners for touch
+  // Touch events
   aiButton.addEventListener('touchstart', startDrag);
   document.addEventListener('touchmove', dragMove);
   document.addEventListener('touchend', endDrag);

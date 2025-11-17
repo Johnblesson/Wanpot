@@ -125,6 +125,12 @@
     font-size: 0.9rem;
   }
 
+  .input-error {
+  border: 2px solid #ef4444 !important;
+  background: #1e293b !important;
+}
+
+
   /* =======================
      Responsive Media Queries
   ======================= */

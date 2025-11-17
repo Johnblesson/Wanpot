@@ -42,7 +42,7 @@ import cacheMiddleware from "../middlewares/cacheMiddleware.js"
 import { checkManagerMiddleware } from '../middlewares/manager.js'
 
 //Auth Routes
-router.post("/signup", signUp);
+router.post("/api/auth/signup", signUp);
 router.post("/api/auth/login", logIn);
 router.get("/login", getLoginPage);
 router.get("/signup", cacheMiddleware, getSignUpPage);

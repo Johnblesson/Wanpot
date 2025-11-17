@@ -25,25 +25,67 @@
       <% }) %>
     <% } %>
 
-    <form action="/signup" method="POST">
+    <form action="/api/auth/signup" method="POST">
+
       <div class="input-group">
-        <input type="text" name="fullname" placeholder="Full Name" required>
+        <input 
+          type="text" 
+          name="fullname" 
+          placeholder="Full Name" 
+          value="<%= old ? old.fullname : '' %>"
+          class="<%= errorFields && errorFields.fullname ? 'input-error' : '' %>"
+          required
+        >
       </div>
+
       <div class="input-group">
-        <input type="text" name="username" placeholder="Username" required>
+        <input 
+          type="text" 
+          name="username" 
+          placeholder="Username" 
+          value="<%= old ? old.username : '' %>"
+          class="<%= errorFields && errorFields.username ? 'input-error' : '' %>"
+          required
+        >
       </div>
+
       <div class="input-group">
-        <input type="tel" name="phone" placeholder="Phone" required>
+        <input 
+          type="tel" 
+          name="phone" 
+          placeholder="Phone"
+          value="<%= old ? old.phone : '' %>"
+          class="<%= errorFields && errorFields.phone ? 'input-error' : '' %>"
+          required
+        >
       </div>
+
       <div class="input-group">
-        <input type="email" name="email" placeholder="Email (Optional)">
+        <input 
+          type="email" 
+          name="email" 
+          placeholder="Email (Optional)"
+          value="<%= old ? old.email : '' %>"
+          class="<%= errorFields && errorFields.email ? 'input-error' : '' %>"
+        >
       </div>
+
       <div class="input-group">
-        <input type="password" name="password" id="password" placeholder="Password" required>
+        <input 
+          type="password" 
+          name="password" 
+          id="password"
+          placeholder="Password"
+          value="<%= old ? old.password : '' %>"
+          class="<%= errorFields && errorFields.password ? 'input-error' : '' %>"
+          required
+        >
         <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
       </div>
+
       <button type="submit">Create Account</button>
     </form>
+
 
     <a href="/login" class="link">Already have an account? Sign in</a>
   </div>

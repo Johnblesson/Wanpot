@@ -17,21 +17,38 @@ dotenv.config();
 export const signUp = async (req, res) => {
   const errors = validationResult(req);
   let errorMessages = [];
+  let errorFields = {};
+  let old = { ...req.body };
 
+  // Map express-validator errors
   if (!errors.isEmpty()) {
-    errorMessages = errors.array().map(err => err.msg);
-    return res.render("signup", { errorMessages });
+    errors.array().forEach(err => {
+      errorMessages.push(err.msg);
+      errorFields[err.path] = true;
+    });
+
+    return res.render("signup", {
+      errorMessages,
+      errorFields,
+      old
+    });
   }
 
   try {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
-    // Check existing username
+    // Username exists?
     const existingUser = await User.findOne({ username: req.body.username });
     if (existingUser) {
       errorMessages.push("Username already taken. Choose another.");
-      return res.render("signup", { errorMessages });
+      errorFields.username = true;
+
+      return res.render("signup", {
+        errorMessages,
+        errorFields,
+        old
+      });
     }
 
     // Password strength
@@ -40,13 +57,17 @@ export const signUp = async (req, res) => {
       errorMessages.push(
         "Password must contain at least 1 uppercase, 1 lowercase and be 6+ characters."
       );
-      return res.render("signup", { errorMessages });
+      errorFields.password = true;
+
+      return res.render("signup", {
+        errorMessages,
+        errorFields,
+        old
+      });
     }
 
-    // Default photo
     const defaultPhoto = "/images/avatar.png";
 
-    // Save user
     const newUser = new User({
       fullname: req.body.fullname,
       username: req.body.username,
@@ -60,23 +81,27 @@ export const signUp = async (req, res) => {
 
     await newUser.save();
 
-    // 🔥 STORE TEMP LOGIN DATA FOR AUTO-FILL
     req.session.justSignedUp = {
       username: req.body.username,
       password: req.body.password,
     };
 
-    // 🔥 SUCCESS MESSAGE
     req.session.signupSuccess = `Account created successfully. Welcome, ${req.body.username}!`;
 
-    // Redirect
     return res.redirect("/login");
   } catch (error) {
     console.error("Sign-Up Error:", error);
+
     errorMessages.push("Signup error occurred. Try again later.");
-    return res.render("signup", { errorMessages });
+
+    return res.render("signup", {
+      errorMessages,
+      errorFields,
+      old
+    });
   }
 };
+
 
 
 // Google Oauth
@@ -243,7 +268,7 @@ export const getLoginPage = (req, res) => {
 
 
 
-// Render the login page
+// Render the signup page
 export const getSignUpPage = (req, res) => {
   const ip =
     req.headers['cf-connecting-ip'] ||
@@ -254,12 +279,15 @@ export const getSignUpPage = (req, res) => {
   const timestamp = new Date().toISOString();
   console.log('IP address:', ip, '/signup', timestamp);
 
-  // Get error messages from flash
   const errorMessages = req.flash('error');
 
-  res.render('signup', { errorMessages });
+  // ALWAYS send old + errorFields so EJS doesn’t break
+  res.render("signup", {
+    errorMessages,
+    old: {},             // prevent "old is not defined"
+    errorFields: {}      // prevent "errorFields is not defined"
+  });
 };
-
 
 
 // Controller to render the login history page

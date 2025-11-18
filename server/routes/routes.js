@@ -22,15 +22,6 @@ const storage = multer.diskStorage({
 });
 const uploadPDF = multer({ storage });
 
-// // login
-// router.get('/login', (req, res) => {
-//     res.render('login');
-// });
-
-// // Signup
-// router.get('/signup', (req, res) => {
-//     res.render('signup');
-// });
 
 router.get('/pdf-tools', renderPDFTools);
 router.post('/pdf-tools/process', uploadPDF.array('pdfs'), processPDF);

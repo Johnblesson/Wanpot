@@ -37,6 +37,7 @@ import {
 from '../controllers/2FA.js'
 import { deleteAccount, getDeleteForm, deleteRequests, getAllDeleteRequests, viewFullRequestDeletion } from "../controllers/deleteAccount.js";
 // import upload from "../upload/upload.js";
+import { redirectIfLoggedIn } from '../middlewares/redirectIfLoggedIn.js';
 import ensureAuthenticated from "../middlewares/auth.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
 // import { checkSudoMiddleware } from "../middlewares/sudo.js";
@@ -46,8 +47,8 @@ import { checkManagerMiddleware } from '../middlewares/manager.js'
 //Auth Routes
 router.post("/api/auth/signup", signUp);
 router.post("/api/auth/login", logIn);
-router.get("/login", getLoginPage);
-router.get("/signup", cacheMiddleware, getSignUpPage);
+router.get("/login", redirectIfLoggedIn, getLoginPage);
+router.get("/signup", cacheMiddleware, redirectIfLoggedIn, getSignUpPage);
 router.get("/active-sessions", ensureAuthenticated, activeUserSessions)
 router.get("/update-profile/:id", ensureAuthenticated, edituser);
 router.patch("/update-profile/:id", ensureAuthenticated, checkManagerMiddleware, updateUser)

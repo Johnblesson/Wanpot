@@ -148,44 +148,40 @@ export const googleAuthCallback = passport.authenticate('google', {
 
 // Login Controller
 export const logIn = (req, res, next) => {
+  const rememberMe = req.body.rememberMe; // checkbox from login form
+
   passport.authenticate('local', async (err, user, info) => {
     try {
       if (err) {
-        return res.render('login', {
-          errorMessages: ['An error occurred during login. Please try again.'],
-        });
+        return res.render('login', { errorMessages: ['An error occurred during login. Please try again.'] });
       }
 
       if (!user) {
-        return res.render('login', {
-          errorMessages: [info.message || 'User does not exist.'],
-        });
+        return res.render('login', { errorMessages: [info?.message || 'User does not exist.'] });
       }
 
       if (user.status !== 'active') {
-        return res.render('login', {
-          errorMessages: ['Forbidden: User status is inactive.'],
-        });
+        return res.render('login', { errorMessages: ['Forbidden: User status is inactive.'] });
       }
 
       // Log the user in
       req.login(user, async (loginErr) => {
         if (loginErr) {
-          return res.render('login', {
-            errorMessages: ['Login failed. Please try again.'],
-          });
+          return res.render('login', { errorMessages: ['Login failed. Please try again.'] });
         }
 
-        // Save user in session
+        // Set session and handle "Remember Me"
         delete user.password;
         req.session.user = user;
+        req.session.cookie.maxAge = rememberMe
+          ? 30 * 24 * 60 * 60 * 1000 // 30 days
+          : null; // session ends when browser closes
 
-        // --- Post-Login / Security Updates ---
+        // --- Security / Audit ---
         const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
         const agent = useragent.parse(req.headers['user-agent']);
         const country = geoip.lookup(ip)?.country || 'Unknown';
 
-        // Update last login details and append to loginHistory
         await User.findByIdAndUpdate(user._id, {
           $set: {
             lastLoginIP: ip,
@@ -193,11 +189,11 @@ export const logIn = (req, res, next) => {
             lastLoginCountry: country,
           },
           $push: {
-            loginHistory: { 
-              ip, 
-              device: agent.toString(), 
-              country, 
-              date: new Date() 
+            loginHistory: {
+              ip,
+              device: agent.toString(),
+              country,
+              date: new Date(),
             },
           },
         });
@@ -210,29 +206,24 @@ export const logIn = (req, res, next) => {
         // Generate JWT token
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
-        // Check if user has messages
-        const hasMessages = user.messages && user.messages.length > 0;
+        // Check for unread messages
+        const hasMessages = user.messages?.length > 0;
 
-        // Redirect user accordingly
-        let redirectUrl = user.role === 'admin' 
-          ? `/admin-dashboard?token=${token}` 
+        // Redirect user based on role
+        let redirectUrl = user.role === 'admin'
+          ? `/admin-dashboard?token=${token}`
           : `/dashboard?token=${token}`;
 
-        if (hasMessages) {
-          redirectUrl += '&alert=You have new messages';
-        }
+        if (hasMessages) redirectUrl += '&alert=You have new messages';
 
         return res.redirect(redirectUrl);
       });
     } catch (catchErr) {
       console.error('Login Error:', catchErr);
-      return res.render('login', {
-        errorMessages: ['An internal server error occurred. Please try again later.'],
-      });
+      return res.render('login', { errorMessages: ['An internal server error occurred. Please try again later.'] });
     }
   })(req, res, next);
 };
-
 
 
 

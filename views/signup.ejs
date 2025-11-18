@@ -199,27 +199,47 @@
     submitBtn.style.opacity = allValid ? "1" : "0.6";
   });
 
-  // 7️⃣ AI-assisted username suggestions (example on focus)
-  usernameInput.addEventListener("focus", async () => {
-    const fullnameInput = document.querySelector("input[name='fullname']");
-    const fullname = fullnameInput.value.trim() || "user";
+// 7️⃣ AI-assisted username suggestions (click-to-fill)
+usernameInput.addEventListener("focus", async () => {
+  const fullnameInput = document.querySelector("input[name='fullname']");
+  const fullname = fullnameInput.value.trim() || "user";
 
-    try {
-      const res = await fetch("/suggest-username", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullname })
+  try {
+    const res = await fetch("/suggest-username", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fullname })
+    });
+
+    const data = await res.json();
+
+    if (data.suggestions && data.suggestions.length) {
+      // Create clickable buttons
+      const buttons = data.suggestions
+        .map(s => `<button type="button" class="suggest-btn">${s}</button>`)
+        .join(" ");
+
+      usernameStatus.innerHTML = `
+        <div class="info">Suggestions:</div>
+        <div class="suggestion-box">${buttons}</div>
+      `;
+
+      // Make each suggestion clickable
+      document.querySelectorAll(".suggest-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          usernameInput.value = btn.textContent;
+          usernameInput.classList.remove("input-error");
+          usernameStatus.innerHTML = "<span class='success'>✔ Selected</span>";
+
+          // Trigger validation instantly
+          usernameInput.dispatchEvent(new Event("input"));
+        });
       });
-      const data = await res.json();
-
-      if (data.suggestions && data.suggestions.length) {
-        usernameStatus.innerHTML = "<span class='info'>Suggestions: " + data.suggestions.join(", ") + "</span>";
-      }
-    } catch (err) {
-      console.error("Username suggestion error:", err);
     }
-  });
-
+  } catch (err) {
+    console.error("Username suggestion error:", err);
+  }
+});
 
 
 </script>

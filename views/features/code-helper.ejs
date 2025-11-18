@@ -1,189 +1,355 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <title>Wanpot AI Code Helper</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #e2e8f0;
+    padding-top: 85px; /* space for header */
+  }
+
+  /* =============================
+       WANPOT HEADER (Improved)
+  ============================== */
+  .wp-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 999;
+  }
+
+  .wp-header img {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+
+  .wp-header-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #3b82f6, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.3px;
+  }
+
+  /* =============================
+       MAIN CONTAINER
+  ============================== */
+  .code-helper-container {
+    width: 88%;
+    max-width: 800px;
+    margin: 15px auto 50px;
+    background: rgba(255,255,255,0.06);
+    padding: 1.6rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 35px rgba(6,182,212,0.2);
+    animation: fadeIn 0.8s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* TITLE */
+  .ai-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    background: linear-gradient(90deg, #3b82f6, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .ai-title i {
+    font-size: 1.9rem;
+    color: #38bdf8;
+  }
+
+  .ai-about { text-align: center; padding: 1rem; margin: 1rem auto; width: 88%; max-width: 800px; background: rgba(255, 255, 255, 0.05); border-radius: 12px; color: #cbd5e1; }
+  .ai-about h2 { color: #38bdf8; font-size: 1.3rem; margin-bottom: 0.5rem; }
+
+
+  /* TEXTAREA */
+  .prompt-input {
+    width: 95%;
+    min-height: 150px;
+    padding: 1rem;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(0,0,0,0.35);
+    color: #e2e8f0;
+    resize: none;
+    font-size: 1rem;
+    line-height: 1.5;
+    transition: 0.3s;
+  }
+
+  .prompt-input:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 10px rgba(59,130,246,0.5);
+  }
+
+  /* RUN BUTTON */
+  .run-btn {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 0.9rem;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #3b82f6, #06b6d4);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: 0.3s;
+    touch-action: manipulation;
+  }
+
+  .run-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(6,182,212,0.33);
+  }
+
+  /* LOADER */
+  .loader {
+    margin-top: 10px;
+    display: none;
+    text-align: center;
+    font-size: 1rem;
+    color: #38bdf8;
+    animation: pulse 1.2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {opacity: 0.4;}
+    50% {opacity: 1;}
+    100% {opacity: 0.4;}
+  }
+
+  /* RESPONSE */
+  .response-box {
+    margin-top: 1.4rem;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 1.2rem;
+    border-radius: 15px;
+    white-space: pre-wrap;
+    font-family: Consolas, monospace;
+    font-size: 0.95rem;
+    display: none;
+    position: relative;
+    overflow-x: auto;
+  }
+
+  /* COPY BUTTON */
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    padding: 6px 12px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid #38bdf8;
+    color: #38bdf8;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .copy-btn:hover {
+    background: #38bdf8;
+    color: #fff;
+  }
+
+  /* =============================
+        RESPONSIVE (Mobile First)
+  ============================== */
+  @media (max-width: 480px) {
     body {
-      background: #0f172a;
-      font-family: 'Poppins', sans-serif;
+      padding-top: 75px;
     }
+
+    .wp-header {
+      padding: 8px 12px;
+    }
+
+    .wp-header img {
+      width: 34px;
+      height: 34px;
+    }
+
+    .wp-header-title {
+      font-size: 1.05rem;
+    }
+
     .code-helper-container {
-      width: 95%;
-      max-width: 900px;
-      margin: 40px auto;
-      background: rgba(15, 23, 42, 0.95);
-      padding: 2rem;
+      padding: 1.3rem;
       border-radius: 16px;
-      box-shadow: 0 0 25px rgba(0, 132, 255, 0.3);
-      color: #e2e8f0;
-      animation: fadeIn 0.8s ease;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+
     .ai-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 1.7rem;
-      font-weight: 600;
-      color: #38bdf8;
-      margin-bottom: 1.3rem;
+      font-size: 1.35rem;
+      gap: 8px;
     }
-    .ai-title i { font-size: 1.9rem; color: #3b82f6; }
+
+    .ai-title i {
+      font-size: 1.5rem;
+    }
+
     .prompt-input {
-      width: 100%;
-      background: #0f172a;
-      border: 1px solid #334155;
-      padding: 1rem;
-      border-radius: 10px;
-      color: #e2e8f0;
-      min-height: 140px;
-      resize: none;
-      font-size: 1rem;
-      line-height: 1.5;
-      transition: 0.3s;
+      font-size: 0.9rem;
+      padding: 0.85rem;
     }
-    .prompt-input:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-    }
+
     .run-btn {
-      margin-top: 1rem;
-      width: 100%;
-      padding: 0.9rem;
-      background: linear-gradient(90deg, #2563eb, #3b82f6);
-      border: none;
-      color: #fff;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      letter-spacing: 1px;
-      transition: 0.3s ease;
+      font-size: 1rem;
+      padding: 0.8rem;
     }
-    .run-btn:hover {
-      background: linear-gradient(90deg, #1d4ed8, #2563eb);
-      transform: translateY(-2px);
+  }
+
+  /* Tablets */
+  @media (min-width: 481px) and (max-width: 768px) {
+    .ai-title {
+      font-size: 1.5rem;
     }
-    .response-box {
-      margin-top: 1.5rem;
-      background: #0f172a;
-      border: 1px solid #475569;
-      padding: 1rem;
-      border-radius: 12px;
-      white-space: pre-wrap;
-      font-family: "Consolas", monospace;
-      font-size: 0.95rem;
-      display: none;
-      position: relative;
-      animation: fadeIn 0.4s ease;
-    }
-    .copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 10px;
-      background: #1e293b;
-      border: 1px solid #3b82f6;
-      color: #3b82f6;
-      padding: 5px 10px;
-      font-size: 0.8rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .copy-btn:hover {
-      background: #3b82f6;
-      color: #fff;
-    }
-    .loader {
-      margin-top: 12px;
-      text-align: center;
-      display: none;
-      color: #38bdf8;
+
+    .prompt-input {
       font-size: 1rem;
     }
-    @media (max-width: 600px) {
-      .ai-title { font-size: 1.4rem; }
-      .ai-title i { font-size: 1.4rem; }
+  }
+
+  /* Large Desktop */
+  @media (min-width: 1200px) {
+    .code-helper-container {
+      padding: 2.2rem;
     }
-  </style>
+
+    .ai-title {
+      font-size: 2rem;
+    }
+
+    .prompt-input {
+      min-height: 180px;
+      font-size: 1.05rem;
+    }
+  }
+</style>
+
 </head>
 
 <body>
+
+  <!-- ======= WANPOT HEADER ======= -->
+  <header class="wp-header">
+    <img src="/images/wanpot.png" alt="Wanpot Logo">
+    <div class="wp-header-title">Wanpot AI</div>
+  </header>
+
+   <section class="ai-about">
+    <h2>Hello, <%= user.fullname || 'Guest' %> 👋</h2>
+    <p>
+      Welcome to <strong>Wanpot AI</strong> — your smart, always-ready digital assistant built to help you work faster, learn better, and solve complex problems with ease.  
+      Whether you're generating code, debugging errors, researching topics, writing content, or exploring ideas, Wanpot AI gives you real-time intelligence directly inside the Wanpot ecosystem.
+    </p>
+    <p>
+      Just type your request, and let the assistant guide, explain, build, fix, or create — instantly.
+    </p>
+  </section>
+
+
+  <!-- ======= MAIN UI ======= -->
   <div class="code-helper-container">
-    <div class="ai-title">
-      <i class="fa-solid fa-code"></i> Wanpot AI Code Helper
-    </div>
 
-    <textarea 
-      id="prompt" 
-      class="prompt-input" 
-      placeholder="Ask me to generate code, debug errors, write documentation, explain a bug, optimize scripts...">
-    </textarea>
+      <div class="ai-title">
+        <i class="fa-solid fa-code"></i> AI Code Helper
+      </div>
 
-    <button class="run-btn" id="runAI">Run AI Assistant</button>
+      <textarea id="prompt" class="prompt-input"
+        placeholder="Ask me to generate code, debug errors, explain bugs, optimize scripts, write documentation..."></textarea>
 
-    <!-- Loader -->
-    <div class="loader" id="loader">⏳ AI is thinking...</div>
+      <button class="run-btn" id="runAI">Run AI Assistant</button>
 
-    <!-- AI Response -->
-    <div id="response" class="response-box">
-      <button class="copy-btn" id="copyBtn">Copy</button>
-    </div>
+      <div class="loader" id="loader">⏳ AI is thinking...</div>
+
+      <div id="response" class="response-box">
+        <button class="copy-btn" id="copyBtn">Copy</button>
+      </div>
   </div>
 
-  <script>
-    const promptBox = document.getElementById("prompt");
-    const responseBox = document.getElementById("response");
-    const loader = document.getElementById("loader");
-    const copyBtn = document.getElementById("copyBtn");
+<script>
+  const promptBox = document.getElementById("prompt");
+  const responseBox = document.getElementById("response");
+  const loader = document.getElementById("loader");
 
-    // Auto expand textarea
-    promptBox.addEventListener("input", () => {
-      promptBox.style.height = "auto";
-      promptBox.style.height = (promptBox.scrollHeight) + "px";
-    });
+  // Auto-expand textarea
+  promptBox.addEventListener("input", () => {
+    promptBox.style.height = "auto";
+    promptBox.style.height = promptBox.scrollHeight + "px";
+  });
 
-    document.getElementById('runAI').addEventListener('click', async () => {
-      const prompt = promptBox.value.trim();
-      if (!prompt) return;
+  // Run AI
+  document.getElementById("runAI").addEventListener("click", async () => {
+    const prompt = promptBox.value.trim();
+    if (!prompt) return;
 
-      loader.style.display = "block";
-      responseBox.style.display = "none";
+    loader.style.display = "block";
+    responseBox.style.display = "none";
 
-      try {
-        const res = await fetch("/dev/ai-code-helper/run", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt })
-        });
+    try {
+      const res = await fetch("/dev/ai-code-helper/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
 
-        const data = await res.json();
-        loader.style.display = "none";
-        responseBox.style.display = "block";
+      const data = await res.json();
+      loader.style.display = "none";
+      responseBox.style.display = "block";
 
-        if (data.error) {
-          responseBox.innerHTML = `<button class='copy-btn' id='copyBtn'>Copy</button>❌ ${data.error}`;
-        } else {
-          responseBox.innerHTML = `<button class='copy-btn' id='copyBtn'>Copy</button>${data.response}`;
-        }
-      } catch (err) {
-        loader.style.display = "none";
-        responseBox.style.display = "block";
-        responseBox.innerHTML = `<button class='copy-btn' id='copyBtn'>Copy</button>❌ Network or server error.`;
-      }
-    });
+      responseBox.innerHTML =
+        `<button class='copy-btn' id='copyBtn'>Copy</button>${data.error ? "❌ " + data.error : data.response}`;
+    } 
+    catch (err) {
+      loader.style.display = "none";
+      responseBox.style.display = "block";
+      responseBox.innerHTML =
+        `<button class='copy-btn' id='copyBtn'>Copy</button>❌ Network or server error.`;
+    }
+  });
 
-    // Copy to clipboard
-    document.addEventListener("click", (e) => {
-      if (e.target.id === "copyBtn") {
-        const text = responseBox.innerText.replace("Copy", "").trim();
-        navigator.clipboard.writeText(text);
-        e.target.innerText = "Copied!";
-        setTimeout(() => e.target.innerText = "Copy", 1500);
-      }
-    });
-  </script>
+  // Copy button
+  document.addEventListener("click", (e) => {
+    if (e.target.id === "copyBtn") {
+      const text = responseBox.innerText.replace("Copy", "").trim();
+      navigator.clipboard.writeText(text);
+      e.target.innerText = "Copied!";
+      setTimeout(() => e.target.innerText = "Copy", 1200);
+    }
+  });
+</script>
+
 </body>
 </html>

@@ -238,3 +238,32 @@ button:hover {
     font-size: 0.9rem;
   }
 }
+
+
+.suggestion-box {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.suggest-btn {
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.suggest-btn:hover {
+  background: #1e293b;
+}
+
+.info {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}

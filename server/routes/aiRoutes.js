@@ -1,5 +1,6 @@
 import express from 'express';
 import { renderAIPage, generateAIResponse, deleteChatMessage, clearAllChat, renderResumeBuilder, enhanceResume } from '../controllers/aiController.js';
+import { getCodeExplainerPage, runCodeExplainer } from '../controllers/codeExplainerController.js'
 import ensureAuthenticated from '../middlewares/auth.js';
 
 const router = express.Router();
@@ -11,5 +12,12 @@ router.post('/clear', ensureAuthenticated, clearAllChat);
 
 router.get("/resume", renderResumeBuilder);
 router.post("/api/enhance-resume", enhanceResume);
+
+
+// Render page
+router.get("/code-explainer", getCodeExplainerPage);
+
+// Run code explainer
+router.post("/code-explainer/run", runCodeExplainer);
 
 export default router;

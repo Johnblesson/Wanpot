@@ -75,25 +75,20 @@ app.get('/favicon.svg', (req, res) => {
 });
 
 // Session middleware
-// app.use(session({
-//   secret: process.env.SESSION_SECRET,
-//   resave: false,
-//   saveUninitialized: false,
-//   cookie: {
-//     maxAge: 24 * 60 * 60 * 1000, // 1 day
-//   },
-// }));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      httpOnly: true,                  // prevents JS access
+      secure: true,                   
+      sameSite: 'lax',                 // allows cross-site but safer
+    },
+  })
+);
 
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-    httpOnly: true, // prevents client-side JS access
-    secure: process.env.NODE_ENV === 'production', // use HTTPS in production
-  },
-}));
 
 
 // Passport middleware

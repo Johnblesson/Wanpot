@@ -49,7 +49,7 @@ router.get("/dashboard", ensureAuthenticated, (req, res) => {
 // admin dashboard
 router.get("/admin-dashboard", ensureAuthenticated, (req, res) => {
      const user = req.isAuthenticated() ? req.user : null;
-  res.render("index-admin", { user });
+  res.render("index", { user });
 });
 
 router.get("/calculator", ensureAuthenticated, (req, res) => {

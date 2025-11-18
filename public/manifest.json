@@ -1,6 +1,6 @@
 {
-  "name": "Wanpot",
-  "short_name": "Wanpot",
+  "name": "Wanpot AI",
+  "short_name": "Wanpot AI",
   "description": "All-in-One Smart App — Simplifying productivity, learning, and creativity in one pot.",
   "start_url": "/dashboard",
   "display": "standalone",

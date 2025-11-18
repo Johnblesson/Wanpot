@@ -10,7 +10,8 @@ import {
         renderPDFTools, processPDF,
         renderVoiceRecorder
     } from "../controllers/controllers.js"
-
+    import { redirectIfLoggedIn } from '../middlewares/redirectIfLoggedIn.js';
+    
     import ensureAuthenticated from "../middlewares/auth.js";
 
 const upload = multer({ dest: "uploads/" });
@@ -27,7 +28,7 @@ router.get('/pdf-tools', renderPDFTools);
 router.post('/pdf-tools/process', uploadPDF.array('pdfs'), processPDF);
 
 // Define your routes here
-router.get("/", (req, res) => {
+router.get("/", redirectIfLoggedIn, (req, res) => {
   res.render("guest-page");
 });
 

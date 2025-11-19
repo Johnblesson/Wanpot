@@ -6,6 +6,53 @@
     function toggleMenu() {
       document.querySelector('nav ul').classList.toggle('active');
     }
+
+    // Toggle user dropdown
+    function toggleDropdown() {
+      const dropdown = document.querySelector('.dropdown-menu');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close dropdown if clicked outside
+    window.onclick = function(event) {
+      if (!event.target.matches('.user-photo')) {
+        const dropdown = document.querySelector('.dropdown-menu');
+        if (dropdown) dropdown.style.display = 'none';
+      }
+    }
+
+    // Toggle nav menu for mobile
+    function toggleMenu() {
+      const nav = document.querySelector('nav ul');
+      nav.classList.toggle('active');
+    }
   </script>
+    <script>
+  let deferredPrompt;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+  });
+
+  function installApp() {
+    const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
+
+    if (isIOS && !isInStandaloneMode) {
+      alert('📱 Tap the "Share" icon at the bottom, then choose "Add to Home Screen" to install Wanpot.');
+    } else if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(choice => {
+        if (choice.outcome === 'accepted') {
+          alert('🎉 Wanpot added to your home screen!');
+        }
+        deferredPrompt = null;
+      });
+    } else {
+      alert('💡 Use your browser’s “Install” or “Add to Home Screen” option to install Wanpot.');
+    }
+  }
+</script>
 </body>
 </html>

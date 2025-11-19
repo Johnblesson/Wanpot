@@ -11,7 +11,9 @@
   <!-- <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"> -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="icon" href="/images/wanpot.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/css/translator.css">
   <link rel="stylesheet" href="/css/main.css" />
+  
   
 <!-- Multiple apple-touch-icons for crisp display -->
 <link rel="apple-touch-icon" sizes="120x120" href="/images/apple-icon-120.png">
@@ -83,54 +85,3 @@
     <p>Manage your work, projects, and personal life seamlessly in one place.</p>
     <a href="#features" class="cta-btn">Get Started</a>
   </section> -->
-
-  <script>
-    // Toggle user dropdown
-    function toggleDropdown() {
-      const dropdown = document.querySelector('.dropdown-menu');
-      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-    }
-
-    // Close dropdown if clicked outside
-    window.onclick = function(event) {
-      if (!event.target.matches('.user-photo')) {
-        const dropdown = document.querySelector('.dropdown-menu');
-        if (dropdown) dropdown.style.display = 'none';
-      }
-    }
-
-    // Toggle nav menu for mobile
-    function toggleMenu() {
-      const nav = document.querySelector('nav ul');
-      nav.classList.toggle('active');
-    }
-  </script>
-    <script>
-  let deferredPrompt;
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-  });
-
-  function installApp() {
-    const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
-    const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
-
-    if (isIOS && !isInStandaloneMode) {
-      alert('📱 Tap the "Share" icon at the bottom, then choose "Add to Home Screen" to install Wanpot.');
-    } else if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(choice => {
-        if (choice.outcome === 'accepted') {
-          alert('🎉 Wanpot added to your home screen!');
-        }
-        deferredPrompt = null;
-      });
-    } else {
-      alert('💡 Use your browser’s “Install” or “Add to Home Screen” option to install Wanpot.');
-    }
-  }
-</script>
-</body>
-</html>

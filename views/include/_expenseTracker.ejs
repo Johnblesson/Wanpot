@@ -1,0 +1,175 @@
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  .container { max-width:900px; margin:50px auto; margin-top: 115px; background: rgba(30,41,59,0.9); padding:40px; border-radius:20px;}
+  h2 { color:#38bdf8; text-align:center; margin-bottom:25px;}
+
+  /* Chart */
+  .chart-container { margin-bottom:30px; background:#1e293b; padding:20px; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.4);}
+  canvas { max-width:100%; }
+
+  /* Totals Cards */
+  .totals { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; margin-bottom:30px;}
+  .total-card {
+      flex:1 1 200px;
+      min-width:150px;
+      border-radius:15px;
+      padding:20px;
+      text-align:center;
+      box-shadow:0 4px 10px rgba(0,0,0,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+  }
+  .total-card:hover { transform: translateY(-4px); box-shadow:0 6px 15px rgba(0,0,0,0.5);}
+  .total-card .icon { font-size:2rem; margin-bottom:10px;}
+  .total-card h3 { margin:0 0 5px; font-size:1.1rem; color:#f8fafc;}
+  .total-card p { font-size:1.6rem; font-weight:700; margin:0; }
+
+  .daily { background:#10b981;}    /* green */
+  .weekly { background:#3b82f6;}   /* blue */
+  .monthly { background:#f59e0b;}  /* amber */
+  .yearly { background:#ef4444;}   /* red */
+
+  /* Expense Form */
+  form { display:flex; flex-direction: column; gap:10px; margin-bottom:30px;}
+  input, select { padding:10px; border-radius:8px; border:none; background:#1e293b; color:#f8fafc;}
+  button { padding:12px; border:none; border-radius:8px; background:#38bdf8; color:white; font-weight:600; cursor:pointer;}
+  button:hover { background:#0ea5e9;}
+
+  /* Expense Table */
+  table { width:100%; border-collapse: collapse; margin-top:20px;}
+  th, td { padding:12px; text-align:left; border-bottom:1px solid #334155;}
+  th { color:#38bdf8;}
+  td { color:#cbd5e1;}
+  .delete-btn { color:#ef4444; text-decoration:none; font-weight:600;}
+  .delete-btn:hover { color:#f87171;}
+
+  /* Responsive */
+  @media (max-width:768px) {
+    .totals { flex-direction:column; gap:15px; }
+    table, thead, tbody, th, td, tr { display:block; }
+    tr { margin-bottom:15px; border-bottom:2px solid #334155; padding-bottom:10px; }
+    td { position: relative; padding-left:50%; margin-bottom:8px; }
+    td:before { position:absolute; left:10px; width:45%; white-space:nowrap; font-weight:600; color:#38bdf8; }
+    td:nth-of-type(1):before { content:"Title"; }
+    td:nth-of-type(2):before { content:"Amount"; }
+    td:nth-of-type(3):before { content:"Category"; }
+    td:nth-of-type(4):before { content:"Date"; }
+    td:nth-of-type(5):before { content:"Action"; }
+    th { display:none; }
+  }
+
+</style>
+
+
+
+<div class="container">
+  <h2>Welcome, <%= user.fullname %></h2>
+
+  <!-- Expense Form -->
+  <form action="/expense-tracker/add" method="POST">
+    <input type="text" name="title" placeholder="Expense Title" required>
+    <input type="number" name="amount" placeholder="Amount" required>
+    <input type="text" name="category" placeholder="Category" required>
+    <input type="text" name="notes" placeholder="Notes (optional)">
+    <button type="submit">Add Expense</button>
+  </form>
+
+  <% if (expenses.length > 0) { %>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Amount</th>
+        <th>Category</th>
+        <th>Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% expenses.forEach(exp => { %>
+        <tr>
+          <td><%= exp.title %></td>
+          <td>SLL<%= exp.amount %></td>
+          <td><%= exp.category %></td>
+          <td><%= exp.date.toDateString() %></td>
+          <td>
+            <a href="/expense-tracker/delete/<%= exp._id %>" class="delete-btn" onclick="return confirm('Delete this expense?')">Delete</a>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% } else { %>
+    <p style="text-align:center; color:#94a3b8;">No expenses yet. Add one above!</p>
+  <% } %>
+</div>
+
+
+  <!-- Chart -->
+  <!-- <div class="chart-container">
+    <canvas id="weeklyChart"></canvas>
+  </div> -->
+
+  <!-- Totals -->
+  <div class="totals">
+    <div class="total-card daily">
+      <div class="icon"><i class="fas fa-sun"></i></div>
+      <h3>Today</h3>
+      <p>SLL<%= totals.dailyTotal %></p>
+    </div>
+    <div class="total-card weekly">
+      <div class="icon"><i class="fas fa-calendar-week"></i></div>
+      <h3>This Week</h3>
+      <p>SLL<%= totals.weeklyTotal %></p>
+    </div>
+    <div class="total-card monthly">
+      <div class="icon"><i class="fas fa-calendar-alt"></i></div>
+      <h3>This Month</h3>
+      <p>SLL<%= totals.monthlyTotal %></p>
+    </div>
+    <div class="total-card yearly">
+      <div class="icon"><i class="fas fa-calendar"></i></div>
+      <h3>This Year</h3>
+      <p>SLL<%= totals.yearlyTotal %></p>
+    </div>
+  </div>
+
+<script>
+  const ctx = document.getElementById('weeklyChart').getContext('2d');
+  const weeklyChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: <%- JSON.stringify(totals.weeklyDays) %>, // ["Mon", "Tue", "Wed", ...]
+      datasets: [{
+        label: 'Expenses (SLL)',
+        data: <%- JSON.stringify(totals.weeklyAmounts) %>,
+        backgroundColor: '#3b82f6',
+        borderRadius: 5,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { color: '#f8fafc' },
+          grid: { color: '#334155' }
+        },
+        x: {
+          ticks: { color: '#f8fafc' },
+          grid: { color: '#334155' }
+        }
+      }
+    }
+  });
+</script>
+

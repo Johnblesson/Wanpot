@@ -1,0 +1,186 @@
+<style>
+  .container {
+    width: 88%;
+    max-width: 800px;
+    margin: 15px auto 50px;
+    margin-top: 115px;
+    background: rgba(255,255,255,0.06);
+    padding: 1.6rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 35px rgba(6,182,212,0.2);
+    animation: fadeIn 0.8s ease;
+  }
+  h2 { color:#38bdf8; text-align:center; margin-bottom:25px;}
+
+  form { display:flex; flex-direction: column; gap:10px; margin-bottom:30px;}
+  input, textarea { padding:10px; border-radius:8px; border:none; background:#1e293b; color:#f8fafc;}
+  button { padding:12px; border:none; border-radius:8px; background:#38bdf8; color:white; font-weight:600; cursor:pointer;}
+  button:hover { background:#0ea5e9;}
+
+  table { width:100%; border-collapse: collapse; margin-top:20px;}
+  th, td { padding:12px; text-align:left; border-bottom:1px solid #334155;}
+  th { color:#38bdf8;}
+  td { color:#cbd5e1;}
+  .delete-btn { color:#ef4444; text-decoration:none; font-weight:600;}
+  .delete-btn:hover { color:#f87171;}
+
+  @media(max-width:768px){
+    table, thead, tbody, th, td, tr{ display:block;}
+    tr{ margin-bottom:15px; border-bottom:2px solid #334155; padding-bottom:10px; }
+    td{ position:relative; padding-left:50%; margin-bottom:8px; }
+    td:before{ position:absolute; left:10px; width:45%; white-space:nowrap; font-weight:600; color:#38bdf8;}
+    td:nth-of-type(1):before{ content:"Title"; }
+    td:nth-of-type(2):before{ content:"Description"; }
+    td:nth-of-type(3):before{ content:"Date"; }
+    td:nth-of-type(4):before{ content:"Time"; }
+    td:nth-of-type(5):before{ content:"Location"; }
+    td:nth-of-type(6):before{ content:"Action"; }
+    th{ display:none; }
+  }
+
+  a {
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+    margin-right: 10px;
+  }
+</style>
+
+<div class="container">
+  <h2>Welcome, <%= user.fullname %></h2>
+
+  <!-- Meeting Form -->
+  <form action="/meeting-scheduler/add" method="POST">
+    <input type="text" name="title" placeholder="Meeting Title" required>
+    <textarea name="description" placeholder="Description (optional)"></textarea>
+    <input type="date" name="date" required>
+    <input type="time" name="time" required>
+    <input type="text" name="location" placeholder="Location (optional)">
+    <button type="submit">Schedule Meeting</button>
+  </form>
+
+  <% if (meetings.length > 0) { %>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Location</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% meetings.forEach(meeting => { %>
+        <tr>
+          <td><%= meeting.title %></td>
+          <td><%= meeting.description || '-' %></td>
+          <td><%= meeting.date.toDateString() %></td>
+          <td><%= meeting.time %></td>
+          <td><%= meeting.location || '-' %></td>
+          <td>
+            <a href="/meeting-scheduler/edit/<%= meeting._id %>" class="edit-btn" title="Edit Meeting">
+                <i class="fas fa-edit"></i>
+            </a>
+            <a href="/meeting-scheduler/delete/<%= meeting._id %>" onclick="return confirm('Delete this meeting?')">
+                <i class="fas fa-trash"></i></a>
+            </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% } else { %>
+    <p style="text-align:center; color:#94a3b8;">No meetings yet. Schedule one above!</p>
+  <% } %>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('tr').forEach(row => {
+    const editBtn = row.querySelector('.edit-btn');
+    if (!editBtn) return;
+
+    editBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const cells = row.querySelectorAll('td');
+      const id = row.querySelector('.delete-btn').href.split('/').pop();
+
+      // Save original values
+      const original = {
+        title: cells[0].textContent,
+        description: cells[1].textContent === '-' ? '' : cells[1].textContent,
+        date: cells[2].textContent,
+        time: cells[3].textContent,
+        location: cells[4].textContent === '-' ? '' : cells[4].textContent
+      };
+
+      // Replace cells with input fields
+      cells[0].innerHTML = `<input type="text" value="${original.title}" style="width:100%;"/>`;
+      cells[1].innerHTML = `<input type="text" value="${original.description}" style="width:100%;"/>`;
+      cells[2].innerHTML = `<input type="date" value="${new Date(original.date).toISOString().substr(0,10)}"/>`;
+      cells[3].innerHTML = `<input type="time" value="${original.time}"/>`;
+      cells[4].innerHTML = `<input type="text" value="${original.location}" style="width:100%;"/>`;
+
+      // Add Save / Cancel buttons
+      cells[5].innerHTML = `
+        <button class="save-btn">Save</button>
+        <button class="cancel-btn">Cancel</button>
+      `;
+
+      const saveBtn = cells[5].querySelector('.save-btn');
+      const cancelBtn = cells[5].querySelector('.cancel-btn');
+
+      cancelBtn.addEventListener('click', () => {
+        // Restore original values
+        cells[0].textContent = original.title;
+        cells[1].textContent = original.description || '-';
+        cells[2].textContent = original.date;
+        cells[3].textContent = original.time;
+        cells[4].textContent = original.location || '-';
+        cells[5].innerHTML = `
+          <a href="#" class="edit-btn"><i class="fas fa-edit"></i></a>
+          <a href="/meeting-scheduler/delete/${id}" class="delete-btn" onclick="return confirm('Delete this meeting?')">Delete</a>
+        `;
+      });
+
+      saveBtn.addEventListener('click', async () => {
+        const updated = {
+          title: cells[0].querySelector('input').value.trim() || 'Untitled',
+          description: cells[1].querySelector('input').value.trim(),
+          date: cells[2].querySelector('input').value,
+          time: cells[3].querySelector('input').value,
+          location: cells[4].querySelector('input').value.trim()
+        };
+
+        try {
+          const res = await fetch(`/meeting-scheduler/edit/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updated)
+          });
+
+          if (!res.ok) throw new Error('Failed to save');
+
+          // Update cells with new values
+          cells[0].textContent = updated.title;
+          cells[1].textContent = updated.description || '-';
+          cells[2].textContent = new Date(updated.date).toDateString();
+          cells[3].textContent = updated.time;
+          cells[4].textContent = updated.location || '-';
+          cells[5].innerHTML = `
+            <a href="#" class="edit-btn"><i class="fas fa-edit"></i></a>
+            <a href="/meeting-scheduler/delete/${id}" class="delete-btn" onclick="return confirm('Delete this meeting?')">Delete</a>
+          `;
+        } catch (err) {
+          alert('Error saving meeting.');
+          console.error(err);
+        }
+      });
+    });
+  });
+});
+</script>

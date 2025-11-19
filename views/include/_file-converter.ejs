@@ -1,0 +1,186 @@
+<style>
+    main {
+      flex: 1;
+      padding: 7rem 1rem 3rem;
+      max-width: 800px;
+      margin: auto;
+      text-align: center;
+    }
+
+  
+
+    .converter-container {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 18px;
+      padding: 2rem;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .drop-zone {
+      border: 2px dashed #38bdf8;
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      color: #94a3b8;
+      transition: all 0.3s ease;
+    }
+
+    .drop-zone.dragover {
+      background: rgba(56,189,248,0.1);
+      border-color: #06b6d4;
+      color: #06b6d4;
+    }
+
+    .preview {
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .preview img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+
+    select, button {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    select {
+      background: rgba(255,255,255,0.1);
+      color: #f8fafc;
+    }
+
+    button {
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .output {
+      margin-top: 1.5rem;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 1rem;
+      border-radius: 12px;
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #0f172a;
+      color: #64748b;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    @media (max-width: 768px) {
+      .converter-container { border-radius: 0; padding: 1.2rem; }
+      .navbar { flex-direction: column; gap: 0.5rem; }
+      nav ul { flex-wrap: wrap; justify-content: center; }
+    }
+  </style>
+
+
+  <main>
+    <h1>File Converter</h1>
+    <div class="converter-container">
+      <div class="drop-zone" id="dropZone">
+        <i class="fas fa-cloud-upload-alt fa-2x"></i>
+        <p>Drag & Drop your file here or click to upload</p>
+        <input type="file" id="fileInput" hidden />
+      </div>
+
+      <div class="preview" id="preview">
+        <img id="previewImg" src="" alt="Preview" />
+      </div>
+
+      <select id="targetFormat">
+        <option value="pdf">PDF</option>
+        <option value="png">PNG</option>
+        <option value="jpg">JPG</option>
+        <option value="webp">WEBP</option>
+        <option value="txt">TXT</option>
+        <option value="docx">DOCX</option>
+        <option value="md">Markdown (MD)</option>
+      </select>
+
+      <button id="convertBtn"><i class="fas fa-file-import"></i> Convert</button>
+
+      <div class="output" id="output"></div>
+    </div>
+  </main>
+
+  <script>
+    const dropZone = document.getElementById("dropZone");
+    const fileInput = document.getElementById("fileInput");
+    const preview = document.getElementById("preview");
+    const previewImg = document.getElementById("previewImg");
+    const output = document.getElementById("output");
+    const convertBtn = document.getElementById("convertBtn");
+    let uploadedFile;
+
+    dropZone.addEventListener("click", () => fileInput.click());
+
+    fileInput.addEventListener("change", (e) => handleFile(e.target.files[0]));
+
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("dragover");
+    });
+
+    dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragover"));
+
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("dragover");
+      const file = e.dataTransfer.files[0];
+      handleFile(file);
+    });
+
+    function handleFile(file) {
+      if (!file) return;
+      uploadedFile = file;
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          previewImg.src = reader.result;
+          preview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      } else {
+        preview.style.display = "none";
+      }
+      dropZone.innerHTML = `<i class="fas fa-file"></i><p>${file.name}</p>`;
+    }
+
+    convertBtn.addEventListener("click", async () => {
+      if (!uploadedFile) return alert("Please upload a file first.");
+
+      const formData = new FormData();
+      formData.append("file", uploadedFile);
+      formData.append("targetFormat", document.getElementById("targetFormat").value);
+
+      output.style.display = "block";
+      output.innerHTML = "Converting... ⏳";
+
+      const res = await fetch("/convert", { method: "POST", body: formData });
+      const data = await res.json();
+
+      if (data.success) {
+        output.innerHTML = `<a href="${data.url}" download class="btn"><i class="fas fa-download"></i> Download Converted File</a>`;
+      } else {
+        output.textContent = "Conversion failed. " + (data.error || "");
+      }
+    });
+  </script>
+

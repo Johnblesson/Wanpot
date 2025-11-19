@@ -1,0 +1,227 @@
+<div class="code-helper-container" id="grammarContainer">
+  <div class="ai-title">
+    <i class="fas fa-spell-check"></i> AI Grammar & Proofreading
+  </div>
+
+  <p class="about-wanpot">
+    Paste your text below, and Wanpot AI will correct grammar, spelling, and enhance your writing in real-time.
+  </p>
+
+  <textarea id="grammarInput" class="prompt-input" placeholder="Type or paste your text here..."></textarea>
+
+  <button class="run-btn" id="generateGrammarBtn">Check & Improve</button>
+
+  <div class="loader" id="grammarLoader">⏳ AI is analyzing your text...</div>
+
+  <div id="grammarResponse" class="response-box">
+    <pre><code id="grammarOutput"></code></pre>
+    <button class="copy-btn" id="copyGrammarBtn">Copy</button>
+    <button class="download-btn" id="downloadGrammarBtn">Download .txt</button>
+  </div>
+</div>
+
+<style>
+    /* Container & Header */
+#grammarContainer {
+  margin: 20px auto 40px;
+  margin-top: 115px;
+  width: 93%;
+  max-width: 900px;
+  background: rgba(15,23,42,0.85);
+  padding: 2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(59,130,246,0.4);
+  box-shadow: 0 10px 40px rgba(6,182,212,0.2);
+  backdrop-filter: blur(6px);
+  transition: all 0.3s ease;
+}
+
+/* Title */
+.ai-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg,#3b82f6,#06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.ai-title i { font-size: 2rem; color: #38bdf8; }
+
+/* About text */
+.about-wanpot {
+  background: rgba(59,130,246,0.05);
+  border-left: 4px solid #3b82f6;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* Textarea */
+.prompt-input {
+  width: 96%;
+  min-height: 160px;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(59,130,246,0.3);
+  background: rgba(30,41,59,0.85);
+  color: #e2e8f0;
+  resize: vertical;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  transition: 0.3s;
+}
+.prompt-input:focus {
+  outline: none;
+  border-color: #38bdf8;
+  box-shadow: 0 0 12px rgba(59,130,246,0.7);
+}
+
+/* Run Button */
+.run-btn {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(90deg,#3b82f6,#06b6d4);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+.run-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(6,182,212,0.4);
+}
+
+/* Loader */
+.loader {
+  display: none;
+  text-align: center;
+  color: #38bdf8;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Response Box */
+.response-box {
+  display: none;
+  background: rgba(0,0,0,0.3);
+  border-radius: 14px;
+  border: 1px solid rgba(59,130,246,0.3);
+  padding: 1rem;
+  position: relative;
+  transition: all 0.4s ease;
+}
+.response-box pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: "Courier New", monospace;
+  font-size: 0.95rem;
+  color: #e2e8f0;
+  background: rgba(30,41,59,0.9);
+  padding: 1rem;
+  border-radius: 10px;
+  margin: 0;
+}
+
+/* Copy / Download Buttons */
+.copy-btn, .download-btn {
+  padding: 8px 15px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 25px;
+  transition: 0.3s;
+}
+.copy-btn {
+  background: #38bdf8;
+  color: #000;
+  float: right;
+  margin-left: 10px;
+}
+.copy-btn:hover { background: #0ea5e9; color: #fff; }
+.download-btn {
+  background: #06b6d4;
+  color: #fff;
+  float: right;
+}
+.download-btn:hover { background: #0b7285; }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .copy-btn, .download-btn {
+    float: none;
+    display: inline-block;
+    width: 48%;
+    margin-top: 10px;
+  }
+}
+
+</style>
+
+
+<script>
+    const grammarInput = document.getElementById("grammarInput");
+const generateGrammarBtn = document.getElementById("generateGrammarBtn");
+const grammarLoader = document.getElementById("grammarLoader");
+const grammarResponse = document.getElementById("grammarResponse");
+const grammarOutput = document.getElementById("grammarOutput");
+
+generateGrammarBtn.addEventListener("click", async () => {
+  const text = grammarInput.value.trim();
+  if (!text) return alert("Please enter text to analyze.");
+
+  grammarLoader.style.display = "block";
+  grammarResponse.style.display = "none";
+
+  try {
+    const res = await fetch("/ai/grammar/run", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text })
+    });
+
+    const data = await res.json();
+    grammarLoader.style.display = "none";
+    grammarResponse.style.display = "block";
+    grammarOutput.innerText = data.error ? "❌ " + data.error : data.correctedText;
+  } catch {
+    grammarLoader.style.display = "none";
+    grammarResponse.style.display = "block";
+    grammarOutput.innerText = "❌ Network or server error.";
+  }
+});
+
+// Copy & Download
+document.getElementById("copyGrammarBtn").addEventListener("click", () => {
+  navigator.clipboard.writeText(grammarOutput.innerText);
+  alert("Copied to clipboard!");
+});
+
+document.getElementById("downloadGrammarBtn").addEventListener("click", () => {
+  const blob = new Blob([grammarOutput.innerText], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "corrected-text.txt";
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+</script>

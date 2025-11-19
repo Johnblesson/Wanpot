@@ -1,0 +1,319 @@
+<style>
+
+
+    .container {
+    width: 88%;
+    max-width: 800px;
+    margin: 15px auto 50px;
+    margin-top: 115px;
+    background: rgba(255,255,255,0.06);
+    padding: 1.6rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 35px rgba(6,182,212,0.2);
+    animation: fadeIn 0.8s ease;
+  }
+
+    h2 {
+      color: #38bdf8;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    form {
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+      margin-bottom: 30px;
+    }
+
+    input, textarea {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 12px;
+      color: #e2e8f0;
+      font-size: 16px;
+      outline: none;
+    }
+
+    button {
+      background: #38bdf8;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #0ea5e9;
+    }
+
+    .notes-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .note {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid #334155;
+      cursor: pointer;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .note h3 {
+      color: #38bdf8;
+      margin-bottom: 10px;
+    }
+
+    .note .content {
+      color: #cbd5e1;
+      line-height: 1.45;
+      margin-bottom: 12px;
+      flex-grow: 1;
+    }
+
+    .note .content p {
+      margin: 0 0 0.6em 0;
+    }
+
+    .note .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+   
+
+    .edit-controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      justify-content: flex-end;
+    }
+
+  
+    .actions {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: flex-end;
+    }
+
+    .actions a {
+      color: #94a3b8;
+      font-size: 1.2rem;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .actions a:hover {
+      transform: scale(1.2);
+    }
+
+    .edit-btn:hover {
+      color: #60a5fa; /* blue */
+    }
+
+    .view-btn:hover {
+      color: #22c55e; /* green */
+    }
+
+    .delete-btn:hover {
+      color: #ef4444; /* red */
+    }
+
+
+    .small-btn {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .save-btn { background: #10b981; color: white; }
+    .cancel-btn { background: #64748b; color: white; }
+
+ 
+  </style>
+
+
+  <div class="container">
+    <h2>Welcome, <%= user.fullname %></h2>
+
+    <form action="/notes/add" method="POST">
+      <input type="text" name="title" placeholder="Note Title" required>
+      <textarea name="content" rows="3" placeholder="Write your note..." required></textarea>
+      <button type="submit">Add Note</button>
+    </form>
+<div class="notes-list">
+  <% if (notes.length > 0) { %>
+    <% notes.forEach(note => { %>
+      <div class="note" data-id="<%= note._id %>">
+        <h3><%= note.title %></h3>
+
+        <!-- content container: data-full holds the raw text -->
+        <div class="content" data-full="<%- (note.content || '').replace(/\n/g, '\\n').replace(/\"/g, '&quot;') %>"></div>
+
+        <div class="actions">
+          <a href="/notes/edit/<%= note._id %>" class="edit-btn" title="Edit Note">
+            <i class="fas fa-edit"></i>
+          </a>
+          <a href="/notes/view/<%= note._id %>" class="view-btn" title="View Note">
+            <i class="fas fa-eye"></i>
+          </a>
+          <a href="/notes/delete/<%= note._id %>" class="delete-btn" title="Delete Note" onclick="return confirm('Delete this note?')">
+            <i class="fas fa-trash"></i>
+          </a>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p style="text-align:center; color:#94a3b8;">No notes yet. Add one above!</p>
+  <% } %>
+</div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.note').forEach(noteEl => {
+    const contentEl = noteEl.querySelector('.content');
+    const raw = (contentEl.dataset.full || '').replace(/\\n/g, '\n');
+    contentEl.innerHTML = truncatedHtmlFromText(raw, 100);
+
+    // Permanent edit button triggers edit mode
+    const editBtn = noteEl.querySelector('.edit-btn');
+    editBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // prevent accidental outer clicks
+      enterEditMode(noteEl);
+    });
+  });
+});
+
+function enterEditMode(noteEl) {
+  const id = noteEl.dataset.id;
+  const contentEl = noteEl.querySelector('.content');
+  const raw = (contentEl.dataset.full || '').replace(/\\n/g, '\n');
+  const titleEl = noteEl.querySelector('h3');
+
+  const textarea = document.createElement('textarea');
+  textarea.value = raw;
+  textarea.rows = 8;
+  textarea.style.width = '100%';
+  textarea.style.background = 'transparent';
+  textarea.style.border = '1px solid #334155';
+  textarea.style.color = '#e2e8f0';
+  textarea.style.borderRadius = '8px';
+  textarea.style.padding = '10px';
+  textarea.style.fontFamily = 'inherit';
+  textarea.style.fontSize = '15px';
+
+  const titleInput = document.createElement('input');
+  titleInput.type = 'text';
+  titleInput.value = titleEl.textContent.trim();
+  titleInput.style.width = '100%';
+  titleInput.style.marginBottom = '8px';
+  titleInput.style.padding = '8px';
+  titleInput.style.borderRadius = '8px';
+  titleInput.style.border = '1px solid #334155';
+  titleInput.style.background = 'transparent';
+  titleInput.style.color = '#e2e8f0';
+
+  contentEl.innerHTML = '';
+  contentEl.appendChild(titleInput);
+  contentEl.appendChild(textarea);
+
+  const controls = document.createElement('div');
+  controls.className = 'edit-controls';
+
+  const saveBtn = document.createElement('button');
+  saveBtn.textContent = 'Save';
+  saveBtn.className = 'small-btn save-btn';
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.textContent = 'Cancel';
+  cancelBtn.className = 'small-btn cancel-btn';
+
+  controls.appendChild(cancelBtn);
+  controls.appendChild(saveBtn);
+  contentEl.appendChild(controls);
+
+  cancelBtn.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    contentEl.dataset.full = raw.replace(/\n/g, '\\n');
+    contentEl.innerHTML = truncatedHtmlFromText(raw, 100);
+    titleEl.textContent = titleInput.defaultValue || titleInput.value;
+  });
+
+  saveBtn.addEventListener('click', async (ev) => {
+    ev.stopPropagation();
+    const newContent = textarea.value.trim();
+    const newTitle = titleInput.value.trim() || 'Untitled';
+
+    contentEl.dataset.full = newContent.replace(/\n/g, '\\n');
+    contentEl.innerHTML = truncatedHtmlFromText(newContent, 100);
+    titleEl.textContent = newTitle;
+
+    try {
+      const res = await fetch(`/notes/edit/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ title: newTitle, content: newContent })
+      });
+
+      if (!res.ok) {
+        alert('Could not save note. Refresh to try again.');
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error(err);
+      alert('An error occurred while saving.');
+      window.location.reload();
+    }
+  });
+}
+
+// Helper functions
+function truncatedHtmlFromText(text, wordLimit = 100) {
+  if (!text) return '';
+  const paras = text.split(/\n\n+/).map(p => p.trim()).filter(Boolean);
+  const words = text.split(/\s+/).filter(Boolean);
+  if (words.length <= wordLimit) return paras.map(p => `<p>${escapeHtml(p)}</p>`).join('');
+  let count = 0;
+  const outParas = [];
+  for (const p of paras) {
+    const pWords = p.split(/\s+/).filter(Boolean);
+    if (count + pWords.length <= wordLimit) {
+      outParas.push(`<p>${escapeHtml(p)}</p>`);
+      count += pWords.length;
+    } else {
+      const remaining = wordLimit - count;
+      if (remaining > 0) outParas.push(`<p>${escapeHtml(pWords.slice(0, remaining).join(' '))}...</p>`);
+      break;
+    }
+  }
+  return outParas.join('');
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+}
+
+</script>

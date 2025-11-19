@@ -11,7 +11,8 @@ const uploadDir = path.join(process.cwd(), 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
 export const renderPDFTools = (req, res) => {
-  res.render('features/pdf-tools', { pageTitle: 'Wanpot | PDF Tools' });
+  const user = req.isAuthenticated() ? req.user : null;
+  res.render('features/pdf-tools', { pageTitle: 'Wanpot | PDF Tools', user });
 };
 
 // POST /pdf-tools/process
@@ -87,7 +88,8 @@ export const processPDF = async (req, res) => {
 
 
 export const getSolverPage = (req, res) => {
-  res.render("features/equation-solver", { result: null, equation: "", error: null });
+  const user = req.isAuthenticated() ? req.user : null;
+  res.render("features/equation-solver", { result: null, equation: "", error: null, user });
 };
 
 // export const solveEquation = (req, res) => {
@@ -181,7 +183,8 @@ export const scanEquation = async (req, res) => {
 
 // GET Translator Page
 export const getTranslatorPage = (req, res) => {
-  res.render("features/translator");
+  const user = req.isAuthenticated() ? req.user : null;
+  res.render("features/translator", {user});
 };
 
 // // POST — Translate Text
@@ -275,10 +278,11 @@ export const translateText = async (req, res) => {
 
 
 export const renderResumeBuilder = (req, res) => {
+  const user = req.isAuthenticated() ? req.user : null;
   // You can pass default values, themes, or template options
   const templates = ["classic", "modern", "minimal"];
   const colors = ["#3b82f6", "#06b6d4", "#ef4444", "#f59e0b"]; // blue, cyan, red, yellow
-  res.render("resume", { templates, colors, pageTitle: "Wanpot | Resume Builder" });
+  res.render("resume", { templates, colors, pageTitle: "Wanpot | Resume Builder", user });
 };
 
 
@@ -287,6 +291,11 @@ export const renderResumeBuilder = (req, res) => {
 // Voice Recorder Controller
 // =============================
 export const renderVoiceRecorder = (req, res) => {
-  res.render("features/voice-recorder", { pageTitle: "Wanpot | Voice Recorder" });
+  const user = req.isAuthenticated() ? req.user : null;
+  res.render("features/voice-recorder", 
+    { 
+      pageTitle: "Wanpot | Voice Recorder", 
+      user 
+    });
 };
 // Would you like me to extend it next so it stores transcriptions in a database (with timestamps and optional titles for each note)?

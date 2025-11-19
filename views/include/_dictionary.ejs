@@ -1,0 +1,235 @@
+<style>
+    /* FEATURES */
+     .features {
+      max-width: 800px;
+      margin: 4rem auto 0 auto;
+      padding: 0 1rem;
+    }
+
+    .features h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      transition: 0.4s;
+    }
+    .feature-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
+    .feature-icon { font-size: 2.3rem; margin-bottom: 1rem; color: #38bdf8; }
+    .feature-card h3 { margin-bottom: 0.5rem; font-weight: 600; }
+    .feature-card p { color: #94a3b8; font-size: 0.95rem; }
+
+    /* DICTIONARY SECTION */
+    .dictionary-container {
+      max-width: 800px;
+      margin: 3rem auto;
+      padding: 2rem 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+    }
+
+    .dictionary-container h1 { text-align:center; margin-bottom: 1.5rem; color:#38bdf8; }
+    .search-box { display:flex; gap:0.8rem; margin-bottom:1.5rem; }
+    .search-box input {
+      flex:1; padding:0.8rem; border:none; border-radius:8px; background: rgba(255,255,255,0.1); color:#f8fafc;
+    }
+    .search-box input::placeholder { color:#cbd5e1; }
+    .search-box button {
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      border:none; padding:0.8rem 1.4rem; border-radius:8px; color:#fff; font-weight:600; cursor:pointer;
+      transition: transform 0.2s;
+    }
+    .search-box button:hover { transform: scale(1.05); }
+
+    .result {
+      background: rgba(255,255,255,0.07); border-radius:10px; padding:1rem; line-height:1.6; margin-top:1rem;
+    }
+    .word-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+    .word { font-size:1.5rem; font-weight:700; color:#38bdf8; }
+    .phonetic { font-style:italic; color:#94a3b8; margin-top:0.3rem; }
+    .definition { margin-top:1rem; }
+    .part-of-speech { font-weight:600; color:#22c55e; margin-bottom:0.5rem; }
+    .example { font-style:italic; color:#94a3b8; margin-top:0.4rem; }
+    .synonyms, .antonyms { margin-top:0.8rem; }
+    .badge { display:inline-block; background: rgba(56,189,248,0.2); color:#38bdf8; border-radius:8px; padding:0.2rem 0.6rem; margin:0.2rem; font-size:0.9rem; }
+    .voice-btn { background:none; border:none; color:#38bdf8; cursor:pointer; font-size:1.4rem; margin-left:0.5rem; }
+
+    .history { margin-top:1rem; background: rgba(255,255,255,0.07); border-radius:10px; padding:1rem; }
+    .history h3 { margin:0 0 0.5rem 0; color:#06b6d4; }
+    .history-list { display:flex; flex-wrap:wrap; gap:0.5rem; }
+    .history-item { background: rgba(56,189,248,0.2); color:#38bdf8; padding:0.3rem 0.6rem; border-radius:6px; cursor:pointer; font-size:0.9rem; transition: transform 0.2s; }
+    .history-item:hover { transform:scale(1.05); }
+    .clear-history { margin-top:0.8rem; background:#ef4444; color:white; border:none; border-radius:6px; padding:0.5rem 1rem; cursor:pointer; transition:transform 0.2s; }
+    .clear-history:hover { transform:scale(1.05); }
+
+    @media (max-width: 768px) {
+      nav ul { display:none; flex-direction:column; position:absolute; right:20px; top:70px; width:200px; background:rgba(15,23,42,0.9); border-radius:10px; padding:1rem; }
+      nav ul.active { display:flex; }
+      .menu-toggle { display:block; }
+      .hero h1 { font-size:2.1rem; }
+    }
+
+  </style>
+    <section class="features" id="features" style="margin-top: 120px;">
+    <!-- <h2>What's Inside the Pot 🍲</h2> -->
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📖</div>
+        <h3>Dictionary & Word Finder</h3>
+        <p>English dictionary and synonyms at your fingertips.</p>
+      </div>
+      <!-- Include other features here -->
+    </div>
+  </section>
+
+  <section class="dictionary-container" id="dictionary">
+  <h1><i class="fas fa-book-open"></i> Dictionary & Word Finder</h1>
+  <div class="search-box">
+    <input type="text" id="wordInput" placeholder="Enter a word e.g., innovation" />
+    <button id="searchBtn">Search</button>
+  </div>
+  <div class="result" id="result">
+    <p>Type a word and click <b>Search</b> to get its definition, pronunciation, synonyms, and antonyms.</p>
+  </div>
+  <div class="history" id="history">
+    <h3>Search History</h3>
+    <div class="history-list" id="historyList"></div>
+    <button class="clear-history" id="clearHistoryBtn">Clear History</button>
+  </div>
+</section>
+
+  <!-- <section class="about" id="about">
+    <h2>The Wanpot Philosophy</h2>
+    <p>In Sierra Leone, “Wanpot” means putting everything in one pot — and that’s exactly what this app does. We blend tools for learning, productivity, creativity, and life management — all served hot in one digital experience!</p>
+  </section> -->
+
+
+ <script>
+    // Toggle user dropdown
+    function toggleDropdown() {
+      const dropdown = document.querySelector('.dropdown-menu');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close dropdown if clicked outside
+    window.onclick = function(event) {
+      if (!event.target.matches('.user-photo')) {
+        const dropdown = document.querySelector('.dropdown-menu');
+        if (dropdown) dropdown.style.display = 'none';
+      }
+    }
+
+    // Toggle nav menu for mobile
+    function toggleMenu() {
+      const nav = document.querySelector('nav ul');
+      nav.classList.toggle('active');
+    }
+  </script>
+
+<script>
+const searchBtn = document.getElementById('searchBtn');
+const wordInput = document.getElementById('wordInput');
+const resultDiv = document.getElementById('result');
+const historyList = document.getElementById('historyList');
+const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+
+// Fetch search history from DB (newest first)
+async function loadHistory() {
+  try {
+    const res = await fetch('/search/history');
+    if (!res.ok) throw new Error('Failed to fetch history');
+    const history = await res.json();
+    historyList.innerHTML = '';
+    history.slice().reverse().forEach(item => { // newest on top
+      const div = document.createElement('div');
+      div.textContent = item.word;
+      div.classList.add('history-item');
+      div.onclick = () => { wordInput.value = item.word; searchWord(); };
+      historyList.appendChild(div);
+    });
+  } catch(err) { console.error(err); }
+}
+
+// Add word to DB history (prevents duplicates)
+async function addToHistoryDB(word) {
+  try {
+    await fetch('/search/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ word })
+    });
+    loadHistory();
+  } catch(err) { console.error(err); }
+}
+
+// Clear DB history
+async function clearHistoryDB() {
+  try {
+    await fetch('/search/clear', { method: 'DELETE' });
+    loadHistory();
+  } catch(err) { console.error(err); }
+}
+
+// Search word in dictionary API
+async function searchWord() {
+  const word = wordInput.value.trim();
+  if (!word) return;
+  resultDiv.innerHTML = "<p>Loading...</p>";
+
+  try {
+    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+    if (!res.ok) throw new Error('Word not found');
+    const data = await res.json();
+    displayResult(data[0]);
+    addToHistoryDB(word); // Save to DB (duplicates prevented in backend)
+  } catch(err) {
+    resultDiv.innerHTML = `<p style="color:#ef4444;">Word not found or no internet connection.</p>`;
+  }
+}
+
+// Display API result
+function displayResult(data) {
+  const meanings = data.meanings.map(m => `
+    <div class="definition">
+      <div class="part-of-speech">${m.partOfSpeech}</div>
+      ${m.definitions.map(d => `
+        <p>• ${d.definition}</p>
+        ${d.example ? `<p class="example">"${d.example}"</p>` : ''}
+      `).join('')}
+      ${m.synonyms?.length ? `<div class="synonyms"><strong>Synonyms:</strong> ${m.synonyms.map(s => `<span class="badge">${s}</span>`).join('')}</div>` : ''}
+      ${m.antonyms?.length ? `<div class="antonyms"><strong>Antonyms:</strong> ${m.antonyms.map(a => `<span class="badge">${a}</span>`).join('')}</div>` : ''}
+    </div>
+  `).join('');
+
+  const phoneticText = data.phonetics?.[0]?.text || '';
+  const audio = data.phonetics?.find(p => p.audio)?.audio || '';
+
+  resultDiv.innerHTML = `
+    <div class="word-header">
+      <div class="word">${data.word}</div>
+      ${audio ? `<button class="voice-btn" onclick="playAudio('${audio}')"><i class='fa-solid fa-volume-high'></i></button>` : ''}
+    </div>
+    ${phoneticText ? `<div class="phonetic">${phoneticText}</div>` : ''}
+    ${meanings}
+  `;
+}
+
+function playAudio(audioUrl) {
+  const audio = new Audio(audioUrl);
+  audio.play();
+}
+
+// Event listeners
+searchBtn.addEventListener('click', searchWord);
+wordInput.addEventListener('keypress', e => { if(e.key==='Enter') searchWord(); });
+clearHistoryBtn.addEventListener('click', clearHistoryDB);
+
+// Initialize
+loadHistory();
+</script>

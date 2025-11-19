@@ -1,0 +1,307 @@
+
+<style>
+ 
+
+  /* =============================
+       MAIN CONTAINER
+  ============================== */
+  .code-helper-container {
+    width: 88%;
+    max-width: 800px;
+    margin: 15px auto 50px;
+    margin-top: 115px;
+    background: rgba(255,255,255,0.06);
+    padding: 1.6rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 35px rgba(6,182,212,0.2);
+    animation: fadeIn 0.8s ease;
+  }
+
+  /* .code-helper-container {
+  width: 93%;
+  max-width: 950px;
+  margin: 20px auto 60px;
+  margin-top: 115px;
+  background: rgba(255,255,255,0.06);
+  padding: 2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 0 40px rgba(6,182,212,0.15);
+} */
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* TITLE */
+  .ai-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    /* margin-top: 115px; */
+
+    background: linear-gradient(90deg, #3b82f6, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .ai-title i {
+    font-size: 1.9rem;
+    color: #38bdf8;
+  }
+
+  .ai-about { text-align: center; padding: 1rem; margin: 1rem auto; width: 95%; max-width: 800px; background: rgba(255, 255, 255, 0.05); border-radius: 12px; color: #cbd5e1; }
+  .ai-about h2 { color: #38bdf8; font-size: 1.3rem; margin-bottom: 0.5rem; }
+
+
+  /* TEXTAREA */
+  .prompt-input {
+    width: 100%;
+    min-height: 150px;
+    padding: 1rem;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(0,0,0,0.35);
+    color: #e2e8f0;
+    resize: none;
+    font-size: 1rem;
+    line-height: 1.5;
+    transition: 0.3s;
+  }
+
+  .prompt-input:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 10px rgba(59,130,246,0.5);
+  }
+
+  /* RUN BUTTON */
+  .run-btn {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 0.9rem;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #3b82f6, #06b6d4);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: 0.3s;
+    touch-action: manipulation;
+  }
+
+  .run-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(6,182,212,0.33);
+  }
+
+  /* LOADER */
+  .loader {
+    margin-top: 10px;
+    display: none;
+    text-align: center;
+    font-size: 1rem;
+    color: #38bdf8;
+    animation: pulse 1.2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {opacity: 0.4;}
+    50% {opacity: 1;}
+    100% {opacity: 0.4;}
+  }
+
+  /* RESPONSE */
+  .response-box {
+    margin-top: 1.4rem;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 1.2rem;
+    border-radius: 15px;
+    white-space: pre-wrap;
+    font-family: Consolas, monospace;
+    font-size: 0.95rem;
+    display: none;
+    position: relative;
+    overflow-x: auto;
+  }
+
+  /* COPY BUTTON */
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    padding: 6px 12px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid #38bdf8;
+    color: #38bdf8;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .copy-btn:hover {
+    background: #38bdf8;
+    color: #fff;
+  }
+
+  /* =============================
+        RESPONSIVE (Mobile First)
+  ============================== */
+  @media (max-width: 480px) {
+    body {
+      padding-top: 75px;
+    }
+
+    .wp-header {
+      padding: 8px 12px;
+    }
+
+    .wp-header img {
+      width: 34px;
+      height: 34px;
+    }
+
+    .wp-header-title {
+      font-size: 1.05rem;
+    }
+
+    .code-helper-container {
+      padding: 1.3rem;
+      border-radius: 16px;
+    }
+
+    .ai-title {
+      font-size: 1.35rem;
+      gap: 8px;
+    }
+
+    .ai-title i {
+      font-size: 1.5rem;
+    }
+
+    .prompt-input {
+      font-size: 0.9rem;
+      padding: 0.85rem;
+    }
+
+    .run-btn {
+      font-size: 1rem;
+      padding: 0.8rem;
+    }
+  }
+
+  /* Tablets */
+  @media (min-width: 481px) and (max-width: 768px) {
+    .ai-title {
+      font-size: 1.5rem;
+    }
+
+    .prompt-input {
+      font-size: 1rem;
+    }
+  }
+
+  /* Large Desktop */
+  @media (min-width: 1200px) {
+    .code-helper-container {
+      padding: 2.2rem;
+    }
+
+    .ai-title {
+      font-size: 2rem;
+    }
+
+    .prompt-input {
+      min-height: 180px;
+      font-size: 1.05rem;
+    }
+  }
+</style>
+  <!-- ======= MAIN UI ======= -->
+  <div class="code-helper-container">
+
+      <div class="ai-title">
+        <i class="fa-solid fa-code"></i> AI Code Helper
+      </div>
+
+      <section class="ai-about">
+    <h2>Hello, <%= user.fullname || 'Guest' %> 👋</h2>
+    <p>
+      Welcome to <strong>Wanpot AI</strong> — your smart, always-ready digital assistant built to help you work faster, learn better, and solve complex problems with ease.  
+    </p>
+    <p>
+      Just type your request, and let the assistant guide, explain, build, fix, or create — instantly.
+    </p>
+  </section>
+
+      <textarea id="prompt" class="prompt-input"
+        placeholder="Ask me to generate code, debug errors, explain bugs, optimize scripts, write documentation..."></textarea>
+
+      <button class="run-btn" id="runAI">Run AI Assistant</button>
+
+      <div class="loader" id="loader">⏳ AI is thinking...</div>
+
+      <div id="response" class="response-box">
+        <button class="copy-btn" id="copyBtn">Copy</button>
+      </div>
+  </div>
+
+<script>
+  const promptBox = document.getElementById("prompt");
+  const responseBox = document.getElementById("response");
+  const loader = document.getElementById("loader");
+
+  // Auto-expand textarea
+  promptBox.addEventListener("input", () => {
+    promptBox.style.height = "auto";
+    promptBox.style.height = promptBox.scrollHeight + "px";
+  });
+
+  // Run AI
+  document.getElementById("runAI").addEventListener("click", async () => {
+    const prompt = promptBox.value.trim();
+    if (!prompt) return;
+
+    loader.style.display = "block";
+    responseBox.style.display = "none";
+
+    try {
+      const res = await fetch("/dev/ai-code-helper/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
+
+      const data = await res.json();
+      loader.style.display = "none";
+      responseBox.style.display = "block";
+
+      responseBox.innerHTML =
+        `<button class='copy-btn' id='copyBtn'>Copy</button>${data.error ? "❌ " + data.error : data.response}`;
+    } 
+    catch (err) {
+      loader.style.display = "none";
+      responseBox.style.display = "block";
+      responseBox.innerHTML =
+        `<button class='copy-btn' id='copyBtn'>Copy</button>❌ Network or server error.`;
+    }
+  });
+
+  // Copy button
+  document.addEventListener("click", (e) => {
+    if (e.target.id === "copyBtn") {
+      const text = responseBox.innerText.replace("Copy", "").trim();
+      navigator.clipboard.writeText(text);
+      e.target.innerText = "Copied!";
+      setTimeout(() => e.target.innerText = "Copy", 1200);
+    }
+  });
+</script>
+

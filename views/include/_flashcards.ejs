@@ -1,0 +1,264 @@
+<style>
+    /* Container */
+    .container {
+    width: 88%;
+    max-width: 800px;
+    margin: 15px auto 50px;
+    margin-top: 115px;
+    background: rgba(255,255,255,0.06);
+    padding: 1.6rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 35px rgba(6,182,212,0.2);
+    animation: fadeIn 0.8s ease;
+  }
+
+    h1,h2 { text-align:center; color:#38bdf8; margin-bottom:1rem; }
+
+    .mode-selector { text-align:center; margin-bottom:2rem; }
+    .mode-selector button {
+      background: linear-gradient(90deg,#3b82f6,#06b6d4);
+      border:none;
+      padding:0.7rem 1.5rem;
+      margin:0 0.5rem;
+      border-radius:10px;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.2s;
+    }
+    .mode-selector button:hover { transform:scale(1.05); }
+
+    /* Flashcards */
+    #flashcards {
+      display:none;
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      gap:1rem;
+    }
+    .flashcard { perspective:1000px; }
+    .card-inner {
+      position: relative; width:100%; min-height:150px; cursor:pointer;
+      transition: transform 0.6s; transform-style: preserve-3d;
+      background: rgba(56,189,248,0.1); border-radius:15px;
+      display:flex; justify-content:center; align-items:center;
+      font-size:1.2rem; padding:1rem;
+    }
+    .card-inner.flipped { transform: rotateY(180deg); }
+    .card-front, .card-back {
+      position:absolute; backface-visibility:hidden;
+      width:100%; height:100%;
+      display:flex; justify-content:center; align-items:center;
+      text-align:center; padding:1rem;
+    }
+    .card-back { transform:rotateY(180deg); }
+
+    /* API Quiz */
+    #quiz-api-area {
+      display:none;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+      text-align: center;
+    }
+    #quiz-api-area h2 { color: #38bdf8; margin-bottom: 1rem; }
+    #quiz-api-area p { color: #cbd5e1; margin-bottom: 0.5rem; }
+    #quiz-category {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255,255,255,0.1);
+      color: #f8fafc;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #quiz-category:hover { background: rgba(56,189,248,0.2); }
+
+    #quiz-api-area > button, #api-score-section button {
+      background: linear-gradient(90deg,#3b82f6,#06b6d4);
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+      margin-bottom: 1rem;
+    }
+    #quiz-api-area > button:hover, #api-score-section button:hover { transform: scale(1.05); }
+
+    #api-quiz-question { font-size: 1.2rem; margin-bottom: 1rem; color: #e2e8f0; }
+    #api-options { display:flex; flex-wrap:wrap; justify-content:center; gap:0.6rem; margin-bottom:1rem; }
+    #api-options button {
+      flex: 1 1 45%;
+      max-width: 220px;
+      padding:0.6rem 1rem;
+      border:none;
+      border-radius:10px;
+      background: rgba(56,189,248,0.2);
+      color:#f8fafc;
+      cursor:pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    #api-options button:hover { background: rgba(56,189,248,0.4); transform: translateY(-2px); }
+
+    #api-score-section { display:none; text-align:center; margin-top:1.5rem; }
+    #api-score-section p { font-size:1.3rem; color:#22c55e; margin-bottom:1rem; }
+
+    /* Footer */
+    footer {
+      text-align:center; padding:2rem 1rem;
+      background: #0f172a; color:#64748b; font-size:0.9rem; margin-top:2rem;
+    }
+
+    /* Responsive */
+    @media(max-width:768px){
+      nav ul {
+        display:none;
+        flex-direction:column;
+        position:absolute;
+        right:20px;
+        top:60px;
+        width:200px;
+        background:rgba(15,23,42,0.95);
+        border-radius:10px;
+        padding:1rem;
+      }
+      nav ul.active { display:flex; }
+      .menu-toggle { display:block; }
+
+      #flashcards { grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); }
+      #api-options button { flex:1 1 100%; max-width:none; }
+      #quiz-category { width:100%; }
+      .container { margin:7rem 1rem 2rem; padding:1rem; }
+      .mode-selector button { margin:0.3rem 0.2rem; padding:0.6rem 1rem; }
+      .card-inner { min-height:120px; font-size:1rem; }
+    }
+  </style>
+
+<div class="container">
+  <h1>Flashcards & Quiz</h1>
+  <div class="mode-selector">
+    <button onclick="showMode('flashcards')">Flashcards Mode</button>
+    <button onclick="showMode('api')">Dynamic Quiz Mode</button>
+  </div>
+
+  <!-- Flashcards -->
+  <div id="flashcards">
+    <div class="flashcard">
+      <div class="card-inner" onclick="flipCard(this)">
+        <div class="card-front">Apple</div>
+        <div class="card-back">A fruit that is red or green</div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="card-inner" onclick="flipCard(this)">
+        <div class="card-front">HTML</div>
+        <div class="card-back">HyperText Markup Language</div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="card-inner" onclick="flipCard(this)">
+        <div class="card-front">API</div>
+        <div class="card-back">Application Programming Interface</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Quiz -->
+  <div id="quiz-api-area">
+    <h2>Dynamic Quiz</h2>
+    <p>Select a category:</p>
+    <select id="quiz-category">
+      <option value="">Random</option>
+      <option value="9">General Knowledge</option>
+      <option value="17">Science & Nature</option>
+      <option value="18">Computers</option>
+      <option value="23">History</option>
+      <option value="27">Animals</option>
+    </select>
+    <button onclick="fetchAPIQuiz()">Start Quiz</button>
+
+    <div id="api-quiz-question"></div>
+    <div id="api-options"></div>
+  </div>
+
+  <div id="api-score-section">
+    <p id="api-score"></p>
+    <button onclick="restartAPIQuiz()">Try Another Quiz</button>
+  </div>
+</div>
+
+<script>
+  function toggleMenu(){document.querySelector('nav ul').classList.toggle('active');}
+  function showMode(mode){
+    document.getElementById('flashcards').style.display = (mode==='flashcards') ? 'grid':'none';
+    document.getElementById('quiz-api-area').style.display = (mode==='api') ? 'block':'none';
+    document.getElementById('api-score-section').style.display = 'none';
+  }
+  function flipCard(el){el.classList.toggle('flipped');}
+
+  let apiQuestions=[], currentAPIQ=0, apiScore=0;
+  async function fetchAPIQuiz(){
+    const cat = document.getElementById('quiz-category').value;
+    const url = `https://opentdb.com/api.php?amount=10&type=multiple${cat?`&category=${cat}`:''}`;
+    try{
+      const resp = await fetch(url);
+      const data = await resp.json();
+      apiQuestions = data.results.map(q=>({
+        question: decodeHtml(q.question),
+        correct: decodeHtml(q.correct_answer),
+        options: shuffleArray([...q.incorrect_answers.map(a=>decodeHtml(a)), decodeHtml(q.correct_answer)])
+      }));
+      currentAPIQ = 0; apiScore = 0; showAPIQuestion();
+    }catch(err){console.error(err); document.getElementById('api-quiz-question').textContent='Failed to load quiz.';}
+  }
+
+  function showAPIQuestion(){
+    if(currentAPIQ>=apiQuestions.length){endAPIQuiz(); return;}
+    const q = apiQuestions[currentAPIQ];
+    const qEl = document.getElementById('api-quiz-question');
+    const optEl = document.getElementById('api-options');
+    qEl.textContent = `Q${currentAPIQ+1}: ${q.question}`;
+    optEl.innerHTML='';
+    q.options.forEach(opt=>{
+      const btn=document.createElement('button');
+      btn.textContent=opt;
+      btn.onclick=()=>selectAPIAnswer(btn,opt,q.correct);
+      optEl.appendChild(btn);
+    });
+  }
+
+  function selectAPIAnswer(button, answer, correct){
+    const btns = document.querySelectorAll('#api-options button');
+    btns.forEach(b=>b.disabled=true);
+    if(answer===correct){apiScore++; button.style.background='#22c55e'; button.style.color='#fff';}
+    else{button.style.background='#ef4444'; button.style.color='#fff'; btns.forEach(b=>{if(b.textContent===correct){b.style.background='#22c55e'; b.style.color='#fff';}});}
+    setTimeout(()=>{currentAPIQ++; showAPIQuestion();},1000);
+  }
+
+  function endAPIQuiz(){
+    document.getElementById('quiz-api-area').style.display='none';
+    document.getElementById('api-score-section').style.display='block';
+    document.getElementById('api-score').textContent=`You scored ${apiScore} / ${apiQuestions.length}`;
+  }
+  function restartAPIQuiz(){fetchAPIQuiz();}
+  function decodeHtml(html){var txt=document.createElement('textarea'); txt.innerHTML=html; return txt.value;}
+  function shuffleArray(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]];} return arr;}
+
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt=e; });
+  function installApp(){
+    const isIOS=/iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    const isInStandaloneMode=('standalone' in window.navigator)&&window.navigator.standalone;
+    if(isIOS&&!isInStandaloneMode){alert('📱 Tap "Share" then "Add to Home Screen".');}
+    else if(deferredPrompt){deferredPrompt.prompt(); deferredPrompt.userChoice.then(choice=>{if(choice.outcome==='accepted'){alert('🎉 Added to Home screen!');} deferredPrompt=null;});}
+    else{alert('💡 Use your browser’s “Install” option to install Wanpot.');}
+  }
+</script>
+

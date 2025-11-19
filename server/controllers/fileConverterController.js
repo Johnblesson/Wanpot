@@ -7,7 +7,8 @@ const uploadDir = path.join(process.cwd(), "uploads");
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
 export const renderFileConverter = (req, res) => {
-  res.render("features/file-converter", { pageTitle: "Wanpot | File Converter" });
+   const user = req.isAuthenticated() ? req.user : null;
+  res.render("features/file-converter", { pageTitle: "Wanpot | File Converter", user });
 };
 
 export const convertFile = async (req, res) => {

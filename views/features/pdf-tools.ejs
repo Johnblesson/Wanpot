@@ -1,121 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><%= pageTitle %></title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="icon" href="/images/wanpot.ico" type="image/x-icon">
+<!-- include header -->
+<%- include('../include/_header') %>
+<!-- ../include header -->
 
-<style>
-/* GENERAL */
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,#0f172a,#1e293b);color:#f8fafc;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;}
-header{position:fixed;top:0;width:100%;z-index:100;background:rgba(15,23,42,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.1);}
-.navbar{max-width:1200px;margin:0 auto;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
-.logo{font-size:1.7rem;font-weight:700;background:linear-gradient(90deg,#3b82f6,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-nav ul{list-style:none;display:flex;gap:1.5rem;}
-nav ul li a{text-decoration:none;color:#f1f5f9;font-weight:500;transition:color 0.3s;}
-nav ul li a:hover{color:#38bdf8;}
-.menu-toggle{display:none;font-size:1.8rem;cursor:pointer;color:#fff;}
+<!-- include pdf-tools -->
+<%- include('../include/_pdf-tools') %>
+<!-- ../include pdf-tools --> 
 
-/* MAIN */
-main{flex:1;padding:6rem 2rem 2rem;max-width:1200px;margin:auto;}
-h1{text-align:center;margin-bottom:2rem;color:#38bdf8;font-size:2rem;}
+<!-- include about -->
+<%- include('../include/_about') %>
+<!-- ../include about --> 
 
-/* PDF TOOL CONTAINER */
-.pdf-container{background:rgba(255,255,255,0.05);padding:1.8rem;border-radius:15px;box-shadow:0 4px 20px rgba(0,0,0,0.3);}
-.pdf-container label{display:block;margin-bottom:0.3rem;font-weight:600;}
-.pdf-container input[type="file"]{width:100%;padding:0.6rem;border-radius:8px;border:none;background:rgba(255,255,255,0.1);color:#f8fafc;margin-bottom:1rem;}
-.pdf-container select{width:100%;padding:0.8rem;border-radius:8px;border:none;background:rgba(255,255,255,0.1);color:#f8fafc;margin-bottom:1rem;}
-.pdf-container button{background:linear-gradient(90deg,#3b82f6,#06b6d4);border:none;padding:0.8rem 1.2rem;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;transition:transform 0.2s;margin-right:0.5rem;margin-bottom:0.5rem;}
-.pdf-container button:hover{transform:scale(1.05);}
-
-/* RESULT BOX */
-.result-box{margin-top:1rem;background:rgba(255,255,255,0.08);padding:1rem;border-radius:12px;color:#e2e8f0;white-space:pre-wrap;}
-
-/* FOOTER */
-footer{text-align:center;padding:2rem 1rem;background:#0f172a;color:#64748b;font-size:0.9rem;border-top:1px solid rgba(255,255,255,0.1);margin-top:auto;}
-
-/* RESPONSIVE */
-@media(max-width:768px){.menu-toggle{display:block;}nav ul{display:none;flex-direction:column;position:absolute;right:20px;top:60px;background:rgba(15,23,42,0.95);border-radius:10px;padding:1rem;}nav ul.active{display:flex;}}
-@media(max-width:480px){main{padding:6rem 1rem 2rem;}}
-</style>
-</head>
-<body>
-<header>
-<div class="navbar">
-  <div class="logo">Wanpot</div>
-  <i class="fas fa-bars menu-toggle" onclick="toggleMenu()"></i>
-  <nav>
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/translator">Translator</a></li>
-      <li><a href="/resume">Resume Builder</a></li>
-      <li><a href="/pdf-tools">PDF Tools</a></li>
-    </ul>
-  </nav>
-</div>
-</header>
-
-<main>
-<h1>PDF Tools</h1>
-
-<div class="pdf-container">
-  <label for="pdfUpload">Upload PDF(s)</label>
-  <input type="file" id="pdfUpload" multiple accept="application/pdf">
-
-  <label for="pdfAction">Select Action</label>
-  <select id="pdfAction">
-    <option value="merge">Merge PDFs</option>
-    <option value="split">Split PDF</option>
-    <option value="compress">Compress PDF</option>
-  </select>
-
-  <label for="pages">Pages (for split, e.g., 1-3,5)</label>
-  <input type="text" id="pages" placeholder="Leave empty for full PDF">
-
-  <button onclick="processPDF()"><i class="fas fa-file-pdf"></i> Process</button>
-
-  <div class="result-box" id="result">Processed PDF result will appear here...</div>
-</div>
-</main>
-
-<footer>© <%= new Date().getFullYear() %> Wanpot — Built with ❤️ by Kharis Pro Tech</footer>
-
-<script>
-function toggleMenu(){document.querySelector('nav ul').classList.toggle('active');}
-
-async function processPDF(){
-  const files = document.getElementById('pdfUpload').files;
-  const action = document.getElementById('pdfAction').value;
-  const pages = document.getElementById('pages').value;
-  const resultDiv = document.getElementById('result');
-
-  if(files.length===0){alert('Please select PDF(s)'); return;}
-
-  resultDiv.textContent = "Processing PDF(s)... ⏳";
-
-  const formData = new FormData();
-  for(const f of files){formData.append('pdfs', f);}
-  formData.append('action', action);
-  formData.append('pages', pages);
-
-  try{
-    const res = await fetch('/pdf-tools/process', {method:'POST', body:formData});
-    const data = await res.json();
-
-    if(data.success){
-      resultDiv.innerHTML = `<a href="${data.url}" target="_blank" style="color:#3b82f6;">Download Processed PDF</a>`;
-    } else {
-      resultDiv.textContent = data.error || "PDF processing failed.";
-    }
-  } catch(err){
-    console.error(err);
-    resultDiv.textContent = "Error processing PDF. Please try again.";
-  }
-}
-</script>
-</body>
-</html>
+<!-- include footer -->
+<%- include('../include/_footer') %>
+<!-- ../include footer --> 

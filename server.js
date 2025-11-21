@@ -23,6 +23,7 @@ import typistRoutes from "./server/routes/typistRoutes.js";
 import aiCodeHelperRoutes from "./server/routes/aiCodeHelperRoutes.js";
 import brainstormRoute from "./server/routes/brainstormRoutes.js"
 import { checkSubscriptionStatus } from './server/middlewares/checkSubscription.js'
+import { redisSession } from "./server/database/redis.js"
 import http from "http";
 import compression from "compression";
 import { Server } from "socket.io";
@@ -89,7 +90,7 @@ app.use(
   })
 );
 
-
+app.use(redisSession);
 
 // Passport middleware
 app.use(passport.initialize());

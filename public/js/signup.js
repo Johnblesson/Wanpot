@@ -1,6 +1,6 @@
 /*******************
-   * WANPOT Signup JS 
-   *******************/
+* WANPOT Signup JS * 
+*******************/
 
   // 1️⃣ Toggle password visibility
   const togglePassword = document.getElementById('togglePassword');

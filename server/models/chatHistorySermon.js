@@ -7,8 +7,10 @@ const messageSchema = new mongoose.Schema({
 });
 
 const chatHistorySchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "users" }, // optional if you want user association
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "users" }, // optional user association
   messages: [messageSchema],
+  context: { type: String, default: "sermon-builder" }, // optional tag
+  referenceId: { type: mongoose.Schema.Types.ObjectId },   // reference to Sermon
   createdAt: { type: Date, default: Date.now }
 });
 

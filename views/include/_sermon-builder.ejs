@@ -98,6 +98,28 @@
     color:#38bdf8;
     display:none;
   }
+
+  /* Controls */
+  .controls {
+    width:85%;
+    max-width:900px;
+    margin:0.5rem auto 1rem;
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+  }
+
+  .btn {
+    padding:8px 12px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+  }
+
+  .copy { background:#38bdf8; color:#000; }
+  .clear { background:#ef4444; color:#fff; }
+  .download { background:#06b6d4; color:#fff; }
 </style>
 
 <section class="page-header">
@@ -105,7 +127,7 @@
   <p>Enter a topic and Wanpot AI will generate a deep, structured, spirit-filled sermon.</p>
 </section>
 
-<!-- CHAT BOX (EMPTY — JS FILLS IT LIKE ai.ejs) -->
+<!-- CHAT BOX -->
 <div class="chat-container" id="chatContainer"></div>
 
 <form id="sermonForm" class="chat-input-wrapper">
@@ -120,18 +142,29 @@
     <button type="submit" id="sendButton"><i class="fas fa-paper-plane"></i></button>
   </div>
 
-  <!-- Hidden fields (same as ai.ejs) -->
+  <!-- Hidden fields -->
   <input type="hidden" id="chatHistory" value='<%= JSON.stringify(messages || []) %>'>
   <input type="hidden" id="chatId" value="<%= chatId || '' %>">
 </form>
 
 <div id="loader" class="loader">⏳ Generating sermon...</div>
 
+<!-- CONTROLS -->
+<div class="controls">
+  <button class="btn copy" id="copyBtn">Copy</button>
+  <button class="btn clear" id="clearBtn">Clear</button>
+  <button class="btn download" id="downloadBtn">Download .txt</button>
+</div>
+
 <script>
   const chatContainer = document.getElementById("chatContainer");
   const topicInput = document.getElementById("topicInput");
   const sermonForm = document.getElementById("sermonForm");
   const loader = document.getElementById("loader");
+
+  const copyBtn = document.getElementById("copyBtn");
+  const clearBtn = document.getElementById("clearBtn");
+  const downloadBtn = document.getElementById("downloadBtn");
 
   // Load chat history into the chat container
   const history = JSON.parse(document.getElementById("chatHistory").value || "[]");
@@ -153,7 +186,6 @@
     const topic = topicInput.value.trim();
     if (!topic) return;
 
-    // Add user message
     addMessage(topic, "user");
     topicInput.value = "";
     loader.style.display = "block";
@@ -167,7 +199,35 @@
     const data = await res.json();
     loader.style.display = "none";
 
-    // Add AI sermon message
     addMessage(data.sermon || "No sermon generated.", "ai");
+  };
+
+  // COPY
+  copyBtn.onclick = () => {
+    const allText = Array.from(chatContainer.querySelectorAll(".ai-msg"))
+                         .map(div => div.innerText)
+                         .join("\n\n");
+    navigator.clipboard.writeText(allText);
+    copyBtn.innerText = "Copied!";
+    setTimeout(() => copyBtn.innerText = "Copy", 1500);
+  };
+
+  // CLEAR
+  clearBtn.onclick = () => {
+    chatContainer.innerHTML = "";
+  };
+
+  // DOWNLOAD
+  downloadBtn.onclick = () => {
+    const allText = Array.from(chatContainer.querySelectorAll(".ai-msg"))
+                         .map(div => div.innerText)
+                         .join("\n\n");
+    const blob = new Blob([allText], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Sermon.txt";
+    a.click();
+    URL.revokeObjectURL(url);
   };
 </script>

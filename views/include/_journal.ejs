@@ -1,0 +1,174 @@
+<style>
+/* JOURNAL TOOL — WANPOT THEME */
+.journal-container {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1.8rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* Form Elements */
+.journal-container textarea,
+.journal-container select {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255,255,255,0.12);
+  color: #f8fafc;
+  font-size: 1rem;
+  outline: none;
+  resize: vertical;
+}
+
+.journal-container textarea::placeholder {
+  color: #94a3b8;
+}
+
+.journal-container label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.journal-container button {
+  background: linear-gradient(90deg, #3b82f6, #06b6d4);
+  border: none;
+  padding: 0.95rem 1rem;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+}
+
+.journal-container button:hover {
+  transform: scale(1.04);
+}
+
+.result-box {
+  position: relative;
+  background: rgba(255,255,255,0.08);
+  padding: 1rem 3rem 1rem 1rem;
+  border-radius: 12px;
+  color: #e2e8f0;
+  font-family: monospace;
+
+  /* FIX: Force vertical wrapping */
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+
+  /* Prevent horizontal scroll */
+  overflow-x: hidden;
+
+  /* Scroll only vertically */
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+
+/* Custom Scrollbar (Wanpot style) */
+.result-box::-webkit-scrollbar {
+  width: 6px;
+}
+.result-box::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+}
+.result-box::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.copy-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  padding: 5px 8px;
+  border-radius: 6px;
+  color: #38bdf8;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.copy-btn:hover {
+  background: rgba(56,189,248,0.3);
+  color: #06b6d4;
+}
+
+/* Page Spacing */
+main {
+  padding: 4.5rem 1rem 2rem;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+  .journal-container {
+    padding: 1.3rem;
+    border-radius: 18px;
+  }
+
+  h1 {
+    font-size: 1.55rem;
+    text-align: center;
+    margin-bottom: .7rem;
+  }
+
+  .result-box {
+    font-size: 0.93rem;
+    max-height: 300px;
+  }
+}
+</style>
+
+
+<main>
+  <h1>AI Personal Journal</h1>
+
+  <div class="journal-container">
+    <form id="journalForm" method="POST" action="/ai/personal-journal/analyze">
+      
+      <label for="entry">Today's Thoughts</label>
+      <textarea name="entry" id="entry" rows="5" placeholder="Write your thoughts, feelings, or experiences..."></textarea>
+
+      <label for="mood">How do you feel?</label>
+      <select name="mood" id="mood">
+        <option value="">Select mood</option>
+        <option value="Happy">😊 Happy</option>
+        <option value="Calm">😌 Calm</option>
+        <option value="Grateful">🙏 Grateful</option>
+        <option value="Sad">😔 Sad</option>
+        <option value="Angry">😡 Angry</option>
+        <option value="Stressed">😣 Stressed</option>
+      </select>
+
+      <button type="submit"><i class="fas fa-magic"></i> Analyze Entry</button>
+    </form>
+
+    <% if (result) { %>
+    <div class="result-box">
+      <button class="copy-btn" onclick="copyResult()">Copy</button>
+      <pre style="white-space: pre-wrap; word-break: break-word;"><%= result %></pre>
+    </div>
+    <% } %>
+  </div>
+</main>
+
+<script>
+function copyResult() {
+  const text = document.querySelector('.result-box pre').innerText;
+  navigator.clipboard.writeText(text);
+  alert("Copied!");
+}
+</script>

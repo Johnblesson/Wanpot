@@ -1,5 +1,5 @@
 import express from 'express';
-import { renderAIPage, generateAIResponse, deleteChatMessage, clearAllChat, renderResumeBuilder, enhanceResume } from '../controllers/aiController.js';
+import { renderAIPage, generateAIResponse, deleteChatMessage, clearAllChat, renderResumeBuilder, enhanceResume, getJournal, postJournal } from '../controllers/aiController.js';
 import { getCodeExplainerPage, runCodeExplainer } from '../controllers/codeExplainerController.js'
 import { generateCoverLetter, renderCoverLetter } from "../controllers/coverLetterController.js";
 import { getGrammarPage, generateGrammar } from "../controllers/grammarController.js";
@@ -31,5 +31,8 @@ router.get("/grammar", ensureAuthenticated, getGrammarPage);
 
 // POST grammar check
 router.post("/grammar/run", ensureAuthenticated, generateGrammar);
+
+router.get("/personal-journal", ensureAuthenticated, getJournal);
+router.post("/personal-journal/analyze", ensureAuthenticated, postJournal);
 
 export default router;

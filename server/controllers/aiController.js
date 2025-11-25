@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import ChatHistory from "../models/chatHistory.js";
+import axios from "axios";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -175,5 +176,57 @@ export const enhanceResume = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to enhance resume." });
+  }
+};
+
+
+
+
+export const getJournal = (req, res) => {
+  const user = req.isAuthenticated() ? req.user : null;
+  res.render("features/journal", { result: null, user });
+};
+
+// import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const aiJournal = new GoogleGenAI(process.env.GEMINI_API_KEY);
+
+export const postJournal = async (req, res) => {
+  const { entry, mood } = req.body;
+
+  try {
+    const prompt = `
+You are an AI personal journal coach. 
+Analyze the journal entry and mood and provide:
+1. Emotional interpretation
+2. Insightful reflection
+3. Encouragement
+4. One actionable step
+
+Entry: ${entry}
+Mood: ${mood}
+`;
+
+    // Using the same working SDK approach
+    const response = await aiJournal.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+    });
+
+    const aiText = response.text || "No insights generated.";
+
+    const user = req.isAuthenticated() ? req.user : null;
+
+    res.render("features/journal", { result: aiText, user });
+
+  } catch (error) {
+    console.error("Gemini Error:", error);
+
+    const user = req.isAuthenticated() ? req.user : null;
+
+    res.render("features/journal", { 
+      result: "Error processing your journal entry.",
+      user
+    });
   }
 };

@@ -1,0 +1,173 @@
+<style>
+  .page-header {
+    width:85%; 
+    max-width:900px;
+    margin:1rem auto;
+    margin-top: 85px;
+    background:rgba(255,255,255,0.05);
+    padding:1.2rem;
+    border-radius:12px;
+    text-align:center;
+  }
+  .page-header h2 { color:#38bdf8; margin-bottom:6px; }
+
+  .ai-title {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    font-size:1.6rem;
+    font-weight:700;
+    color:#38bdf8;
+    margin-bottom:10px;
+  }
+
+  /* CHAT AREA */
+  .chat-container {
+    width:85%;
+    max-width:900px;
+    height:55vh;
+    overflow-y:auto;
+    background:rgba(255,255,255,0.05);
+    margin:0 auto;
+    padding:1rem;
+    border-radius:15px;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .message {
+    max-width:85%;
+    padding:0.8rem 1rem;
+    margin:0.6rem 0;
+    border-radius:12px;
+    white-space:pre-wrap;
+    line-height:1.6;
+  }
+  .user-msg {
+    align-self:flex-end;
+    background:#3b82f6;
+    color:white;
+    border-bottom-right-radius:0;
+  }
+  .ai-msg {
+    align-self:flex-start;
+    background:#1e293b;
+    color:#38bdf8;
+    border-bottom-left-radius:0;
+  }
+
+  /* INPUT AREA (matches AI chat page) */
+  .chat-input-wrapper {
+    width:85%;
+    max-width:900px;
+    margin:1rem auto;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .input-container {
+    display:flex;
+    align-items:center;
+    background:rgba(255,255,255,0.08);
+    border-radius:12px;
+    padding:6px 10px;
+  }
+
+  #topicInput {
+    flex:1;
+    border:none;
+    background:transparent;
+    padding:12px;
+    color:#e2e8f0;
+    outline:none;
+  }
+
+  #sendButton {
+    background:transparent;
+    border:none;
+    font-size:1.3rem;
+    color:#38bdf8;
+    cursor:pointer;
+    padding:8px;
+  }
+
+  .loader {
+    text-align:center;
+    color:#38bdf8;
+    display:none;
+  }
+</style>
+
+<section class="page-header">
+  <div class="ai-title"><i class="fas fa-bible"></i> Sermon Builder</div>
+  <p>Enter a topic and Wanpot AI will generate a deep, structured, spirit-filled sermon.</p>
+</section>
+
+<!-- CHAT BOX (EMPTY — JS FILLS IT LIKE ai.ejs) -->
+<div class="chat-container" id="chatContainer"></div>
+
+<form id="sermonForm" class="chat-input-wrapper">
+  <div class="input-container">
+    <input 
+      type="text" 
+      id="topicInput" 
+      placeholder="Enter sermon topic, <%= user?.fullname || 'Guest' %>..." 
+      autocomplete="off"
+      required
+    >
+    <button type="submit" id="sendButton"><i class="fas fa-paper-plane"></i></button>
+  </div>
+
+  <!-- Hidden fields (same as ai.ejs) -->
+  <input type="hidden" id="chatHistory" value='<%= JSON.stringify(messages || []) %>'>
+  <input type="hidden" id="chatId" value="<%= chatId || '' %>">
+</form>
+
+<div id="loader" class="loader">⏳ Generating sermon...</div>
+
+<script>
+  const chatContainer = document.getElementById("chatContainer");
+  const topicInput = document.getElementById("topicInput");
+  const sermonForm = document.getElementById("sermonForm");
+  const loader = document.getElementById("loader");
+
+  // Load chat history into the chat container
+  const history = JSON.parse(document.getElementById("chatHistory").value || "[]");
+
+  history.forEach(entry => {
+    entry.messages.forEach(msg => addMessage(msg.text, msg.sender));
+  });
+
+  function addMessage(text, sender) {
+    const div = document.createElement("div");
+    div.className = "message " + (sender === "user" ? "user-msg" : "ai-msg");
+    div.innerText = text;
+    chatContainer.appendChild(div);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  }
+
+  sermonForm.onsubmit = async (e) => {
+    e.preventDefault();
+    const topic = topicInput.value.trim();
+    if (!topic) return;
+
+    // Add user message
+    addMessage(topic, "user");
+    topicInput.value = "";
+    loader.style.display = "block";
+
+    const res = await fetch("/ai/sermon-builder/run", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topic })
+    });
+
+    const data = await res.json();
+    loader.style.display = "none";
+
+    // Add AI sermon message
+    addMessage(data.sermon || "No sermon generated.", "ai");
+  };
+</script>

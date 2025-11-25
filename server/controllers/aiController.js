@@ -20,36 +20,6 @@ export const renderAIPage = async (req, res) => {
   }
 };
 
-// // Generate AI response
-// export const generateAIResponse = async (req, res) => {
-//   try {
-//     const { prompt, chatId } = req.body;
-//     if (!prompt) return res.status(400).json({ error: "Prompt is required" });
-
-//     const aiResponse = await ai.models.generateContent({
-//       model: "gemini-2.5-flash",
-//       contents: prompt
-//     });
-
-//     let chatRecord;
-//     if (chatId) {
-//       chatRecord = await ChatHistory.findById(chatId);
-//       if (!chatRecord) chatRecord = new ChatHistory({ user: req.user?._id, messages: [] });
-//     } else {
-//       chatRecord = new ChatHistory({ user: req.user?._id, messages: [] });
-//     }
-
-//     chatRecord.messages.push({ sender: "user", text: prompt });
-//     chatRecord.messages.push({ sender: "ai", text: aiResponse.text });
-//     await chatRecord.save();
-
-//     res.json({ chatId: chatRecord._id, messages: chatRecord.messages });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ messages: [{ sender: "ai", text: "Error generating response. Try again." }] });
-//   }
-// };
-
 // Generate AI response with retry on overload
 export const generateAIResponse = async (req, res) => {
   try {

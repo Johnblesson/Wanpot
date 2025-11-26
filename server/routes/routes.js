@@ -78,7 +78,6 @@ router.get("/qrcode-generator", ensureAuthenticated, (req, res) => {
     res.render("features/qr-code", { user });
 }); 
 
-
 // Gpa Calculator route
 router.get("/gpa-calculator", ensureAuthenticated, (req, res) => {
     const user = req.isAuthenticated() ? req.user : null;
@@ -123,6 +122,11 @@ router.get("/signature-generator", ensureAuthenticated, (req, res) => {
     const user = req.isAuthenticated() ? req.user : null;
     res.render("features/signature-generator", { user });
 });
+
+router.get("/subscription-plan", (req, res) => {
+    res.render("subscribe");
+});
+
 
 // Export the router
 export default router;

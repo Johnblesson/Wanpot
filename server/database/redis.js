@@ -42,3 +42,20 @@ export const redisSession = session({
 });
 
 export default redisSession;
+
+
+
+// Session middleware
+// app.use(
+//   session({
+//     secret: process.env.SESSION_SECRET,
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+//       httpOnly: true,                  // prevents JS access
+//       secure: process.env.SESSION_COOKIE_SECURE === 'true', // dynamic, // true on https //false on http
+//       sameSite: 'lax',                 // allows cross-site but safer
+//     },
+//   })
+// );

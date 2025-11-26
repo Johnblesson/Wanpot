@@ -36,8 +36,6 @@ const server = http.createServer(app); // Create HTTP server
 const io = new Server(server); // Create Socket.io server
 dotenv.config(); // Configure dotenv to use environment variables
 connectDB(); // Connect to the database
-// app.use(express.json()); // Parse JSON bodies
-// Body parsers
 app.use(express.json()); // for JSON requests
 app.use(express.urlencoded({ extended: true })); // for form submissions
 
@@ -76,21 +74,6 @@ app.get('/favicon.svg', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/favicon.svg'));
 });
 
-// Session middleware
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-      httpOnly: true,                  // prevents JS access
-      secure: process.env.SESSION_COOKIE_SECURE === 'true', // dynamic, // true on https //false on http
-      sameSite: 'lax',                 // allows cross-site but safer
-    },
-  })
-);
-
 app.use(redisSession);
 
 // Passport middleware
@@ -99,7 +82,7 @@ app.use(passport.session());
 
 // Routes
 app.use(authRoutes)
-app.use("/", viewRoutes); // Use viewRoutes fileConverterRoutes
+app.use("/", viewRoutes);
 app.use(fileConverterRoutes);
 app.use("/notes", noteRoutes);
 app.use('/expense-tracker', expenseRoutes);
@@ -113,9 +96,7 @@ app.use(aiCodeHelperRoutes);
 app.use('/ai/brainstorm', brainstormRoute)
 app.use(sermonRoutes);
 
-
 app.use(checkSubscriptionStatus);
-
 
 // Set up the server to listen on port 5000
 const PORT = process.env.PORT;

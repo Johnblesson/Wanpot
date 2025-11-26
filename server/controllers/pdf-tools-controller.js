@@ -1,8 +1,6 @@
 import { PDFDocument } from 'pdf-lib';
 import fs from 'fs';
 import path from 'path';
-import { Document, Packer, Paragraph, TextRun } from 'docx';
-// import pdfParse from 'pdf-parse'; // ✅ Correct ESM import
 
 // Ensure uploads folder exists
 const uploadDir = path.join(process.cwd(), 'uploads');
@@ -18,8 +16,9 @@ export const processPDF = async (req, res) => {
     const files = req.files;
     const { action, pages } = req.body;
 
-    if (!files || files.length === 0)
+    if (!files || files.length === 0) {
       return res.json({ success: false, error: 'No PDF uploaded' });
+    }
 
     let outputPaths = [];
 
@@ -27,6 +26,7 @@ export const processPDF = async (req, res) => {
       case 'merge': {
         const outputName = `pdf-tools-${Date.now()}.pdf`;
         const outputPath = path.join(uploadDir, outputName);
+
         const mergedPdf = await PDFDocument.create();
         for (const file of files) {
           const data = fs.readFileSync(file.path);
@@ -34,7 +34,9 @@ export const processPDF = async (req, res) => {
           const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
           copiedPages.forEach(page => mergedPdf.addPage(page));
         }
-        fs.writeFileSync(outputPath, await mergedPdf.save());
+
+        const mergedBytes = await mergedPdf.save();
+        fs.writeFileSync(outputPath, mergedBytes);
         outputPaths.push(`/uploads/${outputName}`);
         break;
       }
@@ -42,6 +44,7 @@ export const processPDF = async (req, res) => {
       case 'split': {
         const outputName = `pdf-tools-${Date.now()}.pdf`;
         const outputPath = path.join(uploadDir, outputName);
+
         const splitPdf = await PDFDocument.create();
         const pageRanges = pages ? pages.split(',') : ['all'];
         const data = fs.readFileSync(files[0].path);
@@ -64,7 +67,8 @@ export const processPDF = async (req, res) => {
 
         const copiedPages = await splitPdf.copyPages(pdf, pagesToAdd);
         copiedPages.forEach(p => splitPdf.addPage(p));
-        fs.writeFileSync(outputPath, await splitPdf.save());
+        const splitBytes = await splitPdf.save();
+        fs.writeFileSync(outputPath, splitBytes);
         outputPaths.push(`/uploads/${outputName}`);
         break;
       }
@@ -72,37 +76,11 @@ export const processPDF = async (req, res) => {
       case 'compress': {
         const outputName = `pdf-tools-${Date.now()}.pdf`;
         const outputPath = path.join(uploadDir, outputName);
+
         const pdf = await PDFDocument.load(fs.readFileSync(files[0].path));
-        fs.writeFileSync(outputPath, await pdf.save({ useObjectStreams: false, addDefaultEncoding: true }));
+        const compressedBytes = await pdf.save({ useObjectStreams: false, addDefaultEncoding: true });
+        fs.writeFileSync(outputPath, compressedBytes);
         outputPaths.push(`/uploads/${outputName}`);
-        break;
-      }
-
-      case 'pdf-to-doc': {
-        for (const file of files) {
-          const dataBuffer = fs.readFileSync(file.path);
-          const pdfData = await pdfParse(dataBuffer); // ✅ now works
-
-          const doc = new Document({
-            sections: [
-              {
-                properties: {},
-                children: [
-                  new Paragraph({
-                    children: [
-                      new TextRun({ text: pdfData.text, font: 'Arial', size: 22 }),
-                    ],
-                  }),
-                ],
-              },
-            ],
-          });
-
-          const docName = `pdf-to-doc-${Date.now()}-${file.originalname.replace(/\.pdf$/i, '.docx')}`;
-          const docPath = path.join(uploadDir, docName);
-          fs.writeFileSync(docPath, await Packer.toBuffer(doc));
-          outputPaths.push(`/uploads/${docName}`);
-        }
         break;
       }
 
@@ -112,6 +90,7 @@ export const processPDF = async (req, res) => {
 
     // Cleanup uploaded PDFs
     files.forEach(f => fs.unlinkSync(f.path));
+
     res.json({ success: true, urls: outputPaths });
 
   } catch (err) {

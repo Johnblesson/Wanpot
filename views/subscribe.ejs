@@ -1,75 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Subscribe | WANPOT</title>
-  <style>
-    body {
-      background: #0f172a;
-      font-family: 'Poppins', sans-serif;
-      color: #fff;
-      padding: 40px;
-    }
+  <!-- include header -->
+  <%- include('include/_header') %>
+  <!-- /include header -->
+ 
+ <!-- include home -->
+  <!-- /include home -->
 
-    .container {
-      max-width: 650px;
-      margin: auto;
-      background: #1e293b;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.4);
-    }
+<!-- include features -->
+<!-- /include features --> 
 
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 2rem;
-    }
+<!-- include subscribe -->
+<%- include('include/_subscribe') %>
+<!-- /include subscribe --> 
 
-    .plan-box {
-      background: #334155;
-      padding: 25px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
+<!-- include ai-icon -->
+<%- include('include/_ai-icon') %>
+<!-- /include ai-icon --> 
 
-    .btn {
-      margin-top: 20px;
-      width: 100%;
-      padding: 15px;
-      background: #3b82f6;
-      border: none;
-      border-radius: 8px;
-      color: #fff;
-      cursor: pointer;
-      font-size: 1.1rem;
-    }
-
-    .btn:hover {
-      background: #2563eb;
-    }
-  </style>
-</head>
-<body>
-
-<div class="container">
-  <h1>Upgrade Your Account</h1>
-
-  <div class="plan-box">
-    <h2>WANPOT PRO PLAN</h2>
-    <p>✔ Unlimited Access</p>
-    <p>✔ AI Chat Assistant</p>
-    <p>✔ Notes & Dashboard</p>
-    <p>✔ Zero Ads</p>
-    <p class="price" style="margin-top:10px; font-size:20px;">
-      <strong>SLL 105/ month</strong>
-    </p>
-  </div>
-
-  <form action="/billing" method="GET">
-    <button class="btn">Continue to Billing</button>
-  </form>
-</div>
-
-</body>
-</html>
+<!-- include footer -->
+<%- include('include/_footer') %>
+<!-- /include footer --> 

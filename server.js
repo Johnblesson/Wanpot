@@ -23,6 +23,7 @@ import typistRoutes from "./server/routes/typistRoutes.js";
 import aiCodeHelperRoutes from "./server/routes/aiCodeHelperRoutes.js";
 import brainstormRoute from "./server/routes/brainstormRoutes.js"
 import sermonRoutes from "./server/routes/sermonRoutes.js";
+import pdfRoute from "./server/routes/pdf.js"
 import { checkSubscriptionStatus } from './server/middlewares/checkSubscription.js'
 import { redisSession } from "./server/database/redis.js"
 import http from "http";
@@ -94,6 +95,7 @@ app.use('/ai', aiRoutes);
 app.use("/api/typists", typistRoutes);
 app.use(aiCodeHelperRoutes);
 app.use('/ai/brainstorm', brainstormRoute)
+app.use(pdfRoute)
 app.use(sermonRoutes);
 
 app.use(checkSubscriptionStatus);

@@ -1,13 +1,13 @@
 import { Router } from "express";
 const router = Router();
 import multer from "multer"; 
+import path from "path";
 import { 
         getSolverPage,
         solveEquation, 
         scanEquation,
         getTranslatorPage, 
         translateText,
-        renderPDFTools, processPDF,
         renderVoiceRecorder
     } from "../controllers/controllers.js"
     import { redirectIfLoggedIn } from '../middlewares/redirectIfLoggedIn.js';
@@ -15,17 +15,6 @@ import {
     import ensureAuthenticated from "../middlewares/auth.js";
 
 const upload = multer({ dest: "uploads/" });
-
-// Multer setup
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(process.cwd(), 'uploads')),
-  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
-});
-const uploadPDF = multer({ storage });
-
-
-router.get('/pdf-tools', renderPDFTools);
-router.post('/pdf-tools/process', uploadPDF.array('pdfs'), processPDF);
 
 // Define your routes here
 router.get("/", redirectIfLoggedIn, (req, res) => {
@@ -123,8 +112,14 @@ router.get("/signature-generator", ensureAuthenticated, (req, res) => {
     res.render("features/signature-generator", { user });
 });
 
-router.get("/subscription-plan", (req, res) => {
-    res.render("subscribe");
+router.get("/subscription-plan", ensureAuthenticated, (req, res) => {
+    const user = req.isAuthenticated() ? req.user : null;
+    res.render("subscribe", { user });
+});
+
+router.get("/billing", ensureAuthenticated, (req, res) => {
+    const user = req.isAuthenticated() ? req.user : null;
+    res.render("billing", { user });
 });
 
 

@@ -1,0 +1,172 @@
+<style>
+  /* --- Mobile First Responsive Payment Page --- */
+
+  .container {
+    width: 90%;
+    max-width: 800px;
+    margin: 100px auto;
+    background: #1e293b;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #38bdf8;
+  }
+
+  .plan-box {
+    background: #334155;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+  }
+
+  .plan-box h2 {
+    margin-bottom: 10px;
+    color: #fff;
+  }
+
+  .price {
+    margin-top: 10px;
+    font-size: 1.3rem;
+    color: #38bdf8;
+  }
+
+  /* ------- Payment Options Section ------- */
+
+  .payment-section {
+    margin-top: 25px;
+  }
+
+  .payment-title {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .method {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #475569;
+  }
+
+  /* ICON IMAGES */
+  .method-icon img {
+    width: 40px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  .method-text {
+    color: #e2e8f0;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  /* Buttons */
+  .btn {
+    margin-top: 25px;
+    width: 100%;
+    padding: 15px;
+    background: #3b82f6;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .btn:hover {
+    background: #2563eb;
+  }
+
+  /* Mobile Optimization */
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 1.6rem;
+    }
+    .method {
+      padding: 12px;
+    }
+    .method-icon img {
+      width: 32px;
+    }
+  }
+</style>
+
+
+<div class="container">
+  <h1>Upgrade Your Account</h1>
+
+  <div class="plan-box">
+    <h2>WANPOT PRO PLAN</h2>
+    <p>✔ Unlimited Access</p>
+    <p>✔ AI Chat Assistant</p>
+    <p>✔ Notes & Dashboard</p>
+    <p>✔ Zero Ads</p>
+    <p class="price"><strong>SLL 105 / month</strong></p>
+  </div>
+
+<!-- Payment Methods Section -->
+<div class="payment-section">
+  <p class="payment-title">You Can Pay With:</p>
+
+  <div class="payment-methods">
+
+    <!-- Bank Card -->
+    <div class="method">
+      <div class="method-icon">
+        <img src="/images/payments/card.png" alt="Card Payment" />
+      </div>
+      <div class="method-text">Bank Card (Visa / Mastercard)</div>
+    </div>
+
+    <!-- Orange Money -->
+    <div class="method">
+      <div class="method-icon">
+        <img src="/images/payments/OrangeMoney.jpg" alt="Orange Money" />
+      </div>
+      <div class="method-text">Orange Money</div>
+    </div>
+
+    <!-- Afrimoney -->
+    <div class="method">
+      <div class="method-icon">
+        <img src="/images/payments/Afrimoney.png" alt="Afrimoney" />
+      </div>
+      <div class="method-text">Afrimoney</div>
+    </div>
+
+    <!-- QCell Money -->
+    <div class="method">
+      <div class="method-icon">
+        <img src="/images/payments/Qmoney-logo.png" alt="QCell Money" />
+      </div>
+      <div class="method-text">QCell Money</div>
+    </div>
+
+  </div>
+</div>
+
+
+  <form action="/billing" method="GET">
+    <button class="btn">Continue to Billing</button>
+  </form>
+</div>

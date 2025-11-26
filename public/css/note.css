@@ -1,0 +1,180 @@
+/* ---- MOBILE FIRST BASE ---- */
+
+.container {
+  width: 92%;
+  margin: 110px auto 40px;
+  background: rgba(255,255,255,0.06);
+  padding: 1.4rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 35px rgba(6,182,212,0.15);
+  animation: fadeIn 0.8s ease;
+}
+
+h2 {
+  color: #38bdf8;
+  text-align: center;
+  margin-bottom: 18px;
+  font-size: 1.2rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+input,
+textarea {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1rem;
+  color: #e2e8f0;
+  outline: none;
+  width: 100%;
+}
+
+button {
+  background: #38bdf8;
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background: #0ea5e9;
+}
+
+/* ---- NOTES GRID ---- */
+.notes-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px; /* default gap for desktop/tablet */
+}
+
+.note {
+  background: #1e293b;
+  padding: 18px;
+  border-radius: 15px;
+  border: 1px solid #334155;
+  cursor: pointer;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .notes-list {
+    gap: 10px;
+  }
+
+  .note {
+    padding: 12px;
+    min-height: 100px;
+  }
+
+  .note h3 {
+    font-size: 1rem;
+  }
+
+  .note .content {
+    font-size: 0.9rem;
+  }
+}
+
+
+.note h3 {
+  color: #38bdf8;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.note .content {
+  color: #cbd5e1;
+  line-height: 1.45;
+  margin-bottom: 12px;
+  flex-grow: 1;
+}
+
+.note .content p {
+  margin: 0 0 0.6em 0;
+}
+
+/* ---- ACTION BUTTONS ---- */
+.actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: flex-end;
+}
+
+.actions a {
+  color: #94a3b8;
+  font-size: 1.2rem;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.actions a:hover {
+  transform: scale(1.2);
+}
+
+.edit-btn:hover { color: #60a5fa; }
+.view-btn:hover { color: #22c55e; }
+.delete-btn:hover { color: #ef4444; }
+
+/* Small buttons (save/cancel) */
+.small-btn {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.save-btn { background: #10b981; color: white; }
+.cancel-btn { background: #64748b; color: white; }
+
+
+/* ---- RESPONSIVE BREAKPOINTS ---- */
+
+/* Tablets */
+@media (min-width: 600px) {
+  .container {
+    width: 85%;
+    padding: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  .notes-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Laptops / Desktops */
+@media (min-width: 900px) {
+  .container {
+    max-width: 850px;
+    width: 75%;
+  }
+
+  .notes-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}

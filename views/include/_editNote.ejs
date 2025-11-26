@@ -1,0 +1,55 @@
+
+  <style>
+
+   
+    .container {
+      max-width: 800px;
+      margin: 100px auto;
+      background: rgba(30, 41, 59, 0.9);
+      padding: 40px;
+      border-radius: 20px;
+    }
+    h2 {
+      color: #38bdf8;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    input, textarea {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 12px;
+      color: #e2e8f0;
+      font-size: 16px;
+      outline: none;
+    }
+    button {
+      background: #38bdf8;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #0ea5e9;
+    }
+  </style>
+
+
+  <div class="container">
+    <h2>Edit Note</h2>
+    <form action="/notes/edit/<%= note._id %>" method="POST">
+      <input type="text" name="title" value="<%= note.title %>" placeholder="Note Title" required>
+      <textarea name="content" rows="8" placeholder="Write your note..." required><%= note.content %></textarea>
+      <button type="submit">Update Note</button>
+    </form>
+  </div>
+

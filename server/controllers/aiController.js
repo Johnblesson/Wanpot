@@ -116,41 +116,6 @@ export const clearAllChat = async (req, res) => {
 
 
 
-export const renderResumeBuilder = (req, res) => {
-  const user = req.isAuthenticated() ? req.user : null;
-  const templates = ["classic", "modern", "minimal"];
-  const colors = ["#3b82f6", "#06b6d4", "#ef4444", "#f59e0b"];
-  res.render("features/resume", { templates, colors, pageTitle: "Wanpot | Resume Builder", user });
-};
-
-export const enhanceResume = async (req, res) => {
-  try {
-    const { name, email, phone, summary, education, experience, skills } = req.body;
-    const prompt = `
-      Improve this resume professionally and concisely.
-      Name: ${name}
-      Email: ${email}
-      Phone: ${phone}
-      Summary: ${summary}
-      Education: ${education.join(", ")}
-      Experience: ${experience.join(", ")}
-      Skills: ${skills}
-    `;
-    const result = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: prompt,
-    });
-
-    const enhancedText = result.response.text();
-    res.json({ enhanced: enhancedText });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to enhance resume." });
-  }
-};
-
-
-
 
 export const getJournal = (req, res) => {
   const user = req.isAuthenticated() ? req.user : null;

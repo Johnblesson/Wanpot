@@ -1,6 +1,7 @@
 import express from 'express';
-import { renderAIPage, generateAIResponse, deleteChatMessage, clearAllChat, renderResumeBuilder, enhanceResume, getJournal, postJournal } from '../controllers/aiController.js';
+import { renderAIPage, generateAIResponse, deleteChatMessage, clearAllChat, getJournal, postJournal } from '../controllers/aiController.js';
 import { getCodeExplainerPage, runCodeExplainer } from '../controllers/codeExplainerController.js'
+import { renderResumeBuilder, enhanceResume } from '../controllers/resumeBuilderController.js'
 import { getGrammarPage, runGrammarAI } from "../controllers/grammarController.js";
 import ensureAuthenticated from '../middlewares/auth.js';
 

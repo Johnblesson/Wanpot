@@ -1,58 +1,59 @@
-import axios from "axios";
+import { GoogleGenAI } from "@google/genai";
 
-// GET route to render the Grammar page
-// export const getGrammarPage = (req, res) => {
-//   try {
-//     return res.render("features/grammar", { title: "AI Grammar & Proofreading | Wanpot" });
-//   } catch (err) {
-//     console.error("Error rendering grammar page:", err);
-//     return res.status(500).send("Failed to load the page.");
-//   }
-// };
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-export const getGrammarPage = (req, res) => { 
-  const user = req.isAuthenticated() ? req.user : null;
-  res.render("features/grammar", 
-    { 
-      user,
-      title: "AI Grammar & Proofreading | Wanpot" 
-    }); 
+const GRAMMAR_PROMPT = (text) => `
+Correct and enhance the following text for grammar, spelling, punctuation, style, clarity, and readability. 
+Maintain the original meaning and make it professional, smooth, and polished.
+
+Text:
+"""${text}"""
+`;
+
+export const getGrammarPage = async (req, res) => {
+  try {
+    const user = req.isAuthenticated() ? req.user : null;
+    res.render("features/grammar", { user });
+  } catch (err) {
+    console.error(err);
+    res.render("features/grammar", { user:null });
+  }
 };
 
-// POST route to run grammar & proofreading
-export const generateGrammar = async (req, res) => {
+export const runGrammarAI = async (req, res) => {
   try {
     const { text } = req.body;
+    if (!text) return res.status(400).json({ error:"Text is required." });
 
-    if (!text || text.trim() === "") {
-      return res.status(400).json({ error: "Text cannot be empty." });
+    let aiResult = null;
+    const MAX_RETRIES = 3;
+    const RETRY_DELAY = 1000;
+
+    for(let attempt=0; attempt<MAX_RETRIES; attempt++){
+      try {
+        aiResult = await ai.models.generateContent({
+          model:"gemini-2.5-flash",
+          contents: GRAMMAR_PROMPT(text)
+        });
+        break;
+      } catch(err){
+        const status = err?.status || err?.response?.status;
+        if ((status===503 || status===429) && attempt<MAX_RETRIES-1) {
+          await new Promise(r=>setTimeout(r, RETRY_DELAY*(attempt+1)));
+          continue;
+        } else throw err;
+      }
     }
 
-    // Replace with your AI provider endpoint
-    const modelName = "models/gemini-2.0-flash"; // Example model
-    const url = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateText?key=${process.env.GEMINI_API_KEY}`;
+    let corrected = "No correction generated.";
+    if(aiResult?.text) corrected = aiResult.text;
+    else if(aiResult?.candidates?.[0]?.content?.[0]?.text) corrected = aiResult.candidates[0].content[0].text;
+    else if(aiResult?.output?.[0]?.content?.[0]?.text) corrected = aiResult.output[0].content[0].text;
+    else if(typeof aiResult==="string") corrected = aiResult;
 
-    const payload = {
-      input: [
-        {
-          role: "user",
-          content: `Correct and enhance the grammar, spelling, and style of the following text:\n\n${text}`
-        }
-      ]
-    };
-
-    const response = await axios.post(url, payload, {
-      headers: { "Content-Type": "application/json" },
-    });
-
-    // Extract AI output safely
-    const correctedText = response.data?.candidates?.[0]?.content?.[0]?.text || "No corrections generated.";
-
-    return res.json({ correctedText });
-
-  } catch (err) {
-    console.error("Grammar Generator Error:", err.response?.data || err);
-    const message = err.response?.data?.error?.message || "AI Grammar & Proofreading failed.";
-    return res.status(500).json({ error: message });
+    return res.json({ corrected });
+  } catch(err){
+    console.error("Grammar AI error:", err);
+    return res.status(500).json({ error: err.message || "AI service failed." });
   }
 };

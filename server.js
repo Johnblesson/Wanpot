@@ -25,9 +25,11 @@ import brainstormRoute from "./server/routes/brainstormRoutes.js"
 import sermonRoutes from "./server/routes/sermonRoutes.js";
 import pdfRoute from "./server/routes/pdf.js";
 import passwordVaultRoutes from "./server/routes/passwordVaultRoutes.js";
-
+import researchRoutes from "./server/routes/researchRoutes.js";
+import coverLetterRoutes from "./server/routes/coverLetterRoutes.js"
+import storyRoutes from "./server/routes/storyRoutes.js"
 import { checkSubscriptionStatus } from './server/middlewares/checkSubscription.js'
-import { redisSession } from "./server/database/redis.js"
+// import { redisSession } from "./server/database/redis.js"
 import http from "http";
 import compression from "compression";
 import { Server } from "socket.io";
@@ -77,22 +79,22 @@ app.get('/favicon.svg', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/favicon.svg'));
 });
 
-app.use(redisSession);
+// app.use(redisSession);
 
 // Session middleware
-// app.use(
-//   session({
-//     secret: process.env.SESSION_SECRET,
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-//       httpOnly: true,                  // prevents JS access
-//       secure: process.env.SESSION_COOKIE_SECURE === 'true', // dynamic, // true on https //false on http
-//       sameSite: 'lax',                 // allows cross-site but safer
-//     },
-//   })
-// );
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      httpOnly: true,                  // prevents JS access
+      secure: process.env.SESSION_COOKIE_SECURE === 'true', // dynamic, // true on https //false on http
+      sameSite: 'lax',                 // allows cross-site but safer
+    },
+  })
+);
 
 // Passport middleware
 app.use(passport.initialize());
@@ -115,7 +117,10 @@ app.use('/ai/brainstorm', brainstormRoute)
 app.use(pdfRoute)
 app.use(sermonRoutes);
 app.use("/vault", passwordVaultRoutes);
-
+// Mount AI Research Assistant feature
+app.use("/ai/research", researchRoutes);
+app.use("/ai/cover-letter-generator", coverLetterRoutes)
+app.use('/ai/story-writer', storyRoutes)
 app.use(checkSubscriptionStatus);
 
 // Set up the server to listen on port 5000

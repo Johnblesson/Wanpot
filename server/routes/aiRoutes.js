@@ -1,8 +1,7 @@
 import express from 'express';
 import { renderAIPage, generateAIResponse, deleteChatMessage, clearAllChat, renderResumeBuilder, enhanceResume, getJournal, postJournal } from '../controllers/aiController.js';
 import { getCodeExplainerPage, runCodeExplainer } from '../controllers/codeExplainerController.js'
-import { generateCoverLetter, renderCoverLetter } from "../controllers/coverLetterController.js";
-import { getGrammarPage, generateGrammar } from "../controllers/grammarController.js";
+import { getGrammarPage, runGrammarAI } from "../controllers/grammarController.js";
 import ensureAuthenticated from '../middlewares/auth.js';
 
 const router = express.Router();
@@ -22,15 +21,8 @@ router.get("/code-explainer", ensureAuthenticated, getCodeExplainerPage);
 // Run code explainer
 router.post("/code-explainer/run", ensureAuthenticated, runCodeExplainer);
 
-router.post("/cover-letter/run", ensureAuthenticated, generateCoverLetter);
-
-router.get("/cover-letter-generator", ensureAuthenticated, renderCoverLetter)
-
-// GET page
 router.get("/grammar", ensureAuthenticated, getGrammarPage);
-
-// POST grammar check
-router.post("/grammar/run", ensureAuthenticated, generateGrammar);
+router.post("/grammar/run", ensureAuthenticated, runGrammarAI);
 
 router.get("/personal-journal", ensureAuthenticated, getJournal);
 router.post("/personal-journal/analyze", ensureAuthenticated, postJournal);

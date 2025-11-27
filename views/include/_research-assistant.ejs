@@ -1,0 +1,170 @@
+
+  <style>
+
+    main { flex:1; width:90%; max-width:900px; margin:1rem auto; }
+    .ai-title {
+      display: flex;
+      align-items: center;      /* Vertically center icon and text */
+      justify-content: center;  /* Horizontally center the whole block */
+      gap: 10px;                /* Space between icon and text */
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #38bdf8;
+      margin-bottom: 1rem;
+    }
+    .ai-title i {
+      font-size: 1.8rem;       /* Adjust icon size */
+    }
+
+    #textInput { width:100%; padding:0.8rem; border-radius:8px; border:none; background: rgba(0,0,0,0.25); font-size:1rem; outline:none;}
+    #generateBtn { margin-top:0.8rem; padding:0.7rem 1.2rem; background:#3b82f6; border:none; color:#fff; border-radius:8px; cursor:pointer; transition:0.2s; }
+    #generateBtn:hover { background:#06b6d4;}
+    #loader { display:none; margin-top:1rem; text-align:center; }
+    #resultWrap { display:none; margin-top:1rem; background: rgba(255,255,255,0.05); padding:1rem; border-radius:12px; }
+    #result { white-space: pre-wrap; line-height:1.5; }
+    .btn-group { margin-top:0.5rem; display:flex; gap:0.5rem; }
+    .btn { padding:0.4rem 0.8rem; border:none; border-radius:6px; cursor:pointer; transition:0.2s; }
+    .copy-btn { background: rgba(59,130,246,0.1); color:#3b82f6; }
+    .copy-btn:hover { background:#3b82f6; color:#fff; }
+    .download-btn { background: rgba(6,182,212,0.1); color:#06b6d4; }
+    .download-btn:hover { background:#06b6d4; color:#fff; }
+    #historyContainer { margin-top:1.5rem; }
+    #historyContainer div { margin-bottom:10px; padding:8px; background: rgba(56,189,248,0.05); border-radius:8px; }
+    footer { text-align:center; padding:1rem; background:#0f172a; color:#64748b; font-size:0.9rem; }
+    .clear-btn {
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .clear-btn:hover {
+    background: #dc2626;
+  }
+
+
+  </style>
+
+
+
+<main>
+ <div class="ai-title"><i class="fas fa-search"></i> AI Research Assistant</div>
+    <p style="color:#cbd5e1; margin-bottom:12px">
+     Paste your research paper, article, or notes below, and get an instant summarized insight.
+    </p>
+
+  <textarea id="textInput" rows="8" placeholder="Paste your research content here..."></textarea>
+  <button id="generateBtn">Generate Summary</button>
+
+  <div id="loader">⏳ Generating summary...</div>
+
+  <div id="resultWrap">
+    <div id="result"></div>
+    <div class="btn-group">
+      <button class="btn copy-btn" id="copyBtn"><i class="fas fa-copy"></i> Copy</button>
+      <button class="btn download-btn" id="downloadBtn"><i class="fas fa-download"></i> Download</button>
+    </div>
+  </div>
+
+  <h3 style="margin-top:2rem;">History</h3>
+  <div id="historyContainer"></div>
+  <button class="clear-btn" id="clearHistoryBtn"><i class="fas fa-trash"></i> Clear History</button>
+</main>
+
+
+<script>
+  const textInput = document.getElementById("textInput");
+  const generateBtn = document.getElementById("generateBtn");
+  const loader = document.getElementById("loader");
+  const resultWrap = document.getElementById("resultWrap");
+  const resultEl = document.getElementById("result");
+  const copyBtn = document.getElementById("copyBtn");
+  const downloadBtn = document.getElementById("downloadBtn");
+  const historyContainer = document.getElementById("historyContainer");
+
+  // Render history from localStorage
+  function renderHistory() {
+    const history = JSON.parse(localStorage.getItem('researchHistory') || '[]');
+    historyContainer.innerHTML = '';
+    if(history.length===0){ historyContainer.innerHTML='<p style="color:#94a3b8;">No history yet. Start summarizing!</p>'; return; }
+    history.forEach(entry=>{
+      const div=document.createElement('div');
+      div.innerHTML=`<strong>Input:</strong> ${entry.input}<br><strong>Summary:</strong> ${entry.summary}<br><small style="color:#94a3b8;">${new Date(entry.timestamp).toLocaleString()}</small>`;
+      historyContainer.appendChild(div);
+    });
+  }
+
+  // Save to localStorage
+  function saveToLocalHistory(input, summary){
+    const history = JSON.parse(localStorage.getItem('researchHistory') || '[]');
+    history.unshift({ input, summary, timestamp: new Date().toISOString() });
+    localStorage.setItem('researchHistory', JSON.stringify(history));
+    renderHistory();
+  }
+
+  renderHistory();
+
+const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+
+clearHistoryBtn.addEventListener('click', () => {
+  if(confirm("Are you sure you want to clear all history?")) {
+    localStorage.removeItem('researchHistory');
+    renderHistory();
+  }
+});
+
+  // Generate summary
+  generateBtn.addEventListener("click", async () => {
+    const text = textInput.value.trim();
+    if(!text){ alert("Please enter some text."); return; }
+
+    loader.style.display="block";
+    resultWrap.style.display="none";
+    resultEl.textContent="";
+
+    try {
+      const res = await fetch("/ai/research/run", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ text })
+      });
+      const data = await res.json();
+      loader.style.display="none";
+      if(data.error){ alert("Error: "+data.error); return; }
+
+      resultEl.textContent = data.summary || "No summary generated.";
+      resultWrap.style.display="block";
+      saveToLocalHistory(text, data.summary);
+
+      resultWrap.scrollIntoView({ behavior:"smooth", block:"center" });
+    } catch(err){
+      loader.style.display="none";
+      alert("Network error. Try again.");
+      console.error(err);
+    }
+  });
+
+  // Copy button
+  copyBtn.addEventListener("click", () => {
+    navigator.clipboard.writeText(resultEl.innerText).then(()=>{
+      copyBtn.innerText="Copied!";
+      setTimeout(()=>copyBtn.innerText="Copy",1400);
+    });
+  });
+
+  // Download button
+  downloadBtn.addEventListener("click", () => {
+    const blob = new Blob([resultEl.innerText], { type:"text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href=url;
+    a.download=`ResearchSummary_${Date.now()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+</script>
+

@@ -1,0 +1,153 @@
+
+  <style>
+
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: auto;
+      margin-top: 75px;
+    }
+
+    .mh-form, .mh-history {
+      flex: 1;
+      min-width: 300px;
+      background: rgba(255,255,255,0.05);
+      padding: 1.8rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #38bdf8;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      resize: vertical;
+    }
+
+    button {
+      background: linear-gradient(90deg,#3b82f6,#06b6d4);
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+      margin-bottom: 0.5rem;
+      margin-right: 0.5rem;
+    }
+
+    button:hover { transform: scale(1.05); }
+
+    .history-item {
+      background: rgba(255,255,255,0.05);
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      border-radius: 8px;
+    }
+
+    .history-item .prompt {
+      font-weight: 600;
+      color: #f59e0b;
+    }
+
+    .history-item .response {
+      margin-top: 0.3rem;
+      white-space: pre-line;
+    }
+
+    .history-item .date {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-top: 0.2rem;
+    }
+
+
+
+    @media(max-width:1024px){ main{flex-direction:column;} }
+  </style>
+
+
+<main>
+  <!-- Mental Health Buddy Form -->
+  <div class="mh-form">
+    <h2>AI Mental Health Buddy</h2>
+    <textarea id="userPrompt" placeholder="Type your thoughts, stress, or questions here..."></textarea>
+    <button onclick="sendPrompt()"><i class="fas fa-paper-plane"></i> Send</button>
+    <button onclick="clearHistory()"><i class="fas fa-trash"></i> Clear History</button>
+  </div>
+
+  <!-- Conversation History -->
+  <div class="mh-history" id="history">
+    <% history.forEach(h => { %>
+      <div class="history-item">
+        <div class="prompt"><%= h.prompt %></div>
+        <div class="response"><%= h.response %></div>
+        <div class="date"><%= new Date(h.createdAt).toLocaleString() %></div>
+      </div>
+    <% }) %>
+  </div>
+</main>
+
+
+<script>
+  async function sendPrompt() {
+    const prompt = document.getElementById('userPrompt').value.trim();
+    if(!prompt) return alert("Please type something!");
+    
+    const res = await fetch('/ai/mental-health/prompt', {
+      method: 'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ prompt })
+    });
+
+    const data = await res.json();
+    if(data.response){
+      updateHistory(data.history);
+      document.getElementById('userPrompt').value = '';
+    } else {
+      alert("Error: " + (data.error || "Something went wrong."));
+    }
+  }
+
+  function updateHistory(history){
+    const historyDiv = document.getElementById('history');
+    historyDiv.innerHTML = "";
+    history.forEach(h=>{
+      const div = document.createElement('div');
+      div.className = 'history-item';
+      div.innerHTML = `<div class="prompt">${h.prompt}</div>
+                       <div class="response">${h.response}</div>
+                       <div class="date">${new Date(h.createdAt).toLocaleString()}</div>`;
+      historyDiv.appendChild(div);
+    });
+  }
+
+  async function clearHistory() {
+    if(!confirm("Are you sure you want to clear your history?")) return;
+
+    const res = await fetch('/ai/mental-health/clear', { method: 'POST' });
+    if(res.ok){
+      document.getElementById('history').innerHTML = '';
+    } else {
+      alert("Failed to clear history.");
+    }
+  }
+</script>
+
+

@@ -28,6 +28,7 @@ import passwordVaultRoutes from "./server/routes/passwordVaultRoutes.js";
 import researchRoutes from "./server/routes/researchRoutes.js";
 import coverLetterRoutes from "./server/routes/coverLetterRoutes.js"
 import storyRoutes from "./server/routes/storyRoutes.js"
+import mentalHealthRoutes from "./server/routes/mentalHealthRoutes.js"
 import { checkSubscriptionStatus } from './server/middlewares/checkSubscription.js'
 // import { redisSession } from "./server/database/redis.js"
 import http from "http";
@@ -121,6 +122,7 @@ app.use("/vault", passwordVaultRoutes);
 app.use("/ai/research", researchRoutes);
 app.use("/ai/cover-letter-generator", coverLetterRoutes)
 app.use('/ai/story-writer', storyRoutes)
+app.use('/ai/mental-health',mentalHealthRoutes)
 app.use(checkSubscriptionStatus);
 
 // Set up the server to listen on port 5000

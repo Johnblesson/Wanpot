@@ -23,8 +23,8 @@
     <p>Login to your unified workspace</p>
 
     <!-- SUCCESS MESSAGE (after signup) -->
-    <% if (successMessage) { %>
-      <div class="success-message"><%= successMessage %></div>
+    <% if (typeof successMessage !== "undefined" && successMessage) { %>
+       <div class="success-message"><%= successMessage %></div>
     <% } %>
 
     <!-- ERROR MESSAGES -->
@@ -41,7 +41,7 @@
           type="text" 
           name="username" 
           placeholder="Username"
-          value="<%= autoFill ? autoFill.username : '' %>"
+          value="<%= typeof autoFill !== 'undefined' && autoFill ? autoFill.username : '' %>"
           required
         >
       </div>
@@ -52,7 +52,7 @@
           name="password" 
           id="password" 
           placeholder="Password"
-          value="<%= autoFill ? autoFill.password : '' %>"
+          value="<%= typeof autoFill !== 'undefined' && autoFill ? autoFill.password : '' %>"
           required
         >
         <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>

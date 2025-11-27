@@ -286,7 +286,13 @@ export const getLoginPage = (req, res) => {
     req.session.justSignedUp = null;
   }
 
-  res.render("login", { errorMessages, autoFill, successMessage });
+  // res.render("login", { errorMessages, autoFill, successMessage });
+  res.render("login", { 
+  errorMessages: errorMessages || [], 
+  autoFill: autoFill || null, 
+  successMessage: successMessage || null 
+});
+
 };
 
 

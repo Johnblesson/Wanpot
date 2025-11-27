@@ -1,0 +1,184 @@
+<style>
+  .hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 60vh;
+    background: radial-gradient(circle at 30% 50%, rgba(59,130,246,0.3), transparent 70%),
+                radial-gradient(circle at 70% 60%, rgba(6,182,212,0.3), transparent 70%);
+    padding: 2rem 1rem;
+    margin-top: 70px;
+  }
+
+  .hero h1 { font-size: 2.4rem; max-width: 700px; margin-bottom: 1rem; line-height: 1.3; }
+  .hero p { color: #cbd5e1; max-width: 650px; margin-bottom: 2rem; font-size: 1.1rem; }
+
+  .converter-container {
+    max-width: 650px;
+    margin: 4rem auto;
+    padding: 2rem 1.2rem;
+    background: rgba(255,255,255,0.05);
+    border-radius: 18px;
+    text-align: center;
+    border: 1px solid rgba(59,130,246,0.3);
+  }
+
+  .converter-container h1 {
+    margin-bottom: 1.5rem; 
+    background: linear-gradient(90deg,#38bdf8,#06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  select, input {
+    width: 100%;
+    padding: 0.9rem;
+    margin: 0.6rem 0;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255,255,255,0.08);
+    color:#f8fafc;
+    font-size: 1rem;
+  }
+
+  button {
+    background: linear-gradient(90deg, #3b82f6, #06b6d4);
+    border: none;
+    padding: 0.9rem 1.6rem;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: 0.2s;
+  }
+
+  button:hover { transform: scale(1.05); }
+
+  .result {
+    margin-top: 1.5rem;
+    font-size: 1.3rem;
+    color:#38bdf8;
+    font-weight: 600;
+  }
+</style>
+
+
+<section class="hero">
+  <h1>Convert Units Instantly with <span style="color:#38bdf8;">Wanpot</span></h1>
+  <p>Quickly convert length, weight, temperature, currency, speed and more — all in one place.</p>
+</section>
+
+<section class="converter-container">
+  <h1><i class="fas fa-scale-balanced"></i> Advanced Unit Converter</h1>
+
+  <input type="number" id="valueInput" placeholder="Enter value" />
+
+  <!-- NEW: CATEGORY SELECT -->
+  <select id="categorySelect">
+    <option value="length">Length</option>
+    <option value="weight">Weight</option>
+    <option value="temperature">Temperature</option>
+    <option value="speed">Speed</option>
+    <option value="time">Time</option>
+    <option value="currency">Currency</option>
+  </select>
+
+  <select id="unitFrom"></select>
+  <select id="unitTo"></select>
+
+  <button id="convertBtn">Convert</button>
+
+  <div class="result" id="result">Result will appear here</div>
+</section>
+
+
+<script>
+  const categorySelect = document.getElementById("categorySelect");
+  const unitFrom = document.getElementById("unitFrom");
+  const unitTo = document.getElementById("unitTo");
+  const convertBtn = document.getElementById("convertBtn");
+  const valueInput = document.getElementById("valueInput");
+  const resultDiv = document.getElementById("result");
+
+  // ALL CONVERSION DATA
+  const conversions = {
+    length: {
+      meter: 1, kilometer: 0.001, mile: 0.000621371, foot: 3.28084
+    },
+    weight: {
+      gram: 1000, kilogram: 1, pound: 2.20462, ounce: 35.274
+    },
+    speed: {
+      "m/s": 1, "km/h": 3.6, "mph": 2.23694
+    },
+    time: {
+      second: 3600, minute: 60, hour: 1
+    },
+    currency: {
+      // sample static rates (can integrate API later)
+      usd: 1, eur: 0.91, gbp: 0.78, sll: 22500
+    }
+  };
+
+  const temperatureUnits = ["celsius", "fahrenheit", "kelvin"];
+
+  // AUTO POPULATE UNITS BASED ON CATEGORY
+  function loadUnits() {
+    const category = categorySelect.value;
+    unitFrom.innerHTML = "";
+    unitTo.innerHTML = "";
+
+    const units = category === "temperature"
+      ? temperatureUnits
+      : Object.keys(conversions[category]);
+
+    units.forEach(u => {
+      unitFrom.innerHTML += `<option value="${u}">${u}</option>`;
+      unitTo.innerHTML += `<option value="${u}">${u}</option>`;
+    });
+  }
+
+  loadUnits();
+  categorySelect.addEventListener("change", loadUnits);
+
+  // TEMPERATURE FORMULAS
+  function convertTemperature(value, from, to) {
+    if (from === to) return value;
+
+    if (from === "celsius" && to === "fahrenheit") return value * 9/5 + 32;
+    if (from === "fahrenheit" && to === "celsius") return (value - 32) * 5/9;
+    if (from === "celsius" && to === "kelvin") return value + 273.15;
+    if (from === "kelvin" && to === "celsius") return value - 273.15;
+    if (from === "fahrenheit" && to === "kelvin") return (value - 32) * 5/9 + 273.15;
+    if (from === "kelvin" && to === "fahrenheit") return (value - 273.15) * 9/5 + 32;
+
+    return value;
+  }
+
+  // MAIN CONVERTER
+  convertBtn.addEventListener("click", () => {
+    const value = parseFloat(valueInput.value);
+    if (isNaN(value)) {
+      resultDiv.textContent = "Enter a valid number.";
+      return;
+    }
+
+    const category = categorySelect.value;
+    const from = unitFrom.value;
+    const to = unitTo.value;
+
+    let result;
+
+    if (category === "temperature") {
+      result = convertTemperature(value, from, to);
+    } else {
+      const rates = conversions[category];
+      result = (value / rates[from]) * rates[to];
+    }
+
+    resultDiv.textContent = `${value} ${from} = ${result.toFixed(4)} ${to}`;
+  });
+</script>

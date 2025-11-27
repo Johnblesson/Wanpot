@@ -2,13 +2,11 @@
 /* ===============================
    General Page Styling
 ================================ */
-
 main h1 {
   text-align: center;
   font-size: 2rem;
   font-weight: 700;
-  /* margin-bottom: 2rem; */
-  margin-top: 95px;
+  margin-top: 75px;
   background: linear-gradient(90deg,#3b82f6,#06b6d4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -27,7 +25,6 @@ main h1 {
   box-shadow: 0 10px 40px rgba(6,182,212,0.2);
   border: 1px solid rgba(59,130,246,0.3);
   backdrop-filter: blur(6px);
-  transition: all 0.3s ease;
   text-align: center;
 }
 
@@ -43,13 +40,12 @@ main h1 {
   height: 90px;
   font-size: 2rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 0.3s ease;
   box-shadow: 0 5px 20px rgba(6,182,212,0.3);
 }
 
 #recordBtn:hover {
   transform: scale(1.05);
-  box-shadow: 0 8px 25px rgba(6,182,212,0.5);
 }
 
 #recordBtn.recording {
@@ -79,7 +75,6 @@ main h1 {
   white-space: pre-wrap;
   border: 1px solid rgba(59,130,246,0.3);
   box-shadow: inset 0 2px 6px rgba(6,182,212,0.1);
-  transition: all 0.3s ease;
 }
 
 /* ===============================
@@ -101,126 +96,134 @@ button.action {
   border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  transition: 0.3s;
 }
 
 button.action:hover {
   background: linear-gradient(90deg, #3b82f6, #06b6d4);
   transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(6,182,212,0.4);
-}
-
-/* ===============================
-   Footer
-================================ */
-footer {
-  text-align: center;
-  padding: 1rem;
-  background: #0f172a;
-  color: #64748b;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  font-size: 0.9rem;
 }
 
 /* ===============================
    Responsive
 ================================ */
 @media (max-width: 768px) {
-  .recorder-container {
-    border-radius: 16px;
-    padding: 1.5rem;
-  }
-  .controls {
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-  button.action {
-    width: 100%;
-    justify-content: center;
-  }
+  .recorder-container { padding: 1.5rem; }
+  .controls { flex-direction: column; width: 100%; }
+  button.action { width: 100%; }
 }
 </style>
+<main>
+  <h1>Voice-to-Text Recorder</h1>
 
+  <div class="recorder-container">
+    <button id="recordBtn"><i class="fas fa-microphone"></i></button>
+    <div id="transcript">🎙️ Start speaking to record your note...</div>
 
-  <main>
-    <h1>Voice-to-Text Recorder</h1>
-
-    <div class="recorder-container">
-      <button id="recordBtn"><i class="fas fa-microphone"></i></button>
-      <div id="transcript">🎙️ Start speaking to record your note...</div>
-
-      <div class="controls">
-        <button id="copyBtn" class="action"><i class="fas fa-copy"></i> Copy</button>
-        <button id="downloadBtn" class="action"><i class="fas fa-download"></i> Download</button>
-        <button id="clearBtn" class="action"><i class="fas fa-trash"></i> Clear</button>
-      </div>
+    <div class="controls">
+      <button id="copyBtn" class="action"><i class="fas fa-copy"></i> Copy</button>
+      <button id="downloadBtn" class="action"><i class="fas fa-download"></i> Download</button>
+      <button id="clearBtn" class="action"><i class="fas fa-trash"></i> Clear</button>
     </div>
-  </main>
+  </div>
+</main>
 
+<script>
+  const recordBtn = document.getElementById('recordBtn');
+  const transcriptEl = document.getElementById('transcript');
+  const copyBtn = document.getElementById('copyBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const clearBtn = document.getElementById('clearBtn');
 
-  <script>
-    const recordBtn = document.getElementById('recordBtn');
-    const transcriptEl = document.getElementById('transcript');
-    const copyBtn = document.getElementById('copyBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const clearBtn = document.getElementById('clearBtn');
+  let recognition;
+  let isRecording = false;
+  let finalTranscript = "";
 
-    let recognition;
-    let isRecording = false;
+  // Initialize speech recognition safely
+  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+  } else {
+    alert("Sorry, your browser doesn't support Speech Recognition. Please use Chrome or Edge.");
+  }
 
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognition = new SpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = 'en-US';
+  // ▶️ Start / Stop Recording
+  recordBtn.addEventListener('click', () => {
+    if (!recognition) return;
+
+    if (isRecording) {
+      recognition.stop();
+      isRecording = false;
+      recordBtn.classList.remove('recording');
+      recordBtn.innerHTML = '<i class="fas fa-microphone"></i>';
     } else {
-      alert("Sorry, your browser doesn't support Speech Recognition. Try Chrome or Edge.");
+      finalTranscript = "";   // reset text before a new session
+      transcriptEl.textContent = "Listening...";
+      recognition.start();
+      isRecording = true;
+      recordBtn.classList.add('recording');
+      recordBtn.innerHTML = '<i class="fas fa-stop"></i>';
+    }
+  });
+
+  // 🎤 Handle recognition output safely
+  recognition.onresult = (event) => {
+    let interim = "";
+
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const transcript = event.results[i][0].transcript;
+
+      if (event.results[i].isFinal) {
+        finalTranscript += transcript + " ";
+      } else {
+        interim += transcript;
+      }
     }
 
-    recordBtn.addEventListener('click', () => {
-      if (!recognition) return;
+    transcriptEl.textContent = finalTranscript + interim;
+  };
 
-      if (isRecording) {
-        recognition.stop();
-        recordBtn.classList.remove('recording');
-        recordBtn.innerHTML = '<i class="fas fa-microphone"></i>';
-        isRecording = false;
-      } else {
-        recognition.start();
-        recordBtn.classList.add('recording');
-        recordBtn.innerHTML = '<i class="fas fa-stop"></i>';
-        isRecording = true;
-      }
-    });
+  // 🛑 Prevent auto-stop on long silence
+  recognition.onend = () => {
+    if (isRecording) {
+      recognition.start(); // restart automatically
+    }
+  };
 
-    recognition.onresult = (event) => {
-      let text = '';
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        text += event.results[i][0].transcript;
-      }
-      transcriptEl.textContent = text.trim();
-    };
+  // ❌ Error handler (prevents crashes)
+  recognition.onerror = (e) => {
+    console.error("Speech Recognition Error:", e);
+  };
 
-    copyBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText(transcriptEl.textContent);
-      alert('Copied to clipboard!');
-    });
+  // 📋 Copy to clipboard
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(transcriptEl.textContent);
+    alert("Copied to clipboard!");
+  });
 
-    downloadBtn.addEventListener('click', () => {
-      const blob = new Blob([transcriptEl.textContent], { type: 'text/plain' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'transcript.txt';
-      link.click();
-    });
+  // ⬇️ Download transcript
+  downloadBtn.addEventListener('click', () => {
+    const text = transcriptEl.textContent.trim();
+    if (!text) return;
 
-    clearBtn.addEventListener('click', () => {
-      transcriptEl.textContent = '🎙️ Start speaking to record your note...';
-    });
-  </script>
+    const blob = new Blob([text], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "transcript.txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
 
+  // 🗑️ Clear transcript
+  clearBtn.addEventListener('click', () => {
+    finalTranscript = "";
+    transcriptEl.textContent = "🎙️ Start speaking to record your note...";
+  });
+</script>

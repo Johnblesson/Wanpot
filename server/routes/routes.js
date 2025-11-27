@@ -8,7 +8,7 @@ import {
         scanEquation,
         getTranslatorPage, 
         translateText,
-        renderVoiceRecorder
+        renderVoiceRecorder,
     } from "../controllers/controllers.js"
     import { redirectIfLoggedIn } from '../middlewares/redirectIfLoggedIn.js';
     
@@ -55,11 +55,6 @@ router.get("/quiz", ensureAuthenticated, (req, res) => {
 //     res.render("features/typing-game", { user });
 // });
 
-// password-generator route
-router.get("/password-generator", ensureAuthenticated, (req, res) => {
-    const user = req.isAuthenticated() ? req.user : null;
-    res.render("features/password-generator", { user });
-});
 
 // Qrcode generator route
 router.get("/qrcode-generator", ensureAuthenticated, (req, res) => {

@@ -254,8 +254,7 @@ export const activeUserSessions = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-
+  
 
 // Render the login page
 export const getLoginPage = (req, res) => {

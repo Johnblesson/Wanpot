@@ -127,7 +127,7 @@ app.use(sermonRoutes);
 app.use("/vault", passwordVaultRoutes);
 // Mount AI Research Assistant feature
 app.use("/ai/research", researchRoutes);
-app.use("/ai/cover-letter-generator", coverLetterRoutes)
+app.use("/ai/cover-letter", coverLetterRoutes)
 app.use('/ai/story-writer', storyRoutes)
 app.use('/ai/mental-health',mentalHealthRoutes)
 app.use("/ai/resume-analyzer", resumeAnalyzerRoutes);

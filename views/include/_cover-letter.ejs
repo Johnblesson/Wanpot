@@ -1,10 +1,7 @@
 <style>
-
-
   /* Container & Header */
   #coverLetterContainer {
-    margin: 20px auto 40px;
-    margin-top: 115px;
+    margin: 115px auto 40px;
     width: 93%;
     max-width: 900px;
     background: rgba(15,23,42,0.85);
@@ -42,7 +39,7 @@
 
   /* Textarea */
   .prompt-input {
-    width: 96%;
+    width: 100%;
     min-height: 160px;
     padding: 1rem;
     border-radius: 12px;
@@ -102,8 +99,12 @@
     border-radius: 14px;
     border: 1px solid rgba(59,130,246,0.3);
     padding: 1rem;
-    position: relative;
+    margin-top: 1rem;
     transition: all 0.4s ease;
+  }
+  .response-box h3 {
+    margin-bottom: 0.8rem;
+    color: #38bdf8;
   }
   .response-box pre {
     white-space: pre-wrap;
@@ -114,24 +115,26 @@
     background: rgba(30,41,59,0.9);
     padding: 1rem;
     border-radius: 10px;
-    margin: 0;
+    margin: 0 0 1rem 0;
   }
 
-  /* Copy / Download Buttons */
+  /* Controls */
+  .controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
   .copy-btn, .download-btn {
     padding: 8px 15px;
     border-radius: 6px;
     border: none;
     cursor: pointer;
     font-weight: 600;
-    margin-top: 25px;
     transition: 0.3s;
   }
   .copy-btn {
     background: #38bdf8;
     color: #000;
-    float: right;
-    margin-left: 10px;
   }
   .copy-btn:hover {
     background: #0ea5e9;
@@ -140,24 +143,23 @@
   .download-btn {
     background: #06b6d4;
     color: #fff;
-    float: right;
   }
   .download-btn:hover {
     background: #0b7285;
   }
 
-  /* Mobile */
   @media (max-width: 768px) {
+    .controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
     .copy-btn, .download-btn {
-      float: none;
-      display: inline-block;
-      width: 48%;
-      margin-top: 10px;
+      width: 100%;
     }
   }
 </style>
 
-<div class="code-helper-container" id="coverLetterContainer">
+<div class="container" id="coverLetterContainer">
   <div class="ai-title">
     <i class="fas fa-pen-nib"></i> AI Cover Letter Generator
   </div>
@@ -166,16 +168,23 @@
     Input the job description or role you are applying for, and Wanpot AI will generate a professional, tailored cover letter ready to use.
   </p>
 
-  <textarea id="jobDescriptionInput" class="prompt-input" placeholder="Paste job description here..."></textarea>
+  <% if (error) { %>
+    <div style="color:red; margin-bottom:12px;"><%= error %></div>
+  <% } %>
+
+  <textarea id="jobDescriptionInput" class="prompt-input" placeholder="Paste job description here..."><%= jobDescription || "" %></textarea>
 
   <button class="run-btn" id="generateCoverLetterBtn">Generate Cover Letter</button>
 
   <div class="loader" id="coverLetterLoader">⏳ AI is crafting your cover letter...</div>
 
   <div id="coverLetterResponse" class="response-box">
-    <pre><code id="coverLetterOutput"></code></pre>
-    <button class="copy-btn" id="copyCoverLetterBtn">Copy</button>
-    <button class="download-btn" id="downloadCoverLetterBtn">Download .txt</button>
+    <h3>Cover Letter:</h3>
+    <pre id="coverLetterOutput"><%= coverLetter || "" %></pre>
+    <div class="controls">
+      <button class="copy-btn" id="copyCoverLetterBtn">Copy</button>
+      <button class="download-btn" id="downloadCoverLetterBtn">Download .txt</button>
+    </div>
   </div>
 </div>
 
@@ -186,9 +195,11 @@
   const responseBox = document.getElementById("coverLetterResponse");
   const outputBox = document.getElementById("coverLetterOutput");
 
+  responseBox.style.display = "<%= coverLetter ? 'block' : 'none' %>";
+
   generateBtn.addEventListener("click", async () => {
-    const jobDesc = jobInput.value.trim();
-    if (!jobDesc) return alert("Please provide a job description.");
+    const jobDescription = jobInput.value.trim();
+    if (!jobDescription) return alert("Please provide a job description.");
 
     loader.style.display = "block";
     responseBox.style.display = "none";
@@ -197,14 +208,16 @@
       const res = await fetch("/ai/cover-letter/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jobDesc })
+        body: JSON.stringify({ jobDescription })
       });
 
       const data = await res.json();
       loader.style.display = "none";
       responseBox.style.display = "block";
       outputBox.innerText = data.error ? "❌ " + data.error : data.coverLetter;
-    } catch {
+
+    } catch (err) {
+      console.error(err);
       loader.style.display = "none";
       responseBox.style.display = "block";
       outputBox.innerText = "❌ Network or server error.";
@@ -212,17 +225,19 @@
   });
 
   document.getElementById("copyCoverLetterBtn").addEventListener("click", () => {
-    navigator.clipboard.writeText(outputBox.innerText);
-    alert("Copied to clipboard!");
+    if (outputBox.innerText.trim()) {
+      navigator.clipboard.writeText(outputBox.innerText);
+      alert("Copied to clipboard!");
+    }
   });
 
   document.getElementById("downloadCoverLetterBtn").addEventListener("click", () => {
+    if (!outputBox.innerText.trim()) return;
     const blob = new Blob([outputBox.innerText], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url;
+    a.href = URL.createObjectURL(blob);
     a.download = "cover-letter.txt";
     a.click();
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(a.href);
   });
 </script>

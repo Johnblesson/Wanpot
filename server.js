@@ -29,6 +29,11 @@ import researchRoutes from "./server/routes/researchRoutes.js";
 import coverLetterRoutes from "./server/routes/coverLetterRoutes.js"
 import storyRoutes from "./server/routes/storyRoutes.js"
 import mentalHealthRoutes from "./server/routes/mentalHealthRoutes.js"
+import resumeAnalyzerRoutes from "./server/routes/resumeAnalyzerRoutes.js"
+import careerCoachRoutes from "./server/routes/careerCoachRoutes.js"
+import emailComposerRoutes from "./server/routes/emailComposerRoutes.js"
+import budgetOptimizerRoutes from "./server/routes/budgetOptimizerRoutes.js"
+
 import { checkSubscriptionStatus } from './server/middlewares/checkSubscription.js'
 // import { redisSession } from "./server/database/redis.js"
 import http from "http";
@@ -123,6 +128,10 @@ app.use("/ai/research", researchRoutes);
 app.use("/ai/cover-letter-generator", coverLetterRoutes)
 app.use('/ai/story-writer', storyRoutes)
 app.use('/ai/mental-health',mentalHealthRoutes)
+app.use("/ai/resume-analyzer", resumeAnalyzerRoutes);
+app.use('/ai/career-coach', careerCoachRoutes )
+app.use('/ai/email-composer', emailComposerRoutes)
+app.use('/ai/budget-optimizer', budgetOptimizerRoutes)
 app.use(checkSubscriptionStatus);
 
 // Set up the server to listen on port 5000

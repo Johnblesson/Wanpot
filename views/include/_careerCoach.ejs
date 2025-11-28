@@ -1,0 +1,136 @@
+<!-- views/features/careerCoach.ejs -->
+<style>
+main {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+  margin-top: 85px;
+}
+
+.cc-form, .cc-history {
+  flex: 1;
+  min-width: 320px;
+  background: rgba(255,255,255,0.05);
+  padding: 1.8rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+h2 { color:#38bdf8; margin-top:0; }
+
+textarea {
+  width:100%;
+  min-height:120px;
+  background: rgba(255,255,255,0.1);
+  border:none;
+  border-radius:10px;
+  color:#fff;
+  padding:1rem;
+  margin-bottom:1rem;
+}
+
+button {
+  background: linear-gradient(90deg,#3b82f6,#06b6d4);
+  border:none;
+  padding:0.9rem 1.6rem;
+  border-radius:8px;
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s;
+  margin-right:0.5rem;
+}
+
+button:hover { transform:scale(1.05); }
+
+.history-item {
+  background:rgba(255,255,255,0.05);
+  padding:1rem;
+  margin-bottom:1rem;
+  border-radius:10px;
+}
+
+.prompt {
+  font-weight:700;
+  color:#f59e0b;
+  margin-bottom:0.4rem;
+}
+
+.response { white-space:pre-line; }
+
+.date {
+  margin-top:0.3rem;
+  font-size:0.8rem;
+  color:#94a3b8;
+}
+</style>
+
+<main>
+  <div class="cc-form">
+    <h2>AI Career Coach</h2>
+
+    <textarea id="careerPrompt" placeholder="Ask for career guidance, skills, roadmap, etc."></textarea>
+
+    <button onclick="sendPrompt()"><i class="fas fa-paper-plane"></i> Ask</button>
+    <button onclick="clearHistory()"><i class="fas fa-trash"></i> Clear History</button>
+  </div>
+
+  <div class="cc-history" id="history">
+    <% history.forEach(h => { %>
+      <div class="history-item">
+        <div class="prompt">You asked:</div>
+        <div class="response"><%= h.prompt %></div>
+        <hr style="border-color:#333">
+        <div class="prompt">AI Coach Response:</div>
+        <div class="response"><%= h.response %></div>
+        <div class="date"><%= new Date(h.createdAt).toLocaleString() %></div>
+      </div>
+    <% }) %>
+  </div>
+</main>
+
+<script>
+async function sendPrompt(){
+  const prompt = document.getElementById("careerPrompt").value.trim();
+  if(!prompt) return alert("Please type a question.");
+
+  const res = await fetch("/ai/career-coach/prompt", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ prompt })
+  });
+
+  const data = await res.json();
+  if(!data.success) return alert("Error: " + data.error);
+
+  updateHistory(data.history);
+  document.getElementById("careerPrompt").value = '';
+}
+
+function updateHistory(history){
+  const hDiv = document.getElementById("history");
+  hDiv.innerHTML = "";
+  history.forEach(h=>{
+    const div = document.createElement("div");
+    div.className = "history-item";
+    div.innerHTML = `
+      <div class="prompt">You asked:</div>
+      <div class="response">${h.prompt}</div>
+      <hr style="border-color:#333">
+      <div class="prompt">AI Coach Response:</div>
+      <div class="response">${h.response}</div>
+      <div class="date">${new Date(h.createdAt).toLocaleString()}</div>
+    `;
+    hDiv.appendChild(div);
+  });
+}
+
+async function clearHistory(){
+  const res = await fetch('/ai/career-coach/clear',{ method:"POST" });
+  if(res.ok) document.getElementById("history").innerHTML = "";
+}
+</script>

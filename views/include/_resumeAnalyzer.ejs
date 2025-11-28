@@ -1,0 +1,183 @@
+<style>
+  main {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: auto;
+    margin-top: 85px;
+  }
+
+  .ra-form, .ra-history {
+    flex: 1;
+    min-width: 320px;
+    background: rgba(255,255,255,0.05);
+    padding: 1.8rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+
+  h2 { color:#38bdf8; margin-top:0; }
+
+  textarea {
+    width:100%;
+    min-height:180px;
+    background: rgba(255,255,255,0.1);
+    border:none;
+    border-radius:10px;
+    color:#fff;
+    padding:1rem;
+    margin-bottom:1rem;
+  }
+
+  button {
+    background: linear-gradient(90deg,#3b82f6,#06b6d4);
+    border:none;
+    padding:0.9rem 1.6rem;
+    border-radius:8px;
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
+    margin-right:0.5rem;
+  }
+
+  button:hover { transform:scale(1.05); }
+
+  .history-item {
+    background:rgba(255,255,255,0.05);
+    padding:1rem;
+    margin-bottom:1rem;
+    border-radius:10px;
+  }
+
+  .prompt {
+    font-weight:700;
+    color:#f59e0b;
+    margin-bottom:0.4rem;
+  }
+
+  .response { white-space:pre-line; }
+
+  .date {
+    margin-top:0.3rem;
+    font-size:0.8rem;
+    color:#94a3b8;
+  }
+
+  .history-buttons {
+    margin-top:0.5rem;
+  }
+
+  .history-buttons button {
+    font-size:0.85rem;
+    padding:0.5rem 1rem;
+  }
+</style>
+
+<main>
+  <div class="ra-form">
+    <h2>AI Resume Analyzer</h2>
+    <p style="color:#94a3b8">
+      Paste your resume text below. AI will analyze formatting, content, clarity, and ATS ranking.
+    </p>
+
+    <textarea id="resumeText" placeholder="Paste resume text here..."></textarea>
+
+    <button onclick="analyzeResume()">
+      <i class="fas fa-search"></i> Analyze Resume
+    </button>
+
+    <button onclick="clearHistory()">
+      <i class="fas fa-trash"></i> Clear History
+    </button>
+  </div>
+
+  <div class="ra-history" id="history">
+    <% history.forEach(h => { %>
+      <div class="history-item">
+        <div class="prompt">Original Resume:</div>
+        <div class="response"><%= h.originalText.substring(0,250) %>...</div>
+
+        <hr style="border-color:#333">
+
+        <div class="prompt">AI Suggestions:</div>
+        <div class="response" id="suggestion-<%= h._id %>"><%= h.aiSuggestions %></div>
+
+        <div class="history-buttons">
+          <button onclick="copyText('<%= h._id %>')"><i class="fas fa-copy"></i> Copy</button>
+          <button onclick="downloadText('<%= h._id %>')"><i class="fas fa-download"></i> Download .txt</button>
+        </div>
+
+        <div class="date"><%= new Date(h.createdAt).toLocaleString() %></div>
+      </div>
+    <% }) %>
+  </div>
+</main>
+
+<script>
+async function analyzeResume() {
+  const text = document.getElementById("resumeText").value.trim();
+  if (!text) return alert("Please paste your resume text.");
+
+  const res = await fetch("/ai/resume-analyzer/analyze", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ resumeText: text })
+  });
+
+  const data = await res.json();
+
+  if (!data.success) return alert("Error: " + data.error);
+
+  updateHistory(data.history);
+}
+
+function updateHistory(history) {
+  const hDiv = document.getElementById("history");
+  hDiv.innerHTML = "";
+
+  history.forEach(h => {
+    const div = document.createElement("div");
+    div.className = "history-item";
+    div.innerHTML = `
+      <div class="prompt">Original Resume:</div>
+      <div class="response">${h.originalText.substring(0,250)}...</div>
+
+      <hr style="border-color:#333">
+
+      <div class="prompt">AI Suggestions:</div>
+      <div class="response" id="suggestion-${h._id}">${h.aiSuggestions}</div>
+
+      <div class="history-buttons">
+        <button onclick="copyText('${h._id}')"><i class="fas fa-copy"></i> Copy</button>
+        <button onclick="downloadText('${h._id}')"><i class="fas fa-download"></i> Download .txt</button>
+      </div>
+
+      <div class="date">${new Date(h.createdAt).toLocaleString()}</div>
+    `;
+    hDiv.appendChild(div);
+  });
+}
+
+function copyText(id){
+  const text = document.getElementById(`suggestion-${id}`).textContent;
+  navigator.clipboard.writeText(text).then(()=> alert("Copied to clipboard!"));
+}
+
+function downloadText(id){
+  const text = document.getElementById(`suggestion-${id}`).textContent;
+  const blob = new Blob([text], { type: "text/plain" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `Wanpot_Resume_Analysis_${new Date().toISOString().split('T')[0]}.txt`;
+  link.click();
+}
+
+async function clearHistory(){
+  const res = await fetch('/ai/resume-analyzer/clear', { method:"POST" });
+  if(res.ok) document.getElementById("history").innerHTML = "";
+}
+</script>

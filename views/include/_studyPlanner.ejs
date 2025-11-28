@@ -1,0 +1,141 @@
+<style>
+  main {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: auto;
+    margin-top: 85px;
+  }
+
+  .sp-form, .sp-history {
+    flex: 1;
+    min-width: 320px;
+    background: rgba(255,255,255,0.05);
+    padding: 1.8rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+
+  h2 { color:#38bdf8; }
+
+  textarea, input {
+    width: 100%;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  button {
+    background: linear-gradient(90deg,#3b82f6,#06b6d4);
+    border:none;
+    padding:0.9rem 1.6rem;
+    border-radius:8px;
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
+    margin-right:0.5rem;
+  }
+  button:hover { transform:scale(1.05); }
+
+  .history-item {
+    background:rgba(255,255,255,0.05);
+    padding:1rem;
+    margin-bottom:1rem;
+    border-radius:10px;
+  }
+
+  .prompt { font-weight:700; color:#f59e0b; margin-bottom:0.4rem; }
+  .response { white-space:pre-line; }
+  .date { color:#94a3b8; font-size:0.8rem; }
+</style>
+
+<main>
+  <div class="sp-form">
+    <h2>AI Study Planner</h2>
+    <p style="color:#94a3b8; margin-bottom:1rem;">
+      Create a personalized, smart weekly study plan tailored to your syllabus and academic goals.
+    </p>
+
+    <input id="subject" placeholder="Subject (e.g., Mathematics, Biology)" />
+    <textarea id="syllabus" placeholder="Paste your syllabus or topic outline"></textarea>
+    <textarea id="goals" placeholder="What are your study goals? (e.g., exam prep, mastery, revision)"></textarea>
+
+    <button onclick="generatePlan()"><i class="fas fa-calendar"></i> Generate Plan</button>
+    <button onclick="clearHistory()"><i class="fas fa-trash"></i> Clear History</button>
+  </div>
+
+  <div class="sp-history" id="history">
+    <% history.forEach(h => { %>
+      <div class="history-item">
+        <div class="prompt">Subject:</div>
+        <div class="response"><%= h.subject %></div>
+
+        <hr style="border-color:#444">
+
+        <div class="prompt">AI Study Plan:</div>
+        <div class="response"><%= h.aiPlan %></div>
+
+        <div class="date"><%= new Date(h.createdAt).toLocaleString() %></div>
+      </div>
+    <% }) %>
+  </div>
+</main>
+
+<script>
+async function generatePlan() {
+  const subject = document.getElementById("subject").value.trim();
+  const syllabus = document.getElementById("syllabus").value.trim();
+  const goals = document.getElementById("goals").value.trim();
+
+  if (!subject || !syllabus || !goals)
+    return alert("Please fill all fields.");
+
+  const res = await fetch("/ai/study-planner/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ subject, syllabus, goals })
+  });
+
+  const data = await res.json();
+
+  if (!data.success) {
+    return alert("Error: " + data.error);
+  }
+
+  updateHistory(data.history);
+}
+
+function updateHistory(history) {
+  const hDiv = document.getElementById("history");
+  hDiv.innerHTML = "";
+
+  history.forEach(h => {
+    const div = document.createElement("div");
+    div.className = "history-item";
+    div.innerHTML = `
+      <div class="prompt">Subject:</div>
+      <div class="response">${h.subject}</div>
+
+      <hr style="border-color:#444">
+
+      <div class="prompt">AI Study Plan:</div>
+      <div class="response">${h.aiPlan}</div>
+
+      <div class="date">${new Date(h.createdAt).toLocaleString()}</div>
+    `;
+    hDiv.appendChild(div);
+  });
+}
+
+async function clearHistory() {
+  const res = await fetch("/ai/study-planner/clear", { method:"POST" });
+  if (res.ok) document.getElementById("history").innerHTML = "";
+}
+</script>

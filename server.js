@@ -34,6 +34,8 @@ import careerCoachRoutes from "./server/routes/careerCoachRoutes.js"
 import emailComposerRoutes from "./server/routes/emailComposerRoutes.js"
 import budgetOptimizerRoutes from "./server/routes/budgetOptimizerRoutes.js"
 import studyPlannerRoutes from "./server/routes/studyPlanRoutes.js"
+import videoScriptRoutes from "./server/routes/videoScriptRoutes.js"
+import meetingSummerizerRoutes from "./server/routes/meetingSummerizerRoutes.js"
 import { checkSubscriptionStatus } from './server/middlewares/checkSubscription.js'
 // import { redisSession } from "./server/database/redis.js"
 import http from "http";
@@ -133,6 +135,10 @@ app.use('/ai/career-coach', careerCoachRoutes )
 app.use('/ai/email-composer', emailComposerRoutes)
 app.use('/ai/budget-optimizer', budgetOptimizerRoutes)
 app.use('/ai/study-planner', studyPlannerRoutes)
+app.use('/ai/script-writer', videoScriptRoutes)
+app.use("/ai/meeting-summarizer", meetingSummerizerRoutes)
+
+
 app.use(checkSubscriptionStatus);
 
 // Set up the server to listen on port 5000

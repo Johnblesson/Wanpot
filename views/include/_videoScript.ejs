@@ -1,0 +1,129 @@
+<style>
+  main.app-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1000px;
+    margin: auto;
+    margin-top: 85px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .tool-header h2 {
+    color: #38bdf8;
+    margin-bottom: 0.3rem;
+  }
+
+  .tool-header p {
+    color: #94a3b8;
+  }
+
+  .tool-form {
+    background: rgba(255,255,255,0.05);
+    padding: 1.8rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .tool-form input {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+  }
+
+  .tool-form button {
+    background: linear-gradient(90deg,#3b82f6,#06b6d4);
+    border:none;
+    padding:0.9rem 1.6rem;
+    border-radius:8px;
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
+    margin-right:0.5rem;
+  }
+
+  .tool-form button:hover { transform:scale(1.05); }
+
+  .tool-output h3 { color:#38bdf8; }
+
+  .result-card {
+    background: rgba(255,255,255,0.05);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    white-space: pre-wrap;
+    font-family: 'Courier New', monospace;
+  }
+
+  .result-card h4 { margin-bottom:0.5rem; color:#f59e0b; }
+  .result-card small { display:block; margin-top:0.5rem; color:#94a3b8; }
+</style>
+
+<main class="app-container">
+  <div class="tool-header">
+    <h2>AI Video Script Writer</h2>
+    <p>Create compelling, platform-ready scripts for any type of video.</p>
+  </div>
+
+  <div class="tool-form">
+    <input id="topic" placeholder="Video Topic" />
+    <input id="style" placeholder="Style (funny, professional, motivational…)" />
+    <input id="duration" placeholder="Duration (e.g., 30 seconds, 1 minute)" />
+
+    <div>
+      <button onclick="generateScript()"><i class="fas fa-magic"></i> Generate Script</button>
+      <button onclick="clearHistory()"><i class="fas fa-trash"></i> Clear History</button>
+    </div>
+  </div>
+
+  <div class="tool-output">
+    <h3>Generated Scripts</h3>
+
+    <% if (history.length === 0) { %>
+      <p>No scripts yet. Generate one!</p>
+    <% } %>
+
+    <% history.forEach(item => { %>
+      <div class="result-card">
+        <h4><%= item.topic %></h4>
+        <pre><%= item.aiScript %></pre>
+        <small><%= item.createdAt.toLocaleString() %></small>
+      </div>
+    <% }) %>
+  </div>
+</main>
+
+<script>
+  async function generateScript() {
+    const topic = document.getElementById("topic").value.trim();
+    const style = document.getElementById("style").value.trim();
+    const duration = document.getElementById("duration").value.trim();
+
+    if (!topic || !style || !duration) return alert("Fill all fields!");
+
+    const res = await fetch("/ai/script-writer/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topic, style, duration })
+    });
+
+    const data = await res.json();
+    if (!data.success) return alert(data.error);
+
+    location.reload();
+  }
+
+  async function clearHistory() {
+    await fetch("/ai/script-writer/clear", { method: "DELETE" });
+    location.reload();
+  }
+</script>

@@ -1,0 +1,138 @@
+<style>
+  .scan-container {
+    max-width: 480px;
+    margin: 70px auto;
+    padding: 25px;
+    background: #0f172a;
+    border-radius: 18px;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    box-shadow: 0 0 28px rgba(56, 189, 248, 0.25);
+    text-align: center;
+    color: #fff;
+  }
+
+  .scan-container h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: #38bdf8;
+  }
+
+  /* --- Scanner Frame Wrapper --- */
+  .scanner-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 330px;
+    margin: 0 auto;
+  }
+
+  /* --- Scanner Frame (border glow) --- */
+  .scanner-frame {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 260px;
+    height: 260px;
+    border: 3px solid rgba(56, 189, 248, 0.8);
+    border-radius: 18px;
+    z-index: 5;
+    pointer-events: none;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+  }
+
+  /* --- Animated Scan Line --- */
+  .scan-line {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 240px;
+    height: 3px;
+    transform: translateX(-50%);
+    background: #38bdf8;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #38bdf8;
+    animation: scanMove 2s linear infinite;
+    z-index: 6;
+  }
+
+  @keyframes scanMove {
+    0% { top: 10px; }
+    100% { top: 245px; }
+  }
+
+  /* --- QR Reader Camera View --- */
+  #reader {
+    width: 100% !important;
+    max-width: 330px;
+    height: 330px !important;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  /* Scan Result Box */
+  #scan-result {
+    margin-top: 25px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    text-align: left;
+  }
+
+  #scan-result h3 {
+    color: #38bdf8;
+    margin-bottom: 5px;
+  }
+
+  #scan-result p {
+    font-size: 16px;
+    word-wrap: break-word;
+  }
+
+  @media (max-width: 480px) {
+    .scan-container {
+      margin: 40px 10px;
+      padding: 20px;
+    }
+    .scanner-frame {
+      width: 220px;
+      height: 220px;
+    }
+    .scan-line {
+      width: 200px;
+    }
+  }
+</style>
+
+<div class="scan-container">
+  <h1>QR Code Scanner</h1>
+
+  <div class="scanner-wrapper">
+    <div class="scanner-frame"></div>
+    <div class="scan-line"></div>
+    <div id="reader"></div>
+  </div>
+
+  <div id="scan-result"></div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<script type="module">
+  const resultDiv = document.querySelector("#scan-result");
+
+  const onScanSuccess = (decodedText) => {
+    resultDiv.innerHTML = `
+      <h3>Scanned Result:</h3>
+      <p>${decodedText}</p>
+    `;
+  };
+
+  new Html5Qrcode("reader").start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 250 },
+    onScanSuccess
+  );
+</script>
